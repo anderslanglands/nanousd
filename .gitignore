@@ -2,3 +2,5 @@ build
 .cache
 .gdb_history
 **/*.pyc
+**/__pycache__
+**/.pytest_cache

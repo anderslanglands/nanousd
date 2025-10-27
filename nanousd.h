@@ -2,6 +2,7 @@
 #define NANOUSD_H
 
 #include <stddef.h>
+#include <stdbool.h>
 
 #define NANOUSD_API
 
@@ -16,69 +17,38 @@ enum nusd_result_e {
     NUSD_RESULT_INVALID_PRIM_PATH,
     NUSD_RESULT_WRONG_TYPE,
     NUSD_RESULT_CREATE_STAGE_FAILED,
+    NUSD_RESULT_OPEN_STAGE_FAILED,
     NUSD_RESULT_DEFINE_PRIM_FAILED,
+    NUSD_RESULT_INVALID_PROPERTY_PATH,
+    NUSD_RESULT_INVALID_PROPERTY_TYPE,
+    NUSD_RESULT_CREATE_RELATIONSHIP_FAILED,
+    NUSD_RESULT_CREATE_ATTRIBUTE_FAILED,
 };
 
 typedef int nusd_result_t;
 
 typedef void* nusd_stage_t;
 
-typedef struct nusd_prim_iterator_s nusd_prim_iterator_s;
-typedef nusd_prim_iterator_s* nusd_prim_iterator_t;
+typedef struct nusd_prim_iterator_s* nusd_prim_iterator_t;
+typedef struct nusd_property_iterator_s* nusd_property_iterator_t;
+typedef struct nusd_attribute_iterator_s* nusd_attribute_iterator_t;
+typedef struct nusd_relationship_iterator_s* nusd_relationship_iterator_t;
+typedef struct nusd_relationship_targets_iterator_s* nusd_relationship_targets_iterator_t;
+typedef struct nusd_token_array_s* nusd_token_array_t;
+typedef struct nusd_float_array_s* nusd_float_array_t;
+typedef struct nusd_float2_array_s* nusd_float2_array_t;
+typedef struct nusd_float3_array_s* nusd_float3_array_t;
+typedef struct nusd_float4_array_s* nusd_float4_array_t;
+typedef struct nusd_double_array_s* nusd_double_array_t;
+typedef struct nusd_double2_array_s* nusd_double2_array_t;
+typedef struct nusd_double3_array_s* nusd_double3_array_t;
+typedef struct nusd_double4_array_s* nusd_double4_array_t;
+typedef struct nusd_int_array_s* nusd_int_array_t;
+typedef struct nusd_int2_array_s* nusd_int2_array_t;
+typedef struct nusd_int3_array_s* nusd_int3_array_t;
+typedef struct nusd_int4_array_s* nusd_int4_array_t;
 
-typedef struct nusd_property_iterator_s nusd_property_iterator_s;
-typedef nusd_property_iterator_s* nusd_property_iterator_t;
-
-typedef struct nusd_attribute_iterator_s nusd_attribute_iterator_s;
-typedef nusd_attribute_iterator_s* nusd_attribute_iterator_t;
-
-typedef struct nusd_relationship_iterator_s nusd_relationship_iterator_s;
-typedef nusd_relationship_iterator_s* nusd_relationship_iterator_t;
-
-typedef struct nusd_relationship_targets_iterator_s nusd_relationship_targets_iterator_s;
-typedef nusd_relationship_targets_iterator_s* nusd_relationship_targets_iterator_t;
-
-typedef struct nusd_token_array_s nusd_token_array_s;
-typedef nusd_token_array_s* nusd_token_array_t;
-
-typedef struct nusd_float_array_s nusd_float_array_s;
-typedef nusd_float_array_s* nusd_float_array_t;
-
-typedef struct nusd_float2_array_s nusd_float2_array_s;
-typedef nusd_float2_array_s* nusd_float2_array_t;
-
-typedef struct nusd_float3_array_s nusd_float3_array_s;
-typedef nusd_float3_array_s* nusd_float3_array_t;
-
-typedef struct nusd_float4_array_s nusd_float4_array_s;
-typedef nusd_float4_array_s* nusd_float4_array_t;
-
-typedef struct nusd_double_array_s nusd_double_array_s;
-typedef nusd_double_array_s* nusd_double_array_t;
-
-typedef struct nusd_double2_array_s nusd_double2_array_s;
-typedef nusd_double2_array_s* nusd_double2_array_t;
-
-typedef struct nusd_double3_array_s nusd_double3_array_s;
-typedef nusd_double3_array_s* nusd_double3_array_t;
-
-typedef struct nusd_double4_array_s nusd_double4_array_s;
-typedef nusd_double4_array_s* nusd_double4_array_t;
-
-typedef struct nusd_int_array_s nusd_int_array_s;
-typedef nusd_int_array_s* nusd_int_array_t;
-
-typedef struct nusd_int2_array_s nusd_int2_array_s;
-typedef nusd_int2_array_s* nusd_int2_array_t;
-
-typedef struct nusd_int3_array_s nusd_int3_array_s;
-typedef nusd_int3_array_s* nusd_int3_array_t;
-
-typedef struct nusd_int4_array_s nusd_int4_array_s;
-typedef nusd_int4_array_s* nusd_int4_array_t;
-
-typedef struct nusd_bool_array_s nusd_bool_array_s;
-typedef nusd_bool_array_s* nusd_bool_array_t;
+typedef struct nusd_bool_array_s* nusd_bool_array_t;
 
 typedef char const* nusd_type_t;
 
@@ -243,10 +213,16 @@ NANOUSD_API
 nusd_result_t nusd_prim_get_properties(nusd_stage_t stage, char const* prim_path, nusd_property_iterator_t* iterator);
 
 NANOUSD_API
+nusd_result_t nusd_prim_create_property(nusd_stage_t stage, char const* prim_path, char const* property_name, nusd_type_t property_type);
+
+NANOUSD_API
 bool nusd_property_iterator_next(nusd_property_iterator_t iterator, char const** property_path, nusd_type_t* property_type);
 
 NANOUSD_API
 nusd_result_t nusd_property_iterator_destroy(nusd_property_iterator_t iterator);
+
+NANOUSD_API
+nusd_result_t nusd_property_get_type(nusd_stage_t stage, char const* property_path, nusd_type_t* property_type);
 
 NANOUSD_API
 nusd_result_t nusd_prim_get_attributes(nusd_stage_t stage, char const* prim_path, nusd_attribute_iterator_t* iterator);
@@ -324,6 +300,29 @@ float* nusd_float4_array_data(nusd_float4_array_t float4_array);
 NANOUSD_API
 void nusd_float4_array_destroy(nusd_float4_array_t float4_array);
 
+NANOUSD_API
+nusd_result_t nusd_attribute_set_float(nusd_stage_t stage, char const* attribute_path, float value);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_float_array(nusd_stage_t stage, char const* attribute_path, float* data, size_t num_elements);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_float2(nusd_stage_t stage, char const* attribute_path, float* value);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_float2_array(nusd_stage_t stage, char const* attribute_path, float* data, size_t num_elements);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_float3(nusd_stage_t stage, char const* attribute_path, float* value);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_float3_array(nusd_stage_t stage, char const* attribute_path, float* data, size_t num_elements);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_float4(nusd_stage_t stage, char const* attribute_path, float* value);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_float4_array(nusd_stage_t stage, char const* attribute_path, float* data, size_t num_elements);
 
 // double
 NANOUSD_API

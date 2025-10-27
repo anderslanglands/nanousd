@@ -82,6 +82,22 @@
 def Xform "World"
 {
     float testFloat = 3.14159
+    texCoord2f testFloat2 = (17.0, 19.0)
+    float[] testFloatArray = [1.0, 2.0, 3.0]
+    float2[] testFloat2Array = [(1.0, 2.0), (3.0, 4.0)]
+    point3f testFloat3 = (1.0, 2.0, 3.0)
+    color3f[] testFloat3Array = [(1.0, 2.0, 3.0), (4.0, 5.0, 6.0)]
+    float4 testFloat4 = (1, 2, 3, 4)
+    color4f[] testFloat4Array = [(1, 2, 3, 4), (5, 6, 7, 8)]
+
+    double testDouble = 3.14159
+    texCoord2d testDouble2 = (17.0, 19.0)
+    double[] testDoubleArray = [1.0, 2.0, 3.0]
+    double2[] testDouble2Array = [(1.0, 2.0), (3.0, 4.0)]
+    point3d testDouble3 = (1.0, 2.0, 3.0)
+    color3d[] testDouble3Array = [(1.0, 2.0, 3.0), (4.0, 5.0, 6.0)]
+    double4 testDouble4 = (1, 2, 3, 4)
+    color4d[] testDouble4Array = [(1, 2, 3, 4), (5, 6, 7, 8)]
 
     def Mesh "Sphere"
     {
