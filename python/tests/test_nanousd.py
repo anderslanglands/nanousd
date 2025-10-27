@@ -55,7 +55,7 @@ def test_set_property_float2_array():
     stage.define_prim("/World", "Xform")
     stage.prim_create_property("/World", "testFloat2Array", nusd.FLOAT2ARRAY)
     # Set via Python API, get via Python API
-    test_data = np.array([[1, 2], [3, 4], [5, 6]])
+    test_data = np.array([[1, 2], [3, 4], [5, 6]], dtype=np.float32)
     stage.set_property("/World.testFloat2Array", nusd.FLOAT2ARRAY, test_data)
     
     value = stage.get_property("/World.testFloat2Array")
@@ -249,4 +249,24 @@ def test_set_property_int64_array():
     
     value = stage.get_property("/World.testInt64Array")
     assert isinstance(value, nusd.Int64Array)
+    assert np.array_equal(value, test_data)
+
+def test_set_property_bool():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testBool", nusd.BOOL)
+    stage.set_property("/World.testBool", nusd.BOOL, True)
+    value = stage.get_property("/World.testBool")
+    assert value == True
+
+def test_set_property_bool_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testBoolArray", nusd.BOOLARRAY)
+    # Set via Python API, get via Python API
+    test_data = np.array([True, False, True, False, True], dtype=np.bool_)
+    stage.set_property("/World.testBoolArray", nusd.BOOLARRAY, test_data)
+    
+    value = stage.get_property("/World.testBoolArray")
+    assert isinstance(value, nusd.BoolArray)
     assert np.array_equal(value, test_data)

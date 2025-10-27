@@ -549,3 +549,51 @@ TEST(nusd, set_double4_array_attribute) {
 
     nusd_double4_array_destroy(double4_array);
 }
+
+TEST(nusd, set_bool_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_BOOL);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_attribute_set_bool(stage, "/World.testattr", true);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    bool value = false;
+    result = nusd_attribute_get_bool(stage, "/World.testattr", &value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(value, true);
+}
+
+TEST(nusd, set_bool_array_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_BOOLARRAY);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    bool test_data[] = {true, false, true, false, true};
+    result = nusd_attribute_set_bool_array(stage, "/World.testattr", test_data, 5);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_bool_array_t bool_array;
+    result = nusd_attribute_get_bool_array(stage, "/World.testattr", &bool_array);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    size_t size = nusd_bool_array_size(bool_array);
+    EXPECT_EQ(size, 5);
+
+    bool* data = nusd_bool_array_data(bool_array);
+    for (size_t i = 0; i < size; i++) {
+        EXPECT_EQ(data[i], test_data[i]);
+    }
+
+    nusd_bool_array_destroy(bool_array);
+}

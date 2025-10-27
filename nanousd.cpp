@@ -463,7 +463,7 @@ nusd_result_t nusd_stage_open(char const* filename, nusd_stage_t* stage) {
 nusd_result_t nusd_stage_create_new(char const* identifier, nusd_stage_t* stage) {
     initialize_tokens();
 
-    UsdStageRefPtr _stage = UsdStage::CreateInMemory(identifier);
+    UsdStageRefPtr _stage = UsdStage::CreateNew(identifier);
 
     if (!_stage) {
         *stage = nullptr;
@@ -1400,7 +1400,33 @@ void nusd_bool_array_destroy(nusd_bool_array_t bool_array) {
     delete bool_array;
 }
 
+// Bool setters
+nusd_result_t nusd_attribute_set_bool(nusd_stage_t stage, char const* attribute_path, bool value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_BOOL) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Set(value);
+    return NUSD_RESULT_OK;
+}
 
+nusd_result_t nusd_attribute_set_bool_array(nusd_stage_t stage, char const* attribute_path, bool* data, size_t num_elements) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_BOOLARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    VtArray<bool> vt_array(data, data + num_elements);
+    attr.Set(vt_array);
+    return NUSD_RESULT_OK;
+}
 
 // relationships
 nusd_result_t nusd_prim_get_relationships(nusd_stage_t stage, char const* prim_path, nusd_relationship_iterator_t* iterator) {

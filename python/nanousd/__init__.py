@@ -371,6 +371,17 @@ class Int64Array(ArrayBase):
         _lib.nusd_int64_array_destroy(self._array)
 
 
+class BoolArray(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_bool_array_size(array)
+        data = _lib.nusd_bool_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size,))
+
+    def __del__(self):
+        _lib.nusd_bool_array_destroy(self._array)
+
+
 class StageOpenError(RuntimeError):
     pass
 
@@ -735,6 +746,26 @@ class Stage:
                     f'failed to get value for "{property_path}": {result}'
                 )
             return Int64Array(value)
+        elif property_type == _lib.NUSD_TYPE_BOOL:
+            value = c_bool(False)
+            result = _lib.nusd_attribute_get_bool(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return value.value
+        elif property_type == _lib.NUSD_TYPE_BOOLARRAY:
+            value = _lib.nusd_bool_array_t()
+            result = _lib.nusd_attribute_get_bool_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return BoolArray(value)
 
         else:
             raise GetPropertyError(
@@ -1154,6 +1185,33 @@ class Stage:
                 self._stage,
                 property_path,
                 value_flat.ctypes.data_as(POINTER(c_double)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == BOOL:
+            if not isinstance(value, bool):
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of bool and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_bool(
+                self._stage, property_path, c_bool(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == BOOLARRAY:
+            if not isinstance(value, np.ndarray) or value.dtype != np.bool_:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_bool_array(
+                self._stage,
+                property_path,
+                value.ctypes.data_as(POINTER(c_bool)),
                 c_size_t(value.shape[0]),
             )
             if result != _lib.NUSD_RESULT_OK:

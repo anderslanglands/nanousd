@@ -1824,6 +1824,40 @@ bool* nusd_bool_array_data(nusd_bool_array_t bool_array);
 NANOUSD_API
 void nusd_bool_array_destroy(nusd_bool_array_t bool_array);
 
+// bool setters
+/// Sets the value of the given attribute to a bool, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Bool value to set.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of bool type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_bool(nusd_stage_t stage, char const* attribute_path, bool value);
+
+/// Sets the value of the given attribute to a bool array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param data Pointer to the bool data to set.
+/// @param num_elements Number of bool elements in the data array.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of bool array type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note data must not be null.
+/// @note num_elements must be greater than 0.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_bool_array(nusd_stage_t stage, char const* attribute_path, bool* data, size_t num_elements);
+
 
 // token
 /// Returns the number of tokens in a token array.
