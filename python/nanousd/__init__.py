@@ -305,6 +305,50 @@ class Double4Array(ArrayBase):
         _lib.nusd_double4_array_destroy(self._array)
 
 
+class IntArray(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_int_array_size(array)
+        data = _lib.nusd_int_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size,))
+
+    def __del__(self):
+        _lib.nusd_int_array_destroy(self._array)
+
+
+class Int2Array(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_int2_array_size(array)
+        data = _lib.nusd_int2_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size, 2))
+
+    def __del__(self):
+        _lib.nusd_int2_array_destroy(self._array)
+
+
+class Int3Array(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_int3_array_size(array)
+        data = _lib.nusd_int3_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size, 3))
+
+    def __del__(self):
+        _lib.nusd_int3_array_destroy(self._array)
+
+
+class Int4Array(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_int4_array_size(array)
+        data = _lib.nusd_int4_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size, 4))
+
+    def __del__(self):
+        _lib.nusd_int4_array_destroy(self._array)
+
+
 class StageOpenError(RuntimeError):
     pass
 
@@ -575,6 +619,80 @@ class Stage:
                     f'failed to get value for "{property_path}": {result}'
                 )
             return Double4Array(value)
+        elif property_type == _lib.NUSD_TYPE_INT:
+            value = c_int(0)
+            result = _lib.nusd_attribute_get_int(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return value.value
+        elif property_type == _lib.NUSD_TYPE_INTARRAY:
+            value = _lib.nusd_int_array_t()
+            result = _lib.nusd_attribute_get_int_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return IntArray(value)
+        elif property_type == _lib.NUSD_TYPE_INT2:
+            value = (c_int * 2)()
+            result = _lib.nusd_attribute_get_int2(self._stage, property_path, value)
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return np.array(value)
+        elif property_type == _lib.NUSD_TYPE_INT2ARRAY:
+            value = _lib.nusd_int2_array_t()
+            result = _lib.nusd_attribute_get_int2_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return Int2Array(value)
+        elif property_type == _lib.NUSD_TYPE_INT3:
+            value = (c_int * 3)()
+            result = _lib.nusd_attribute_get_int3(self._stage, property_path, value)
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return np.array(value)
+        elif property_type == _lib.NUSD_TYPE_INT3ARRAY:
+            value = _lib.nusd_int3_array_t()
+            result = _lib.nusd_attribute_get_int3_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return Int3Array(value)
+        elif property_type == _lib.NUSD_TYPE_INT4:
+            value = (c_int * 4)()
+            result = _lib.nusd_attribute_get_int4(self._stage, property_path, value)
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return np.array(value)
+        elif property_type == _lib.NUSD_TYPE_INT4ARRAY:
+            value = _lib.nusd_int4_array_t()
+            result = _lib.nusd_attribute_get_int4_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return Int4Array(value)
 
         else:
             raise GetPropertyError(
@@ -691,6 +809,93 @@ class Stage:
 
             c_value = (c_float * 4)(value[0], value[1], value[2])
             result = _lib.nusd_attribute_set_float4(self._stage, property_path, c_value)
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == INT:
+            if not isinstance(value, int):
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_int(
+                self._stage, property_path, c_int(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == INT2:
+            if isinstance(value, np.ndarray):
+                if value.ndim != 1 or len(value) != 2 or value.dtype != np.int32:
+                    raise TypeError(
+                        f"incompatible types for property <{property_path}>: requested {property_type} but value is not a 2-element int32 array {type(value)}, {value.ndim}, {len(value)} {value.dtype}"
+                    )
+            else:
+                try:
+                    iterator = iter(value)
+                except TypeError:
+                    raise TypeError(
+                        f"incompatible types for property <{property_path}>: requested {property_type} but value is not an iterable ({type(value)})"
+                    )
+
+                if len(value) != 2:
+                    raise ValueError(
+                        f"incompatible types for property <{property_path}>: requested {property_type} but value has length {len(value)} instead of 2"
+                    )
+
+            c_value = (c_int * 2)(int(value[0]), int(value[1]))
+            result = _lib.nusd_attribute_set_int2(self._stage, property_path, c_value)
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == INT3:
+            if isinstance(value, np.ndarray):
+                if value.ndim != 1 or len(value) != 3 or value.dtype != np.int32:
+                    raise TypeError(
+                        f"incompatible types for property <{property_path}>: requested {property_type} but value is not a 3-element int32 array {type(value)}, {value.ndim}, {len(value)} {value.dtype}"
+                    )
+            else:
+                try:
+                    iterator = iter(value)
+                except TypeError:
+                    raise TypeError(
+                        f"incompatible types for property <{property_path}>: requested {property_type} but value is not an iterable ({type(value)})"
+                    )
+
+                if len(value) != 3:
+                    raise ValueError(
+                        f"incompatible types for property <{property_path}>: requested {property_type} but value has length {len(value)} instead of 3"
+                    )
+
+            c_value = (c_int * 3)(int(value[0]), int(value[1]), int(value[2]))
+            result = _lib.nusd_attribute_set_int3(self._stage, property_path, c_value)
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == INT4:
+            if isinstance(value, np.ndarray):
+                if value.ndim != 1 or len(value) != 4 or value.dtype != np.int32:
+                    raise TypeError(
+                        f"incompatible types for property <{property_path}>: requested {property_type} but value is not a 4-element int32 array {type(value)}, {value.ndim}, {len(value)} {value.dtype}"
+                    )
+            else:
+                try:
+                    iterator = iter(value)
+                except TypeError:
+                    raise TypeError(
+                        f"incompatible types for property <{property_path}>: requested {property_type} but value is not an iterable ({type(value)})"
+                    )
+
+                if len(value) != 4:
+                    raise ValueError(
+                        f"incompatible types for property <{property_path}>: requested {property_type} but value has length {len(value)} instead of 4"
+                    )
+
+            c_value = (c_int * 4)(int(value[0]), int(value[1]), int(value[2]), int(value[3]))
+            result = _lib.nusd_attribute_set_int4(self._stage, property_path, c_value)
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'

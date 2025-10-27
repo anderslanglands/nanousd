@@ -1668,4 +1668,143 @@ nusd_result_t nusd_attribute_set_float4_array(nusd_stage_t stage, char const* at
     return NUSD_RESULT_OK;
 }
 
+// Int setters
+nusd_result_t nusd_attribute_set_int(nusd_stage_t stage, char const* attribute_path, int value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    attr.Set(value);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_int_array(nusd_stage_t stage, char const* attribute_path, int* data, size_t num_elements) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INTARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    VtArray<int> vt_array(data, data + num_elements);
+    attr.Set(vt_array);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_int2(nusd_stage_t stage, char const* attribute_path, int* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT2) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    GfVec2i vec(value[0], value[1]);
+    attr.Set(vec);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_int2_array(nusd_stage_t stage, char const* attribute_path, int* _data, size_t num_elements) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT2ARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    GfVec2i* data = reinterpret_cast<GfVec2i*>(_data);
+    VtArray<GfVec2i> value(data, data + num_elements);
+    attr.Set(std::move(value));
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_int3(nusd_stage_t stage, char const* attribute_path, int* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT3) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    GfVec3i vec(value[0], value[1], value[2]);
+    attr.Set(vec);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_int3_array(nusd_stage_t stage, char const* attribute_path, int* _data, size_t num_elements) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT3ARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    GfVec3i* data = reinterpret_cast<GfVec3i*>(_data);
+    VtArray<GfVec3i> value(data, data + num_elements);
+    attr.Set(std::move(value));
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_int4(nusd_stage_t stage, char const* attribute_path, int* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT4) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    GfVec4i vec(value[0], value[1], value[2], value[3]);
+    attr.Set(vec);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_int4_array(nusd_stage_t stage, char const* attribute_path, int* _data, size_t num_elements) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT4ARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    GfVec4i* data = reinterpret_cast<GfVec4i*>(_data);
+    VtArray<GfVec4i> value(data, data + num_elements);
+    attr.Set(std::move(value));
+    return NUSD_RESULT_OK;
+}
+
 }
