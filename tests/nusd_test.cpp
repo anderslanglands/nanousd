@@ -597,3 +597,159 @@ TEST(nusd, set_bool_array_attribute) {
 
     nusd_bool_array_destroy(bool_array);
 }
+
+TEST(nusd, set_matrix2d_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_MATRIX2D);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double test_matrix[4] = {1.0, 2.0, 3.0, 4.0};
+    result = nusd_attribute_set_matrix2d(stage, "/World.testattr", test_matrix);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double value[4] = {0.0, 0.0, 0.0, 0.0};
+    result = nusd_attribute_get_matrix2d(stage, "/World.testattr", value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    for (int i = 0; i < 4; i++) {
+        EXPECT_DOUBLE_EQ(value[i], test_matrix[i]);
+    }
+}
+
+TEST(nusd, set_matrix2d_array_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_MATRIX2DARRAY);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double test_data[8] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};  // 2 matrix2d values
+    result = nusd_attribute_set_matrix2d_array(stage, "/World.testattr", test_data, 2);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_matrix2d_array_t matrix2d_array;
+    result = nusd_attribute_get_matrix2d_array(stage, "/World.testattr", &matrix2d_array);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    size_t size = nusd_matrix2d_array_size(matrix2d_array);
+    EXPECT_EQ(size, 2);
+
+    double* data = nusd_matrix2d_array_data(matrix2d_array);
+    for (size_t i = 0; i < size * 4; i++) {
+        EXPECT_DOUBLE_EQ(data[i], test_data[i]);
+    }
+
+    nusd_matrix2d_array_destroy(matrix2d_array);
+}
+
+TEST(nusd, set_matrix3d_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_MATRIX3D);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double test_matrix[9] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+    result = nusd_attribute_set_matrix3d(stage, "/World.testattr", test_matrix);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double value[9] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    result = nusd_attribute_get_matrix3d(stage, "/World.testattr", value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    for (int i = 0; i < 9; i++) {
+        EXPECT_DOUBLE_EQ(value[i], test_matrix[i]);
+    }
+}
+
+TEST(nusd, set_matrix3d_array_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_MATRIX3DARRAY);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double test_data[18] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0};  // 2 matrix3d values
+    result = nusd_attribute_set_matrix3d_array(stage, "/World.testattr", test_data, 2);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_matrix3d_array_t matrix3d_array;
+    result = nusd_attribute_get_matrix3d_array(stage, "/World.testattr", &matrix3d_array);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    size_t size = nusd_matrix3d_array_size(matrix3d_array);
+    EXPECT_EQ(size, 2);
+
+    double* data = nusd_matrix3d_array_data(matrix3d_array);
+    for (size_t i = 0; i < size * 9; i++) {
+        EXPECT_DOUBLE_EQ(data[i], test_data[i]);
+    }
+
+    nusd_matrix3d_array_destroy(matrix3d_array);
+}
+
+TEST(nusd, set_matrix4d_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_MATRIX4D);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double test_matrix[16] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0};
+    result = nusd_attribute_set_matrix4d(stage, "/World.testattr", test_matrix);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double value[16] = {0.0};
+    result = nusd_attribute_get_matrix4d(stage, "/World.testattr", value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    for (int i = 0; i < 16; i++) {
+        EXPECT_DOUBLE_EQ(value[i], test_matrix[i]);
+    }
+}
+
+TEST(nusd, set_matrix4d_array_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_MATRIX4DARRAY);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double test_data[32];  // 2 matrix4d values
+    for (int i = 0; i < 32; i++) {
+        test_data[i] = i + 1.0;
+    }
+    result = nusd_attribute_set_matrix4d_array(stage, "/World.testattr", test_data, 2);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_matrix4d_array_t matrix4d_array;
+    result = nusd_attribute_get_matrix4d_array(stage, "/World.testattr", &matrix4d_array);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    size_t size = nusd_matrix4d_array_size(matrix4d_array);
+    EXPECT_EQ(size, 2);
+
+    double* data = nusd_matrix4d_array_data(matrix4d_array);
+    for (size_t i = 0; i < size * 16; i++) {
+        EXPECT_DOUBLE_EQ(data[i], test_data[i]);
+    }
+
+    nusd_matrix4d_array_destroy(matrix4d_array);
+}

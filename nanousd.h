@@ -52,6 +52,10 @@ typedef struct nusd_int64_array_s* nusd_int64_array_t;
 
 typedef struct nusd_bool_array_s* nusd_bool_array_t;
 
+typedef struct nusd_matrix2d_array_s* nusd_matrix2d_array_t;
+typedef struct nusd_matrix3d_array_s* nusd_matrix3d_array_t;
+typedef struct nusd_matrix4d_array_s* nusd_matrix4d_array_t;
+
 typedef char const* nusd_type_t;
 
 extern nusd_type_t NUSD_TYPE_ASSET;
@@ -1824,6 +1828,201 @@ bool* nusd_bool_array_data(nusd_bool_array_t bool_array);
 NANOUSD_API
 void nusd_bool_array_destroy(nusd_bool_array_t bool_array);
 
+// matrix2d getters
+/// Gets the value of the given attribute as a 2x2 matrix of doubles, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Pointer to array of 4 doubles to store the matrix values in row-major order.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix2d type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null and must point to at least 4 doubles.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_matrix2d(nusd_stage_t stage, char const* attribute_path, double* value);
+
+/// Gets the value of the given attribute as a matrix2d array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param matrix2d_array Pointer to store the matrix2d array handle.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix2d array type
+/// 
+/// @note The returned matrix2d array must be released with nusd_matrix2d_array_destroy() when no longer needed.
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note matrix2d_array must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_matrix2d_array(nusd_stage_t stage, char const* attribute_path, nusd_matrix2d_array_t* matrix2d_array);
+
+/// Returns the number of matrix2d elements in a matrix2d array.
+/// 
+/// @param matrix2d_array Valid matrix2d array handle.
+/// 
+/// @return Number of matrix2d elements in the array.
+/// 
+/// @note matrix2d_array must not be null.
+NANOUSD_API
+size_t nusd_matrix2d_array_size(nusd_matrix2d_array_t matrix2d_array);
+
+/// Returns a pointer to the matrix2d data in a matrix2d array.
+/// 
+/// @param matrix2d_array Valid matrix2d array handle.
+/// 
+/// @return Pointer to the matrix2d data. Each matrix2d is stored as 4 consecutive doubles in row-major order.
+/// 
+/// @note matrix2d_array must not be null.
+/// @note The returned pointer is valid until the array is destroyed.
+/// @note Total data size is nusd_matrix2d_array_size(matrix2d_array) * 4 * sizeof(double).
+NANOUSD_API
+double* nusd_matrix2d_array_data(nusd_matrix2d_array_t matrix2d_array);
+
+/// Destroys a matrix2d array and releases associated resources.
+/// 
+/// @param matrix2d_array Valid matrix2d array handle to destroy. Can be null (no-op).
+/// 
+/// @note After calling this function, the array handle becomes invalid and must not be used.
+/// @note It is safe to call this function with a null array handle.
+NANOUSD_API
+void nusd_matrix2d_array_destroy(nusd_matrix2d_array_t matrix2d_array);
+
+// matrix3d getters
+/// Gets the value of the given attribute as a 3x3 matrix of doubles, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Pointer to array of 9 doubles to store the matrix values in row-major order.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix3d type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null and must point to at least 9 doubles.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_matrix3d(nusd_stage_t stage, char const* attribute_path, double* value);
+
+/// Gets the value of the given attribute as a matrix3d array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param matrix3d_array Pointer to store the matrix3d array handle.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix3d array type
+/// 
+/// @note The returned matrix3d array must be released with nusd_matrix3d_array_destroy() when no longer needed.
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note matrix3d_array must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_matrix3d_array(nusd_stage_t stage, char const* attribute_path, nusd_matrix3d_array_t* matrix3d_array);
+
+/// Returns the number of matrix3d elements in a matrix3d array.
+/// 
+/// @param matrix3d_array Valid matrix3d array handle.
+/// 
+/// @return Number of matrix3d elements in the array.
+/// 
+/// @note matrix3d_array must not be null.
+NANOUSD_API
+size_t nusd_matrix3d_array_size(nusd_matrix3d_array_t matrix3d_array);
+
+/// Returns a pointer to the matrix3d data in a matrix3d array.
+/// 
+/// @param matrix3d_array Valid matrix3d array handle.
+/// 
+/// @return Pointer to the matrix3d data. Each matrix3d is stored as 9 consecutive doubles in row-major order.
+/// 
+/// @note matrix3d_array must not be null.
+/// @note The returned pointer is valid until the array is destroyed.
+/// @note Total data size is nusd_matrix3d_array_size(matrix3d_array) * 9 * sizeof(double).
+NANOUSD_API
+double* nusd_matrix3d_array_data(nusd_matrix3d_array_t matrix3d_array);
+
+/// Destroys a matrix3d array and releases associated resources.
+/// 
+/// @param matrix3d_array Valid matrix3d array handle to destroy. Can be null (no-op).
+/// 
+/// @note After calling this function, the array handle becomes invalid and must not be used.
+/// @note It is safe to call this function with a null array handle.
+NANOUSD_API
+void nusd_matrix3d_array_destroy(nusd_matrix3d_array_t matrix3d_array);
+
+// matrix4d getters
+/// Gets the value of the given attribute as a 4x4 matrix of doubles, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Pointer to array of 16 doubles to store the matrix values in row-major order.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix4d type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null and must point to at least 16 doubles.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_matrix4d(nusd_stage_t stage, char const* attribute_path, double* value);
+
+/// Gets the value of the given attribute as a matrix4d array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param matrix4d_array Pointer to store the matrix4d array handle.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix4d array type
+/// 
+/// @note The returned matrix4d array must be released with nusd_matrix4d_array_destroy() when no longer needed.
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note matrix4d_array must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_matrix4d_array(nusd_stage_t stage, char const* attribute_path, nusd_matrix4d_array_t* matrix4d_array);
+
+/// Returns the number of matrix4d elements in a matrix4d array.
+/// 
+/// @param matrix4d_array Valid matrix4d array handle.
+/// 
+/// @return Number of matrix4d elements in the array.
+/// 
+/// @note matrix4d_array must not be null.
+NANOUSD_API
+size_t nusd_matrix4d_array_size(nusd_matrix4d_array_t matrix4d_array);
+
+/// Returns a pointer to the matrix4d data in a matrix4d array.
+/// 
+/// @param matrix4d_array Valid matrix4d array handle.
+/// 
+/// @return Pointer to the matrix4d data. Each matrix4d is stored as 16 consecutive doubles in row-major order.
+/// 
+/// @note matrix4d_array must not be null.
+/// @note The returned pointer is valid until the array is destroyed.
+/// @note Total data size is nusd_matrix4d_array_size(matrix4d_array) * 16 * sizeof(double).
+NANOUSD_API
+double* nusd_matrix4d_array_data(nusd_matrix4d_array_t matrix4d_array);
+
+/// Destroys a matrix4d array and releases associated resources.
+/// 
+/// @param matrix4d_array Valid matrix4d array handle to destroy. Can be null (no-op).
+/// 
+/// @note After calling this function, the array handle becomes invalid and must not be used.
+/// @note It is safe to call this function with a null array handle.
+NANOUSD_API
+void nusd_matrix4d_array_destroy(nusd_matrix4d_array_t matrix4d_array);
+
 // bool setters
 /// Sets the value of the given attribute to a bool, if the attribute is of that type.
 /// 
@@ -1857,6 +2056,111 @@ nusd_result_t nusd_attribute_set_bool(nusd_stage_t stage, char const* attribute_
 /// @note num_elements must be greater than 0.
 NANOUSD_API
 nusd_result_t nusd_attribute_set_bool_array(nusd_stage_t stage, char const* attribute_path, bool* data, size_t num_elements);
+
+// matrix2d setters
+/// Sets the value of the given attribute to a 2x2 matrix of doubles, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Pointer to array of 4 doubles containing matrix values in row-major order.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix2d type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null and must point to at least 4 doubles.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_matrix2d(nusd_stage_t stage, char const* attribute_path, double* value);
+
+/// Sets the value of the given attribute to a matrix2d array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param data Pointer to the matrix2d data to set. Each matrix2d should be 4 consecutive doubles in row-major order.
+/// @param num_elements Number of matrix2d elements in the data array.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix2d array type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note data must not be null and must point to at least num_elements * 4 doubles.
+/// @note num_elements must be greater than 0.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_matrix2d_array(nusd_stage_t stage, char const* attribute_path, double* data, size_t num_elements);
+
+// matrix3d setters
+/// Sets the value of the given attribute to a 3x3 matrix of doubles, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Pointer to array of 9 doubles containing matrix values in row-major order.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix3d type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null and must point to at least 9 doubles.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_matrix3d(nusd_stage_t stage, char const* attribute_path, double* value);
+
+/// Sets the value of the given attribute to a matrix3d array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param data Pointer to the matrix3d data to set. Each matrix3d should be 9 consecutive doubles in row-major order.
+/// @param num_elements Number of matrix3d elements in the data array.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix3d array type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note data must not be null and must point to at least num_elements * 9 doubles.
+/// @note num_elements must be greater than 0.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_matrix3d_array(nusd_stage_t stage, char const* attribute_path, double* data, size_t num_elements);
+
+// matrix4d setters
+/// Sets the value of the given attribute to a 4x4 matrix of doubles, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Pointer to array of 16 doubles containing matrix values in row-major order.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix4d type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null and must point to at least 16 doubles.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_matrix4d(nusd_stage_t stage, char const* attribute_path, double* value);
+
+/// Sets the value of the given attribute to a matrix4d array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param data Pointer to the matrix4d data to set. Each matrix4d should be 16 consecutive doubles in row-major order.
+/// @param num_elements Number of matrix4d elements in the data array.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of matrix4d array type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note data must not be null and must point to at least num_elements * 16 doubles.
+/// @note num_elements must be greater than 0.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_matrix4d_array(nusd_stage_t stage, char const* attribute_path, double* data, size_t num_elements);
 
 
 // token

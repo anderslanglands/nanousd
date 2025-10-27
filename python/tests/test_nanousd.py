@@ -270,3 +270,73 @@ def test_set_property_bool_array():
     value = stage.get_property("/World.testBoolArray")
     assert isinstance(value, nusd.BoolArray)
     assert np.array_equal(value, test_data)
+
+def test_set_property_matrix2d():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testMatrix2d", nusd.MATRIX2D)
+    test_data = np.array([[1.0, 2.0], [3.0, 4.0]], dtype=np.float64)
+    stage.set_property("/World.testMatrix2d", nusd.MATRIX2D, test_data)
+    
+    value = stage.get_property("/World.testMatrix2d")
+    assert isinstance(value, np.ndarray)
+    assert value.shape == (2, 2)
+    assert np.array_equal(value, test_data)
+
+def test_set_property_matrix2d_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testMatrix2dArray", nusd.MATRIX2DARRAY)
+    test_data = np.array([[[1.0, 2.0], [3.0, 4.0]], [[5.0, 6.0], [7.0, 8.0]]], dtype=np.float64)
+    stage.set_property("/World.testMatrix2dArray", nusd.MATRIX2DARRAY, test_data)
+    
+    value = stage.get_property("/World.testMatrix2dArray")
+    assert isinstance(value, nusd.Matrix2dArray)
+    assert np.array_equal(value, test_data)
+
+def test_set_property_matrix3d():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testMatrix3d", nusd.MATRIX3D)
+    test_data = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]], dtype=np.float64)
+    stage.set_property("/World.testMatrix3d", nusd.MATRIX3D, test_data)
+    
+    value = stage.get_property("/World.testMatrix3d")
+    assert isinstance(value, np.ndarray)
+    assert value.shape == (3, 3)
+    assert np.array_equal(value, test_data)
+
+def test_set_property_matrix3d_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testMatrix3dArray", nusd.MATRIX3DARRAY)
+    test_data = np.array([[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]], 
+                          [[10.0, 11.0, 12.0], [13.0, 14.0, 15.0], [16.0, 17.0, 18.0]]], dtype=np.float64)
+    stage.set_property("/World.testMatrix3dArray", nusd.MATRIX3DARRAY, test_data)
+    
+    value = stage.get_property("/World.testMatrix3dArray")
+    assert isinstance(value, nusd.Matrix3dArray)
+    assert np.array_equal(value, test_data)
+
+def test_set_property_matrix4d():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testMatrix4d", nusd.MATRIX4D)
+    test_data = np.arange(1, 17, dtype=np.float64).reshape(4, 4)
+    stage.set_property("/World.testMatrix4d", nusd.MATRIX4D, test_data)
+    
+    value = stage.get_property("/World.testMatrix4d")
+    assert isinstance(value, np.ndarray)
+    assert value.shape == (4, 4)
+    assert np.array_equal(value, test_data)
+
+def test_set_property_matrix4d_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testMatrix4dArray", nusd.MATRIX4DARRAY)
+    test_data = np.arange(1, 33, dtype=np.float64).reshape(2, 4, 4)
+    stage.set_property("/World.testMatrix4dArray", nusd.MATRIX4DARRAY, test_data)
+    
+    value = stage.get_property("/World.testMatrix4dArray")
+    assert isinstance(value, nusd.Matrix4dArray)
+    assert np.array_equal(value, test_data)

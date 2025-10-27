@@ -382,6 +382,39 @@ class BoolArray(ArrayBase):
         _lib.nusd_bool_array_destroy(self._array)
 
 
+class Matrix2dArray(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_matrix2d_array_size(array)
+        data = _lib.nusd_matrix2d_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size, 2, 2))
+
+    def __del__(self):
+        _lib.nusd_matrix2d_array_destroy(self._array)
+
+
+class Matrix3dArray(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_matrix3d_array_size(array)
+        data = _lib.nusd_matrix3d_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size, 3, 3))
+
+    def __del__(self):
+        _lib.nusd_matrix3d_array_destroy(self._array)
+
+
+class Matrix4dArray(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_matrix4d_array_size(array)
+        data = _lib.nusd_matrix4d_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size, 4, 4))
+
+    def __del__(self):
+        _lib.nusd_matrix4d_array_destroy(self._array)
+
+
 class StageOpenError(RuntimeError):
     pass
 
@@ -766,6 +799,60 @@ class Stage:
                     f'failed to get value for "{property_path}": {result}'
                 )
             return BoolArray(value)
+        elif property_type == _lib.NUSD_TYPE_MATRIX2D:
+            value = (c_double * 4)()
+            result = _lib.nusd_attribute_get_matrix2d(self._stage, property_path, value)
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return np.array(value).reshape(2, 2)
+        elif property_type == _lib.NUSD_TYPE_MATRIX2DARRAY:
+            value = _lib.nusd_matrix2d_array_t()
+            result = _lib.nusd_attribute_get_matrix2d_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return Matrix2dArray(value)
+        elif property_type == _lib.NUSD_TYPE_MATRIX3D:
+            value = (c_double * 9)()
+            result = _lib.nusd_attribute_get_matrix3d(self._stage, property_path, value)
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return np.array(value).reshape(3, 3)
+        elif property_type == _lib.NUSD_TYPE_MATRIX3DARRAY:
+            value = _lib.nusd_matrix3d_array_t()
+            result = _lib.nusd_attribute_get_matrix3d_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return Matrix3dArray(value)
+        elif property_type == _lib.NUSD_TYPE_MATRIX4D:
+            value = (c_double * 16)()
+            result = _lib.nusd_attribute_get_matrix4d(self._stage, property_path, value)
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return np.array(value).reshape(4, 4)
+        elif property_type == _lib.NUSD_TYPE_MATRIX4DARRAY:
+            value = _lib.nusd_matrix4d_array_t()
+            result = _lib.nusd_attribute_get_matrix4d_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return Matrix4dArray(value)
 
         else:
             raise GetPropertyError(
@@ -1213,6 +1300,99 @@ class Stage:
                 property_path,
                 value.ctypes.data_as(POINTER(c_bool)),
                 c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == MATRIX2D:
+            if not isinstance(value, np.ndarray) or value.shape != (2, 2) or value.dtype != np.float64:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}>: expected 2x2 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
+                )
+            flat_data = value.flatten()
+            result = _lib.nusd_attribute_set_matrix2d(
+                self._stage,
+                property_path,
+                flat_data.ctypes.data_as(POINTER(c_double))
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == MATRIX2DARRAY:
+            if not isinstance(value, np.ndarray) or len(value.shape) != 3 or value.shape[1:] != (2, 2) or value.dtype != np.float64:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}>: expected Nx2x2 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
+                )
+            flat_data = value.flatten()
+            result = _lib.nusd_attribute_set_matrix2d_array(
+                self._stage,
+                property_path,
+                flat_data.ctypes.data_as(POINTER(c_double)),
+                c_size_t(value.shape[0])
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == MATRIX3D:
+            if not isinstance(value, np.ndarray) or value.shape != (3, 3) or value.dtype != np.float64:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}>: expected 3x3 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
+                )
+            flat_data = value.flatten()
+            result = _lib.nusd_attribute_set_matrix3d(
+                self._stage,
+                property_path,
+                flat_data.ctypes.data_as(POINTER(c_double))
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == MATRIX3DARRAY:
+            if not isinstance(value, np.ndarray) or len(value.shape) != 3 or value.shape[1:] != (3, 3) or value.dtype != np.float64:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}>: expected Nx3x3 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
+                )
+            flat_data = value.flatten()
+            result = _lib.nusd_attribute_set_matrix3d_array(
+                self._stage,
+                property_path,
+                flat_data.ctypes.data_as(POINTER(c_double)),
+                c_size_t(value.shape[0])
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == MATRIX4D:
+            if not isinstance(value, np.ndarray) or value.shape != (4, 4) or value.dtype != np.float64:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}>: expected 4x4 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
+                )
+            flat_data = value.flatten()
+            result = _lib.nusd_attribute_set_matrix4d(
+                self._stage,
+                property_path,
+                flat_data.ctypes.data_as(POINTER(c_double))
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == MATRIX4DARRAY:
+            if not isinstance(value, np.ndarray) or len(value.shape) != 3 or value.shape[1:] != (4, 4) or value.dtype != np.float64:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}>: expected Nx4x4 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
+                )
+            flat_data = value.flatten()
+            result = _lib.nusd_attribute_set_matrix4d_array(
+                self._stage,
+                property_path,
+                flat_data.ctypes.data_as(POINTER(c_double)),
+                c_size_t(value.shape[0])
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(

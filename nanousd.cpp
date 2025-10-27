@@ -11,6 +11,9 @@
 #include <pxr/base/tf/refPtr.h>
 #include <pxr/base/vt/value.h>
 #include <pxr/base/vt/array.h>
+#include <pxr/base/gf/matrix2d.h>
+#include <pxr/base/gf/matrix3d.h>
+#include <pxr/base/gf/matrix4d.h>
 
 #include <unordered_map>
 #include <mutex>
@@ -104,6 +107,18 @@ struct nusd_int64_array_s {
 
 struct nusd_bool_array_s {
     PXR_NS::VtBoolArray value;
+};
+
+struct nusd_matrix2d_array_s {
+    PXR_NS::VtArray<PXR_NS::GfMatrix2d> value;
+};
+
+struct nusd_matrix3d_array_s {
+    PXR_NS::VtArray<PXR_NS::GfMatrix3d> value;
+};
+
+struct nusd_matrix4d_array_s {
+    PXR_NS::VtArray<PXR_NS::GfMatrix4d> value;
 };
 
 std::mutex MTX_TOKEN_INIT;
@@ -1425,6 +1440,266 @@ nusd_result_t nusd_attribute_set_bool_array(nusd_stage_t stage, char const* attr
     }
     VtArray<bool> vt_array(data, data + num_elements);
     attr.Set(vt_array);
+    return NUSD_RESULT_OK;
+}
+
+// matrix2d getters
+nusd_result_t nusd_attribute_get_matrix2d(nusd_stage_t stage, char const* attribute_path, double* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX2D) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    GfMatrix2d matrix;
+    attr.Get(&matrix);
+    
+    // Copy matrix data in row-major order
+    const double* data = matrix.GetArray();
+    for (int i = 0; i < 4; i++) {
+        value[i] = data[i];
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_get_matrix2d_array(nusd_stage_t stage, char const* attribute_path, nusd_matrix2d_array_t* matrix2d_array) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    
+    *matrix2d_array = new nusd_matrix2d_array_s();
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX2DARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    attr.Get(&((*matrix2d_array)->value));
+
+    return NUSD_RESULT_OK;
+}
+
+size_t nusd_matrix2d_array_size(nusd_matrix2d_array_t matrix2d_array) {
+    return matrix2d_array->value.size();
+}
+
+double* nusd_matrix2d_array_data(nusd_matrix2d_array_t matrix2d_array) {
+    return reinterpret_cast<double*>(matrix2d_array->value.data());
+}
+
+void nusd_matrix2d_array_destroy(nusd_matrix2d_array_t matrix2d_array) {
+    delete matrix2d_array;
+}
+
+// matrix3d getters
+nusd_result_t nusd_attribute_get_matrix3d(nusd_stage_t stage, char const* attribute_path, double* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX3D) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    GfMatrix3d matrix;
+    attr.Get(&matrix);
+    
+    // Copy matrix data in row-major order
+    const double* data = matrix.GetArray();
+    for (int i = 0; i < 9; i++) {
+        value[i] = data[i];
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_get_matrix3d_array(nusd_stage_t stage, char const* attribute_path, nusd_matrix3d_array_t* matrix3d_array) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    
+    *matrix3d_array = new nusd_matrix3d_array_s();
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX3DARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    attr.Get(&((*matrix3d_array)->value));
+
+    return NUSD_RESULT_OK;
+}
+
+size_t nusd_matrix3d_array_size(nusd_matrix3d_array_t matrix3d_array) {
+    return matrix3d_array->value.size();
+}
+
+double* nusd_matrix3d_array_data(nusd_matrix3d_array_t matrix3d_array) {
+    return reinterpret_cast<double*>(matrix3d_array->value.data());
+}
+
+void nusd_matrix3d_array_destroy(nusd_matrix3d_array_t matrix3d_array) {
+    delete matrix3d_array;
+}
+
+// matrix4d getters
+nusd_result_t nusd_attribute_get_matrix4d(nusd_stage_t stage, char const* attribute_path, double* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX4D) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    GfMatrix4d matrix;
+    attr.Get(&matrix);
+    
+    // Copy matrix data in row-major order
+    const double* data = matrix.GetArray();
+    for (int i = 0; i < 16; i++) {
+        value[i] = data[i];
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_get_matrix4d_array(nusd_stage_t stage, char const* attribute_path, nusd_matrix4d_array_t* matrix4d_array) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    
+    *matrix4d_array = new nusd_matrix4d_array_s();
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX4DARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    attr.Get(&((*matrix4d_array)->value));
+
+    return NUSD_RESULT_OK;
+}
+
+size_t nusd_matrix4d_array_size(nusd_matrix4d_array_t matrix4d_array) {
+    return matrix4d_array->value.size();
+}
+
+double* nusd_matrix4d_array_data(nusd_matrix4d_array_t matrix4d_array) {
+    return reinterpret_cast<double*>(matrix4d_array->value.data());
+}
+
+void nusd_matrix4d_array_destroy(nusd_matrix4d_array_t matrix4d_array) {
+    delete matrix4d_array;
+}
+
+// matrix2d setters
+nusd_result_t nusd_attribute_set_matrix2d(nusd_stage_t stage, char const* attribute_path, double* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX2D) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    GfMatrix2d matrix(value[0], value[1], value[2], value[3]);
+    attr.Set(matrix);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_matrix2d_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX2DARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    
+    GfMatrix2d* data = reinterpret_cast<GfMatrix2d*>(_data);
+    VtArray<GfMatrix2d> value(data, data + num_elements);
+    attr.Set(std::move(value));
+    return NUSD_RESULT_OK;
+}
+
+// matrix3d setters
+nusd_result_t nusd_attribute_set_matrix3d(nusd_stage_t stage, char const* attribute_path, double* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX3D) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    GfMatrix3d matrix(value[0], value[1], value[2], 
+                      value[3], value[4], value[5], 
+                      value[6], value[7], value[8]);
+    attr.Set(matrix);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_matrix3d_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX3DARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    
+    GfMatrix3d* data = reinterpret_cast<GfMatrix3d*>(_data);
+    VtArray<GfMatrix3d> value(data, data + num_elements);
+    attr.Set(std::move(value));
+    return NUSD_RESULT_OK;
+}
+
+// matrix4d setters
+nusd_result_t nusd_attribute_set_matrix4d(nusd_stage_t stage, char const* attribute_path, double* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX4D) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    GfMatrix4d matrix(value[0], value[1], value[2], value[3],
+                      value[4], value[5], value[6], value[7],
+                      value[8], value[9], value[10], value[11],
+                      value[12], value[13], value[14], value[15]);
+    attr.Set(matrix);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_matrix4d_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX4DARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    
+    GfMatrix4d* data = reinterpret_cast<GfMatrix4d*>(_data);
+    VtArray<GfMatrix4d> value(data, data + num_elements);
+    attr.Set(std::move(value));
     return NUSD_RESULT_OK;
 }
 
