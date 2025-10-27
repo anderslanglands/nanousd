@@ -387,6 +387,30 @@ double* nusd_double4_array_data(nusd_double4_array_t double4_array);
 NANOUSD_API
 void nusd_double4_array_destroy(nusd_double4_array_t double4_array);
 
+// double setters
+NANOUSD_API
+nusd_result_t nusd_attribute_set_double(nusd_stage_t stage, char const* attribute_path, double value);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_double_array(nusd_stage_t stage, char const* attribute_path, double* data, size_t num_elements);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_double2(nusd_stage_t stage, char const* attribute_path, double* value);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_double2_array(nusd_stage_t stage, char const* attribute_path, double* data, size_t num_elements);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_double3(nusd_stage_t stage, char const* attribute_path, double* value);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_double3_array(nusd_stage_t stage, char const* attribute_path, double* data, size_t num_elements);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_double4(nusd_stage_t stage, char const* attribute_path, double* value);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_double4_array(nusd_stage_t stage, char const* attribute_path, double* data, size_t num_elements);
 
 // int
 NANOUSD_API

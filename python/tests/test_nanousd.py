@@ -26,6 +26,17 @@ def test_prim_create_property_float():
     stage.define_prim("/World", "Xform")
     stage.prim_create_property("/World", "testFloat", nusd.FLOAT, 17.0)
 
+def test_set_property_float_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testFloatArray", nusd.FLOATARRAY)
+    # Set via Python API, get via Python API
+    test_data = np.array([1, 2, 3, 4, 5], dtype=np.float32)
+    stage.set_property("/World.testFloatArray", nusd.FLOATARRAY, test_data)
+    
+    value = stage.get_property("/World.testFloatArray")
+    assert isinstance(value, nusd.FloatArray)
+    assert np.array_equal(value, np.array(test_data))
 
 def test_prim_create_property_float2():
     stage = nusd.Stage.create_in_memory("test")
@@ -38,6 +49,18 @@ def test_set_property_float2():
     stage.prim_create_property("/World", "testFloat2", nusd.TEXCOORD2F)
     stage.set_property("/World.testFloat2", nusd.TEXCOORD2F, (1.0, 2.0))
     stage.set_property("/World.testFloat2", nusd.TEXCOORD2F, [3, 4])
+
+def test_set_property_float2_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testFloat2Array", nusd.FLOAT2ARRAY)
+    # Set via Python API, get via Python API
+    test_data = np.array([[1, 2], [3, 4], [5, 6]])
+    stage.set_property("/World.testFloat2Array", nusd.FLOAT2ARRAY, test_data)
+    
+    value = stage.get_property("/World.testFloat2Array")
+    assert isinstance(value, nusd.Float2Array)
+    assert np.array_equal(value, np.array(test_data))
 
 def test_set_property_float3():
     stage = nusd.Stage.create_in_memory("test")
@@ -64,11 +87,8 @@ def test_set_property_int_array():
     stage.define_prim("/World", "Xform")
     stage.prim_create_property("/World", "testIntArray", nusd.INTARRAY)
     # Set via Python API, get via Python API
-    test_data = [1, 2, 3, 4, 5]
-    from ctypes import c_int
-    c_data = (c_int * len(test_data))(*test_data)
-    result = nusd._lib.nusd_attribute_set_int_array(stage._stage, b"/World.testIntArray", c_data, len(test_data))
-    assert result == nusd._lib.NUSD_RESULT_OK
+    test_data = np.array([1, 2, 3, 4, 5], dtype=np.int32)
+    stage.set_property("/World.testIntArray", nusd.INTARRAY, test_data)
     
     value = stage.get_property("/World.testIntArray")
     assert isinstance(value, nusd.IntArray)
@@ -87,16 +107,12 @@ def test_set_property_int2_array():
     stage.define_prim("/World", "Xform")
     stage.prim_create_property("/World", "testInt2Array", nusd.INT2ARRAY)
     # Set via Python API, get via Python API
-    test_data = [1, 2, 3, 4, 5, 6]  # 3 int2 values
-    from ctypes import c_int
-    c_data = (c_int * len(test_data))(*test_data)
-    result = nusd._lib.nusd_attribute_set_int2_array(stage._stage, b"/World.testInt2Array", c_data, 3)
-    assert result == nusd._lib.NUSD_RESULT_OK
+    test_data = np.array([[1, 2], [3, 4], [5, 6]], dtype=np.int32)
+    stage.set_property("/World.testInt2Array", nusd.INT2ARRAY, test_data)
     
     value = stage.get_property("/World.testInt2Array")
     assert isinstance(value, nusd.Int2Array)
-    expected = np.array([[1, 2], [3, 4], [5, 6]])
-    assert np.array_equal(value, expected)
+    assert np.array_equal(value, test_data)
 
 def test_set_property_int3():
     stage = nusd.Stage.create_in_memory("test")
@@ -111,16 +127,12 @@ def test_set_property_int3_array():
     stage.define_prim("/World", "Xform")
     stage.prim_create_property("/World", "testInt3Array", nusd.INT3ARRAY)
     # Set via Python API, get via Python API
-    test_data = [1, 2, 3, 4, 5, 6, 7, 8, 9]  # 3 int3 values
-    from ctypes import c_int
-    c_data = (c_int * len(test_data))(*test_data)
-    result = nusd._lib.nusd_attribute_set_int3_array(stage._stage, b"/World.testInt3Array", c_data, 3)
-    assert result == nusd._lib.NUSD_RESULT_OK
+    test_data = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=np.int32)
+    stage.set_property("/World.testInt3Array", nusd.INT3ARRAY, test_data)
     
     value = stage.get_property("/World.testInt3Array")
     assert isinstance(value, nusd.Int3Array)
-    expected = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-    assert np.array_equal(value, expected)
+    assert np.array_equal(value, test_data)
 
 def test_set_property_int4():
     stage = nusd.Stage.create_in_memory("test")
@@ -135,16 +147,12 @@ def test_set_property_int4_array():
     stage.define_prim("/World", "Xform")
     stage.prim_create_property("/World", "testInt4Array", nusd.INT4ARRAY)
     # Set via Python API, get via Python API
-    test_data = [1, 2, 3, 4, 5, 6, 7, 8]  # 2 int4 values
-    from ctypes import c_int
-    c_data = (c_int * len(test_data))(*test_data)
-    result = nusd._lib.nusd_attribute_set_int4_array(stage._stage, b"/World.testInt4Array", c_data, 2)
-    assert result == nusd._lib.NUSD_RESULT_OK
+    test_data = np.array([[1, 2, 3, 4], [5, 6, 7, 8]], dtype=np.int32)
+    stage.set_property("/World.testInt4Array", nusd.INT4ARRAY, test_data)
     
     value = stage.get_property("/World.testInt4Array")
     assert isinstance(value, nusd.Int4Array)
-    expected = np.array([[1, 2, 3, 4], [5, 6, 7, 8]])
-    assert np.array_equal(value, expected)
+    assert np.array_equal(value, test_data)
 
 def test_prim_create_property_int64():
     stage = nusd.Stage.create_in_memory("test")
@@ -159,17 +167,86 @@ def test_set_property_int64():
     value = stage.get_property("/World.testInt64")
     assert value == 9223372036854775807
 
+def test_set_property_float3_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testFloat3Array", nusd.FLOAT3ARRAY)
+    # Set via Python API, get via Python API
+    test_data = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]], dtype=np.float32)
+    stage.set_property("/World.testFloat3Array", nusd.FLOAT3ARRAY, test_data)
+    
+    value = stage.get_property("/World.testFloat3Array")
+    assert isinstance(value, nusd.Float3Array)
+    assert np.array_equal(value, test_data)
+
+def test_set_property_float4_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testFloat4Array", nusd.FLOAT4ARRAY)
+    # Set via Python API, get via Python API
+    test_data = np.array([[1.0, 2.0, 3.0, 4.0], [5.0, 6.0, 7.0, 8.0]], dtype=np.float32)
+    stage.set_property("/World.testFloat4Array", nusd.FLOAT4ARRAY, test_data)
+    
+    value = stage.get_property("/World.testFloat4Array")
+    assert isinstance(value, nusd.Float4Array)
+    assert np.array_equal(value, test_data)
+
+def test_set_property_double_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testDoubleArray", nusd.DOUBLEARRAY)
+    # Set via Python API, get via Python API
+    test_data = np.array([1.0, 2.0, 3.0, 4.0, 5.0], dtype=np.float64)
+    stage.set_property("/World.testDoubleArray", nusd.DOUBLEARRAY, test_data)
+    
+    value = stage.get_property("/World.testDoubleArray")
+    assert isinstance(value, nusd.DoubleArray)
+    assert np.array_equal(value, test_data)
+
+def test_set_property_double2_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testDouble2Array", nusd.DOUBLE2ARRAY)
+    # Set via Python API, get via Python API
+    test_data = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]], dtype=np.float64)
+    stage.set_property("/World.testDouble2Array", nusd.DOUBLE2ARRAY, test_data)
+    
+    value = stage.get_property("/World.testDouble2Array")
+    assert isinstance(value, nusd.Double2Array)
+    assert np.array_equal(value, test_data)
+
+def test_set_property_double3_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testDouble3Array", nusd.DOUBLE3ARRAY)
+    # Set via Python API, get via Python API
+    test_data = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]], dtype=np.float64)
+    stage.set_property("/World.testDouble3Array", nusd.DOUBLE3ARRAY, test_data)
+    
+    value = stage.get_property("/World.testDouble3Array")
+    assert isinstance(value, nusd.Double3Array)
+    assert np.array_equal(value, test_data)
+
+def test_set_property_double4_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testDouble4Array", nusd.DOUBLE4ARRAY)
+    # Set via Python API, get via Python API
+    test_data = np.array([[1.0, 2.0, 3.0, 4.0], [5.0, 6.0, 7.0, 8.0]], dtype=np.float64)
+    stage.set_property("/World.testDouble4Array", nusd.DOUBLE4ARRAY, test_data)
+    
+    value = stage.get_property("/World.testDouble4Array")
+    assert isinstance(value, nusd.Double4Array)
+    assert np.array_equal(value, test_data)
+
 def test_set_property_int64_array():
     stage = nusd.Stage.create_in_memory("test")
     stage.define_prim("/World", "Xform")
     stage.prim_create_property("/World", "testInt64Array", nusd.INT64ARRAY)
-    # Set via C API, get via Python API
-    test_data = [1000000000000, 2000000000000, 3000000000000, 4000000000000, 5000000000000]
-    from ctypes import c_longlong
-    c_data = (c_longlong * len(test_data))(*test_data)
-    result = nusd._lib.nusd_attribute_set_int64_array(stage._stage, b"/World.testInt64Array", c_data, len(test_data))
-    assert result == nusd._lib.NUSD_RESULT_OK
+    # Set via Python API, get via Python API
+    test_data = np.array([1000000000000, 2000000000000, 3000000000000, 4000000000000, 5000000000000], dtype=np.int64)
+    stage.set_property("/World.testInt64Array", nusd.INT64ARRAY, test_data)
     
     value = stage.get_property("/World.testInt64Array")
     assert isinstance(value, nusd.Int64Array)
-    assert np.array_equal(value, np.array(test_data))
+    assert np.array_equal(value, test_data)

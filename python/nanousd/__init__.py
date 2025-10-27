@@ -4,7 +4,18 @@ import numpy as np
 from numpy.lib.mixins import NDArrayOperatorsMixin
 
 import ctypes
-from ctypes import c_void_p, c_bool, c_int, c_char_p, POINTER, byref, c_float, c_double, c_longlong
+from ctypes import (
+    c_void_p,
+    c_bool,
+    c_int,
+    c_char_p,
+    POINTER,
+    byref,
+    c_float,
+    c_double,
+    c_longlong,
+    c_size_t,
+)
 
 ASSET = _lib.NUSD_TYPE_ASSET
 ASSETARRAY = _lib.NUSD_TYPE_ASSETARRAY
@@ -750,6 +761,21 @@ class Stage:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
                 )
+        elif property_type == FLOATARRAY:
+            if not isinstance(value, np.ndarray) and not value.dtype == np.float32:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_float_array(
+                self._stage,
+                property_path,
+                value.ctypes.data_as(POINTER(c_float)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
         elif property_type == DOUBLE:
             if not isinstance(value, float):
                 raise SetPropertyError(
@@ -783,6 +809,54 @@ class Stage:
 
             c_value = (c_float * 2)(value[0], value[1])
             result = _lib.nusd_attribute_set_float2(self._stage, property_path, c_value)
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type in [FLOAT2ARRAY, TEXCOORD2FARRAY]:
+            if not isinstance(value, np.ndarray) or not value.dtype == np.float32 or value.ndim != 2 or value.shape[1] != 2:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            value_flat = np.ascontiguousarray(value, dtype=np.float32)
+            result = _lib.nusd_attribute_set_float2_array(
+                self._stage,
+                property_path,
+                value_flat.ctypes.data_as(POINTER(c_float)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type in [FLOAT3ARRAY, TEXCOORD3FARRAY, COLOR3FARRAY, POINT3FARRAY, VECTOR3FARRAY, NORMAL3FARRAY]:
+            if not isinstance(value, np.ndarray) or value.dtype != np.float32 or value.ndim != 2 or value.shape[1] != 3:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            value_flat = np.ascontiguousarray(value.flatten(), dtype=np.float32)
+            result = _lib.nusd_attribute_set_float3_array(
+                self._stage,
+                property_path,
+                value_flat.ctypes.data_as(POINTER(c_float)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type in [FLOAT4ARRAY, COLOR4FARRAY]:
+            if not isinstance(value, np.ndarray) or value.dtype != np.float32 or value.ndim != 2 or value.shape[1] != 4:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            value_flat = np.ascontiguousarray(value.flatten(), dtype=np.float32)
+            result = _lib.nusd_attribute_set_float4_array(
+                self._stage,
+                property_path,
+                value_flat.ctypes.data_as(POINTER(c_float)),
+                c_size_t(value.shape[0]),
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -925,7 +999,9 @@ class Stage:
                         f"incompatible types for property <{property_path}>: requested {property_type} but value has length {len(value)} instead of 4"
                     )
 
-            c_value = (c_int * 4)(int(value[0]), int(value[1]), int(value[2]), int(value[3]))
+            c_value = (c_int * 4)(
+                int(value[0]), int(value[1]), int(value[2]), int(value[3])
+            )
             result = _lib.nusd_attribute_set_int4(self._stage, property_path, c_value)
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -938,6 +1014,147 @@ class Stage:
                 )
             result = _lib.nusd_attribute_set_int64(
                 self._stage, property_path, c_longlong(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == INTARRAY:
+            if not isinstance(value, np.ndarray) or value.dtype != np.int32:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_int_array(
+                self._stage,
+                property_path,
+                value.ctypes.data_as(POINTER(c_int)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == INT2ARRAY:
+            if not isinstance(value, np.ndarray) or value.dtype != np.int32 or value.ndim != 2 or value.shape[1] != 2:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            value_flat = np.ascontiguousarray(value.flatten(), dtype=np.int32)
+            result = _lib.nusd_attribute_set_int2_array(
+                self._stage,
+                property_path,
+                value_flat.ctypes.data_as(POINTER(c_int)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == INT3ARRAY:
+            if not isinstance(value, np.ndarray) or value.dtype != np.int32 or value.ndim != 2 or value.shape[1] != 3:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            value_flat = np.ascontiguousarray(value.flatten(), dtype=np.int32)
+            result = _lib.nusd_attribute_set_int3_array(
+                self._stage,
+                property_path,
+                value_flat.ctypes.data_as(POINTER(c_int)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == INT4ARRAY:
+            if not isinstance(value, np.ndarray) or value.dtype != np.int32 or value.ndim != 2 or value.shape[1] != 4:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            value_flat = np.ascontiguousarray(value.flatten(), dtype=np.int32)
+            result = _lib.nusd_attribute_set_int4_array(
+                self._stage,
+                property_path,
+                value_flat.ctypes.data_as(POINTER(c_int)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == INT64ARRAY:
+            if not isinstance(value, np.ndarray) or value.dtype != np.int64:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_int64_array(
+                self._stage,
+                property_path,
+                value.ctypes.data_as(POINTER(c_longlong)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == DOUBLEARRAY:
+            if not isinstance(value, np.ndarray) or value.dtype != np.float64:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_double_array(
+                self._stage,
+                property_path,
+                value.ctypes.data_as(POINTER(c_double)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == DOUBLE2ARRAY:
+            if not isinstance(value, np.ndarray) or value.dtype != np.float64 or value.ndim != 2 or value.shape[1] != 2:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            value_flat = np.ascontiguousarray(value.flatten(), dtype=np.float64)
+            result = _lib.nusd_attribute_set_double2_array(
+                self._stage,
+                property_path,
+                value_flat.ctypes.data_as(POINTER(c_double)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == DOUBLE3ARRAY:
+            if not isinstance(value, np.ndarray) or value.dtype != np.float64 or value.ndim != 2 or value.shape[1] != 3:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            value_flat = np.ascontiguousarray(value.flatten(), dtype=np.float64)
+            result = _lib.nusd_attribute_set_double3_array(
+                self._stage,
+                property_path,
+                value_flat.ctypes.data_as(POINTER(c_double)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == DOUBLE4ARRAY:
+            if not isinstance(value, np.ndarray) or value.dtype != np.float64 or value.ndim != 2 or value.shape[1] != 4:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            value_flat = np.ascontiguousarray(value.flatten(), dtype=np.float64)
+            result = _lib.nusd_attribute_set_double4_array(
+                self._stage,
+                property_path,
+                value_flat.ctypes.data_as(POINTER(c_double)),
+                c_size_t(value.shape[0]),
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
