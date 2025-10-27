@@ -56,6 +56,10 @@ typedef struct nusd_matrix2d_array_s* nusd_matrix2d_array_t;
 typedef struct nusd_matrix3d_array_s* nusd_matrix3d_array_t;
 typedef struct nusd_matrix4d_array_s* nusd_matrix4d_array_t;
 
+typedef struct nusd_uint_array_s* nusd_uint_array_t;
+typedef struct nusd_uint64_array_s* nusd_uint64_array_t;
+typedef struct nusd_uchar_array_s* nusd_uchar_array_t;
+
 typedef char const* nusd_type_t;
 
 extern nusd_type_t NUSD_TYPE_ASSET;
@@ -2161,6 +2165,300 @@ nusd_result_t nusd_attribute_set_matrix4d(nusd_stage_t stage, char const* attrib
 /// @note num_elements must be greater than 0.
 NANOUSD_API
 nusd_result_t nusd_attribute_set_matrix4d_array(nusd_stage_t stage, char const* attribute_path, double* data, size_t num_elements);
+
+// uint getters
+/// Gets the value of the given attribute as an unsigned int, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Pointer to store the unsigned int value.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uint type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_uint(nusd_stage_t stage, char const* attribute_path, unsigned int* value);
+
+/// Gets the value of the given attribute as a uint array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param uint_array Pointer to store the uint array handle.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uint array type
+/// 
+/// @note The returned uint array must be released with nusd_uint_array_destroy() when no longer needed.
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note uint_array must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_uint_array(nusd_stage_t stage, char const* attribute_path, nusd_uint_array_t* uint_array);
+
+/// Returns the number of elements in a uint array.
+/// 
+/// @param uint_array Valid uint array handle.
+/// 
+/// @return Number of elements in the array.
+/// 
+/// @note uint_array must not be null.
+NANOUSD_API
+size_t nusd_uint_array_size(nusd_uint_array_t uint_array);
+
+/// Returns a pointer to the uint data in a uint array.
+/// 
+/// @param uint_array Valid uint array handle.
+/// 
+/// @return Pointer to the uint data.
+/// 
+/// @note uint_array must not be null.
+/// @note The returned pointer is valid until the array is destroyed.
+NANOUSD_API
+unsigned int* nusd_uint_array_data(nusd_uint_array_t uint_array);
+
+/// Destroys a uint array and releases associated resources.
+/// 
+/// @param uint_array Valid uint array handle to destroy. Can be null (no-op).
+/// 
+/// @note After calling this function, the array handle becomes invalid and must not be used.
+/// @note It is safe to call this function with a null array handle.
+NANOUSD_API
+void nusd_uint_array_destroy(nusd_uint_array_t uint_array);
+
+// uint64 getters
+/// Gets the value of the given attribute as an unsigned 64-bit int, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Pointer to store the uint64 value.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uint64 type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_uint64(nusd_stage_t stage, char const* attribute_path, uint64_t* value);
+
+/// Gets the value of the given attribute as a uint64 array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param uint64_array Pointer to store the uint64 array handle.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uint64 array type
+/// 
+/// @note The returned uint64 array must be released with nusd_uint64_array_destroy() when no longer needed.
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note uint64_array must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_uint64_array(nusd_stage_t stage, char const* attribute_path, nusd_uint64_array_t* uint64_array);
+
+/// Returns the number of elements in a uint64 array.
+/// 
+/// @param uint64_array Valid uint64 array handle.
+/// 
+/// @return Number of elements in the array.
+/// 
+/// @note uint64_array must not be null.
+NANOUSD_API
+size_t nusd_uint64_array_size(nusd_uint64_array_t uint64_array);
+
+/// Returns a pointer to the uint64 data in a uint64 array.
+/// 
+/// @param uint64_array Valid uint64 array handle.
+/// 
+/// @return Pointer to the uint64 data.
+/// 
+/// @note uint64_array must not be null.
+/// @note The returned pointer is valid until the array is destroyed.
+NANOUSD_API
+uint64_t* nusd_uint64_array_data(nusd_uint64_array_t uint64_array);
+
+/// Destroys a uint64 array and releases associated resources.
+/// 
+/// @param uint64_array Valid uint64 array handle to destroy. Can be null (no-op).
+/// 
+/// @note After calling this function, the array handle becomes invalid and must not be used.
+/// @note It is safe to call this function with a null array handle.
+NANOUSD_API
+void nusd_uint64_array_destroy(nusd_uint64_array_t uint64_array);
+
+// uchar getters
+/// Gets the value of the given attribute as an unsigned char, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Pointer to store the uchar value.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uchar type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_uchar(nusd_stage_t stage, char const* attribute_path, unsigned char* value);
+
+/// Gets the value of the given attribute as a uchar array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param uchar_array Pointer to store the uchar array handle.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uchar array type
+/// 
+/// @note The returned uchar array must be released with nusd_uchar_array_destroy() when no longer needed.
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note uchar_array must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_uchar_array(nusd_stage_t stage, char const* attribute_path, nusd_uchar_array_t* uchar_array);
+
+/// Returns the number of elements in a uchar array.
+/// 
+/// @param uchar_array Valid uchar array handle.
+/// 
+/// @return Number of elements in the array.
+/// 
+/// @note uchar_array must not be null.
+NANOUSD_API
+size_t nusd_uchar_array_size(nusd_uchar_array_t uchar_array);
+
+/// Returns a pointer to the uchar data in a uchar array.
+/// 
+/// @param uchar_array Valid uchar array handle.
+/// 
+/// @return Pointer to the uchar data.
+/// 
+/// @note uchar_array must not be null.
+/// @note The returned pointer is valid until the array is destroyed.
+NANOUSD_API
+unsigned char* nusd_uchar_array_data(nusd_uchar_array_t uchar_array);
+
+/// Destroys a uchar array and releases associated resources.
+/// 
+/// @param uchar_array Valid uchar array handle to destroy. Can be null (no-op).
+/// 
+/// @note After calling this function, the array handle becomes invalid and must not be used.
+/// @note It is safe to call this function with a null array handle.
+NANOUSD_API
+void nusd_uchar_array_destroy(nusd_uchar_array_t uchar_array);
+
+// uint setters
+/// Sets the value of the given attribute to an unsigned int, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Unsigned int value to set.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uint type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_uint(nusd_stage_t stage, char const* attribute_path, unsigned int value);
+
+/// Sets the value of the given attribute to a uint array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param data Pointer to the uint data to set.
+/// @param num_elements Number of uint elements in the data array.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uint array type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note data must not be null.
+/// @note num_elements must be greater than 0.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_uint_array(nusd_stage_t stage, char const* attribute_path, unsigned int* data, size_t num_elements);
+
+// uint64 setters
+/// Sets the value of the given attribute to an unsigned 64-bit int, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Uint64 value to set.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uint64 type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_uint64(nusd_stage_t stage, char const* attribute_path, uint64_t value);
+
+/// Sets the value of the given attribute to a uint64 array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param data Pointer to the uint64 data to set.
+/// @param num_elements Number of uint64 elements in the data array.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uint64 array type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note data must not be null.
+/// @note num_elements must be greater than 0.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_uint64_array(nusd_stage_t stage, char const* attribute_path, uint64_t* data, size_t num_elements);
+
+// uchar setters
+/// Sets the value of the given attribute to an unsigned char, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Unsigned char value to set.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uchar type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_uchar(nusd_stage_t stage, char const* attribute_path, unsigned char value);
+
+/// Sets the value of the given attribute to a uchar array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param data Pointer to the uchar data to set.
+/// @param num_elements Number of uchar elements in the data array.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of uchar array type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note data must not be null.
+/// @note num_elements must be greater than 0.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_uchar_array(nusd_stage_t stage, char const* attribute_path, unsigned char* data, size_t num_elements);
 
 
 // token

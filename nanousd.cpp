@@ -99,6 +99,15 @@ struct nusd_int3_array_s {
 struct nusd_int4_array_s {
     PXR_NS::VtVec4iArray value;
 };
+struct nusd_uint_array_s {
+    PXR_NS::VtUIntArray value;
+};
+struct nusd_uint64_array_s {
+    PXR_NS::VtUInt64Array value;
+};
+struct nusd_uchar_array_s {
+    PXR_NS::VtUCharArray value;
+};
 
 struct nusd_int64_array_s {
     int64_t* data;
@@ -2169,6 +2178,127 @@ void nusd_int64_array_destroy(nusd_int64_array_t int64_array) {
     delete int64_array;
 }
 
+// Unsigned integer getters
+nusd_result_t nusd_attribute_get_uint(nusd_stage_t stage, char const* attribute_path, unsigned int* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Get(value);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_get_uint_array(nusd_stage_t stage, char const* attribute_path, nusd_uint_array_t* uint_array) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    
+    *uint_array = new nusd_uint_array_s();
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINTARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Get(&(*uint_array)->value);
+    return NUSD_RESULT_OK;
+}
+
+size_t nusd_uint_array_size(nusd_uint_array_t uint_array) {
+    return uint_array->value.size();
+}
+
+unsigned int* nusd_uint_array_data(nusd_uint_array_t uint_array) {
+    return uint_array->value.data();
+}
+
+void nusd_uint_array_destroy(nusd_uint_array_t uint_array) {
+    delete uint_array;
+}
+
+nusd_result_t nusd_attribute_get_uint64(nusd_stage_t stage, char const* attribute_path, uint64_t* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT64) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Get(value);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_get_uint64_array(nusd_stage_t stage, char const* attribute_path, nusd_uint64_array_t* uint64_array) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    
+    *uint64_array = new nusd_uint64_array_s();
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT64ARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Get(&(*uint64_array)->value);
+    return NUSD_RESULT_OK;
+}
+
+size_t nusd_uint64_array_size(nusd_uint64_array_t uint64_array) {
+    return uint64_array->value.size();
+}
+
+uint64_t* nusd_uint64_array_data(nusd_uint64_array_t uint64_array) {
+    return uint64_array->value.data();
+}
+
+void nusd_uint64_array_destroy(nusd_uint64_array_t uint64_array) {
+    delete uint64_array;
+}
+
+nusd_result_t nusd_attribute_get_uchar(nusd_stage_t stage, char const* attribute_path, unsigned char* value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UCHAR) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Get(value);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_get_uchar_array(nusd_stage_t stage, char const* attribute_path, nusd_uchar_array_t* uchar_array) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    
+    *uchar_array = new nusd_uchar_array_s();
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UCHARARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Get(&(*uchar_array)->value);
+    return NUSD_RESULT_OK;
+}
+
+size_t nusd_uchar_array_size(nusd_uchar_array_t uchar_array) {
+    return uchar_array->value.size();
+}
+
+unsigned char* nusd_uchar_array_data(nusd_uchar_array_t uchar_array) {
+    return uchar_array->value.data();
+}
+
+void nusd_uchar_array_destroy(nusd_uchar_array_t uchar_array) {
+    delete uchar_array;
+}
+
 // Int64 setters
 nusd_result_t nusd_attribute_set_int64(nusd_stage_t stage, char const* attribute_path, int64_t value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -2199,6 +2329,88 @@ nusd_result_t nusd_attribute_set_int64_array(nusd_stage_t stage, char const* att
     }
 
     VtArray<int64_t> vt_array(data, data + num_elements);
+    attr.Set(vt_array);
+    return NUSD_RESULT_OK;
+}
+
+// Unsigned integer setters
+nusd_result_t nusd_attribute_set_uint(nusd_stage_t stage, char const* attribute_path, unsigned int value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Set(value);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_uint_array(nusd_stage_t stage, char const* attribute_path, unsigned int* data, size_t num_elements) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINTARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    VtArray<unsigned int> vt_array(data, data + num_elements);
+    attr.Set(vt_array);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_uint64(nusd_stage_t stage, char const* attribute_path, uint64_t value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT64) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Set(value);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_uint64_array(nusd_stage_t stage, char const* attribute_path, uint64_t* data, size_t num_elements) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT64ARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    VtArray<uint64_t> vt_array(data, data + num_elements);
+    attr.Set(vt_array);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_uchar(nusd_stage_t stage, char const* attribute_path, unsigned char value) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UCHAR) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Set(value);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_uchar_array(nusd_stage_t stage, char const* attribute_path, unsigned char* data, size_t num_elements) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UCHARARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    VtArray<unsigned char> vt_array(data, data + num_elements);
     attr.Set(vt_array);
     return NUSD_RESULT_OK;
 }

@@ -415,6 +415,39 @@ class Matrix4dArray(ArrayBase):
         _lib.nusd_matrix4d_array_destroy(self._array)
 
 
+class UintArray(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_uint_array_size(array)
+        data = _lib.nusd_uint_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size,))
+
+    def __del__(self):
+        _lib.nusd_uint_array_destroy(self._array)
+
+
+class Uint64Array(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_uint64_array_size(array)
+        data = _lib.nusd_uint64_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size,))
+
+    def __del__(self):
+        _lib.nusd_uint64_array_destroy(self._array)
+
+
+class UcharArray(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_uchar_array_size(array)
+        data = _lib.nusd_uchar_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size,))
+
+    def __del__(self):
+        _lib.nusd_uchar_array_destroy(self._array)
+
+
 class StageOpenError(RuntimeError):
     pass
 
@@ -853,6 +886,69 @@ class Stage:
                     f'failed to get value for "{property_path}": {result}'
                 )
             return Matrix4dArray(value)
+        elif property_type == _lib.NUSD_TYPE_UINT:
+            from ctypes import c_uint
+            value = c_uint(0)
+            result = _lib.nusd_attribute_get_uint(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return value.value
+        elif property_type == _lib.NUSD_TYPE_UINTARRAY:
+            value = _lib.nusd_uint_array_t()
+            result = _lib.nusd_attribute_get_uint_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return UintArray(value)
+        elif property_type == _lib.NUSD_TYPE_UINT64:
+            from ctypes import c_ulonglong
+            value = c_ulonglong(0)
+            result = _lib.nusd_attribute_get_uint64(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return value.value
+        elif property_type == _lib.NUSD_TYPE_UINT64ARRAY:
+            value = _lib.nusd_uint64_array_t()
+            result = _lib.nusd_attribute_get_uint64_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return Uint64Array(value)
+        elif property_type == _lib.NUSD_TYPE_UCHAR:
+            from ctypes import c_ubyte
+            value = c_ubyte(0)
+            result = _lib.nusd_attribute_get_uchar(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return value.value
+        elif property_type == _lib.NUSD_TYPE_UCHARARRAY:
+            value = _lib.nusd_uchar_array_t()
+            result = _lib.nusd_attribute_get_uchar_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return UcharArray(value)
 
         else:
             raise GetPropertyError(
@@ -1393,6 +1489,93 @@ class Stage:
                 property_path,
                 flat_data.ctypes.data_as(POINTER(c_double)),
                 c_size_t(value.shape[0])
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == UINT:
+            from ctypes import c_uint
+            if not isinstance(value, int):
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_uint(
+                self._stage, property_path, c_uint(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == UINTARRAY:
+            from ctypes import c_uint
+            if not isinstance(value, np.ndarray) or value.dtype != np.uint32:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_uint_array(
+                self._stage,
+                property_path,
+                value.ctypes.data_as(POINTER(c_uint)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == UINT64:
+            from ctypes import c_ulonglong
+            if not isinstance(value, int):
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_uint64(
+                self._stage, property_path, c_ulonglong(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == UINT64ARRAY:
+            from ctypes import c_ulonglong
+            if not isinstance(value, np.ndarray) or value.dtype != np.uint64:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_uint64_array(
+                self._stage,
+                property_path,
+                value.ctypes.data_as(POINTER(c_ulonglong)),
+                c_size_t(value.shape[0]),
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == UCHAR:
+            from ctypes import c_ubyte
+            if not isinstance(value, int):
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_uchar(
+                self._stage, property_path, c_ubyte(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == UCHARARRAY:
+            from ctypes import c_ubyte
+            if not isinstance(value, np.ndarray) or value.dtype != np.uint8:
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_uchar_array(
+                self._stage,
+                property_path,
+                value.ctypes.data_as(POINTER(c_ubyte)),
+                c_size_t(value.shape[0]),
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(

@@ -753,3 +753,123 @@ TEST(nusd, set_matrix4d_array_attribute) {
 
     nusd_matrix4d_array_destroy(matrix4d_array);
 }
+
+TEST(nusd, set_uint_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UINT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    result = nusd_attribute_set_uint(stage, "/World.testattr", 42U);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    unsigned int value = 0;
+    result = nusd_attribute_get_uint(stage, "/World.testattr", &value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(value, 42U);
+}
+
+TEST(nusd, set_uint_array_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UINTARRAY);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    unsigned int test_data[] = {1U, 2U, 3U, 4U, 5U};
+    result = nusd_attribute_set_uint_array(stage, "/World.testattr", test_data, 5);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    nusd_uint_array_t uint_array;
+    result = nusd_attribute_get_uint_array(stage, "/World.testattr", &uint_array);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    size_t size = nusd_uint_array_size(uint_array);
+    EXPECT_EQ(size, 5);
+    
+    unsigned int* data = nusd_uint_array_data(uint_array);
+    for (size_t i = 0; i < size; i++) {
+        EXPECT_EQ(data[i], test_data[i]);
+    }
+    
+    nusd_uint_array_destroy(uint_array);
+}
+
+TEST(nusd, set_uint64_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UINT64);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    result = nusd_attribute_set_uint64(stage, "/World.testattr", 18446744073709551615ULL);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    uint64_t value = 0;
+    result = nusd_attribute_get_uint64(stage, "/World.testattr", &value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(value, 18446744073709551615ULL);
+}
+
+TEST(nusd, set_uint64_array_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UINT64ARRAY);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    uint64_t test_data[] = {1000000000000ULL, 2000000000000ULL, 3000000000000ULL, 4000000000000ULL, 5000000000000ULL};
+    result = nusd_attribute_set_uint64_array(stage, "/World.testattr", test_data, 5);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    nusd_uint64_array_t uint64_array;
+    result = nusd_attribute_get_uint64_array(stage, "/World.testattr", &uint64_array);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    size_t size = nusd_uint64_array_size(uint64_array);
+    EXPECT_EQ(size, 5);
+    
+    uint64_t* data = nusd_uint64_array_data(uint64_array);
+    for (size_t i = 0; i < size; i++) {
+        EXPECT_EQ(data[i], test_data[i]);
+    }
+    
+    nusd_uint64_array_destroy(uint64_array);
+}
+
+TEST(nusd, set_uchar_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UCHAR);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    result = nusd_attribute_set_uchar(stage, "/World.testattr", 255);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    unsigned char value = 0;
+    result = nusd_attribute_get_uchar(stage, "/World.testattr", &value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(value, 255);
+}
+
+TEST(nusd, set_uchar_array_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UCHARARRAY);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    unsigned char test_data[] = {100, 150, 200, 255, 50};
+    result = nusd_attribute_set_uchar_array(stage, "/World.testattr", test_data, 5);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    nusd_uchar_array_t uchar_array;
+    result = nusd_attribute_get_uchar_array(stage, "/World.testattr", &uchar_array);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    size_t size = nusd_uchar_array_size(uchar_array);
+    EXPECT_EQ(size, 5);
+    
+    unsigned char* data = nusd_uchar_array_data(uchar_array);
+    for (size_t i = 0; i < size; i++) {
+        EXPECT_EQ(data[i], test_data[i]);
+    }
+    
+    nusd_uchar_array_destroy(uchar_array);
+}
