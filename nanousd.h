@@ -1,6 +1,7 @@
 #ifndef NANOUSD_H
 #define NANOUSD_H
 
+#include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
 
@@ -47,6 +48,7 @@ typedef struct nusd_int_array_s* nusd_int_array_t;
 typedef struct nusd_int2_array_s* nusd_int2_array_t;
 typedef struct nusd_int3_array_s* nusd_int3_array_t;
 typedef struct nusd_int4_array_s* nusd_int4_array_t;
+typedef struct nusd_int64_array_s* nusd_int64_array_t;
 
 typedef struct nusd_bool_array_s* nusd_bool_array_t;
 
@@ -447,6 +449,22 @@ int* nusd_int4_array_data(nusd_int4_array_t int4_array);
 NANOUSD_API
 void nusd_int4_array_destroy(nusd_int4_array_t int4_array);
 
+// int64
+NANOUSD_API
+nusd_result_t nusd_attribute_get_int64(nusd_stage_t stage, char const* attribute_path, int64_t* value);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_get_int64_array(nusd_stage_t stage, char const* attribute_path, nusd_int64_array_t* int64_array);
+
+NANOUSD_API
+size_t nusd_int64_array_size(nusd_int64_array_t int64_array);
+
+NANOUSD_API
+int64_t* nusd_int64_array_data(nusd_int64_array_t int64_array);
+
+NANOUSD_API
+void nusd_int64_array_destroy(nusd_int64_array_t int64_array);
+
 // int setters
 NANOUSD_API
 nusd_result_t nusd_attribute_set_int(nusd_stage_t stage, char const* attribute_path, int value);
@@ -471,6 +489,13 @@ nusd_result_t nusd_attribute_set_int4(nusd_stage_t stage, char const* attribute_
 
 NANOUSD_API
 nusd_result_t nusd_attribute_set_int4_array(nusd_stage_t stage, char const* attribute_path, int* data, size_t num_elements);
+
+// int64 setters
+NANOUSD_API
+nusd_result_t nusd_attribute_set_int64(nusd_stage_t stage, char const* attribute_path, int64_t value);
+
+NANOUSD_API
+nusd_result_t nusd_attribute_set_int64_array(nusd_stage_t stage, char const* attribute_path, int64_t* data, size_t num_elements);
 
 // bool
 NANOUSD_API

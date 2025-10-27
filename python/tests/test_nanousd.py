@@ -145,3 +145,31 @@ def test_set_property_int4_array():
     assert isinstance(value, nusd.Int4Array)
     expected = np.array([[1, 2, 3, 4], [5, 6, 7, 8]])
     assert np.array_equal(value, expected)
+
+def test_prim_create_property_int64():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testInt64", nusd.INT64, 9223372036854775807)
+
+def test_set_property_int64():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testInt64", nusd.INT64)
+    stage.set_property("/World.testInt64", nusd.INT64, 9223372036854775807)
+    value = stage.get_property("/World.testInt64")
+    assert value == 9223372036854775807
+
+def test_set_property_int64_array():
+    stage = nusd.Stage.create_in_memory("test")
+    stage.define_prim("/World", "Xform")
+    stage.prim_create_property("/World", "testInt64Array", nusd.INT64ARRAY)
+    # Set via C API, get via Python API
+    test_data = [1000000000000, 2000000000000, 3000000000000, 4000000000000, 5000000000000]
+    from ctypes import c_longlong
+    c_data = (c_longlong * len(test_data))(*test_data)
+    result = nusd._lib.nusd_attribute_set_int64_array(stage._stage, b"/World.testInt64Array", c_data, len(test_data))
+    assert result == nusd._lib.NUSD_RESULT_OK
+    
+    value = stage.get_property("/World.testInt64Array")
+    assert isinstance(value, nusd.Int64Array)
+    assert np.array_equal(value, np.array(test_data))

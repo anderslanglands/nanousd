@@ -165,3 +165,4 @@ just pyexample
 - **CRITICAL**: After modifying `nanousd.h`, ALWAYS run `just bind` to regenerate Python bindings before running `just pytest`
 - Use `just pytest` as the primary testing method since it covers both C and Python functionality
 - The Python layer handles type conversions and provides a more user-friendly API than the raw C interface
+- **NOTE**: ctypesgen syntax errors from system headers (e.g. `/usr/include/x86_64-linux-gnu/sys/cdefs.h`) can be safely ignored - they're due to ctypesgen parser limitations, not actual code errors

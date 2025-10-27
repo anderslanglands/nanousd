@@ -4,7 +4,7 @@ import numpy as np
 from numpy.lib.mixins import NDArrayOperatorsMixin
 
 import ctypes
-from ctypes import c_void_p, c_bool, c_int, c_char_p, POINTER, byref, c_float, c_double
+from ctypes import c_void_p, c_bool, c_int, c_char_p, POINTER, byref, c_float, c_double, c_longlong
 
 ASSET = _lib.NUSD_TYPE_ASSET
 ASSETARRAY = _lib.NUSD_TYPE_ASSETARRAY
@@ -347,6 +347,17 @@ class Int4Array(ArrayBase):
 
     def __del__(self):
         _lib.nusd_int4_array_destroy(self._array)
+
+
+class Int64Array(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_int64_array_size(array)
+        data = _lib.nusd_int64_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size,))
+
+    def __del__(self):
+        _lib.nusd_int64_array_destroy(self._array)
 
 
 class StageOpenError(RuntimeError):
@@ -693,6 +704,26 @@ class Stage:
                     f'failed to get value for "{property_path}": {result}'
                 )
             return Int4Array(value)
+        elif property_type == _lib.NUSD_TYPE_INT64:
+            value = c_longlong(0)
+            result = _lib.nusd_attribute_get_int64(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return value.value
+        elif property_type == _lib.NUSD_TYPE_INT64ARRAY:
+            value = _lib.nusd_int64_array_t()
+            result = _lib.nusd_attribute_get_int64_array(
+                self._stage, property_path, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return Int64Array(value)
 
         else:
             raise GetPropertyError(
@@ -896,6 +927,18 @@ class Stage:
 
             c_value = (c_int * 4)(int(value[0]), int(value[1]), int(value[2]), int(value[3]))
             result = _lib.nusd_attribute_set_int4(self._stage, property_path, c_value)
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == INT64:
+            if not isinstance(value, int):
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_int64(
+                self._stage, property_path, c_longlong(value)
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
