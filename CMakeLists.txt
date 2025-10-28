@@ -2,6 +2,22 @@ cmake_minimum_required(VERSION 3.15)
 project(nanousd VERSION 0.1.0)
 
 option(ENABLE_DOCS "Enable buliding the API docs using Doxygen and Sphinx" ON)
+option(ENABLE_TESTS "Enable the ctest-based tests" ON)
+
+find_package(pxr REQUIRED)
+find_package(OpenGL REQUIRED)
+
+add_library(nanousd SHARED nanousd.cpp)
+target_link_libraries(nanousd PUBLIC ${PXR_LIBRARIES})
+target_include_directories(nanousd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_executable(example01 example01.cpp)
+target_link_libraries(example01 PUBLIC nanousd)
+
+if(ENABLE_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
 if(ENABLE_DOCS)
     include(FetchContent)
@@ -29,16 +45,3 @@ if(ENABLE_DOCS)
         VERBATIM
     )
 endif()
-
-find_package(pxr REQUIRED)
-find_package(OpenGL REQUIRED)
-
-add_library(nanousd SHARED nanousd.cpp)
-target_link_libraries(nanousd PUBLIC ${PXR_LIBRARIES})
-target_include_directories(nanousd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
-add_executable(example01 example01.cpp)
-target_link_libraries(example01 PUBLIC nanousd)
-
-enable_testing()
-add_subdirectory(tests)
