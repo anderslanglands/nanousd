@@ -2,10 +2,19 @@
 #define NANOUSD_PROPERTIES_H
 
 #include "nanousd-types.h"
+#include "nanousd-arrays.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+/// @defgroup PropertyFunctions Property Functions
+/// 
+/// @brief Functions related to managing properties on prims
+///
+/// @{
+
 
 /// Gets the type of a property at the specified path.
 /// 
@@ -1725,6 +1734,8 @@ nusd_result_t nusd_attribute_set_uchar_array(nusd_stage_t stage, char const* att
 NANOUSD_API
 nusd_result_t nusd_relationship_get_targets(nusd_stage_t stage, char const* relationship_path, nusd_relationship_targets_iterator_t* targets, size_t* num_targets);
 
+
+/// @}
 
 
 #ifdef __cplusplus
