@@ -8,7 +8,13 @@ test:
     ctest --test-dir build --output-on-failure
 
 bind:
-    cd python && uv run ctypesgen -L../build $PWD/../nanousd.h -lnanousd -o nanousd/ffi.py; cd - 
+    cd python && uv run ctypesgen -L../build  -lnanousd -o nanousd/ffi.py \
+        $PWD/../nanousd.h \
+        $PWD/../nanousd-types.h \
+        $PWD/../nanousd-arrays.h \
+        $PWD/../nanousd-iterators.h \
+        $PWD/../nanousd-properties.h \
+        ; cd - 
 
 pytest:
     cd python && uv run pytest -s; cd -
