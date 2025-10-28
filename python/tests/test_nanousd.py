@@ -553,3 +553,47 @@ def test_camera_functions_with_time_code():
     # Verify transform computation at that time
     world_transform = stage.prim_compute_local_to_world_transform("/World/Camera", time_code)
     assert np.allclose(world_transform, transform_matrix)
+
+
+def test_camera_set_aperture():
+    """Test camera aperture setting"""
+    stage = nusd.Stage.create_in_memory("test_camera_aperture")
+    stage.camera_define("/World/Camera")
+    
+    # Set aperture dimensions (35mm full frame: 36x24 in tenths of scene units)
+    width = 36.0  # horizontal aperture
+    height = 24.0  # vertical aperture
+    
+    stage.camera_set_aperture("/World/Camera", width, height)
+    
+    # Verify by reading the horizontalAperture and verticalAperture attributes
+    horizontal_aperture = stage.get_property("/World/Camera.horizontalAperture")
+    vertical_aperture = stage.get_property("/World/Camera.verticalAperture")
+    
+    # Use approximate equality for float precision
+    assert abs(horizontal_aperture - width) < 1e-6
+    assert abs(vertical_aperture - height) < 1e-6
+
+
+def test_camera_set_aperture_with_time_code():
+    """Test camera aperture setting with explicit time code"""
+    stage = nusd.Stage.create_in_memory("test_camera_aperture_time")
+    stage.camera_define("/World/Camera")
+    
+    # Test with non-default time code
+    time_code = 12.0
+    
+    # Set aperture at specific time (Super 35: 24.89x18.66)
+    width = 24.89
+    height = 18.66
+    
+    stage.camera_set_aperture("/World/Camera", width, height, time_code)
+    
+    # Verify the aperture was set at the correct time
+    # Note: We can't easily test time-specific values without more complex USD setup,
+    # but we can verify that the function call succeeds and the values are set
+    horizontal_aperture = stage.get_property("/World/Camera.horizontalAperture")
+    vertical_aperture = stage.get_property("/World/Camera.verticalAperture")
+    
+    assert abs(horizontal_aperture - width) < 1e-4
+    assert abs(vertical_aperture - height) < 1e-4

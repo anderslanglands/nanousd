@@ -95,6 +95,28 @@ nusd_result_t nusd_camera_set_exposure(nusd_stage_t stage, char const* camera_pa
 NANOUSD_API
 nusd_result_t nusd_camera_set_clipping_range(nusd_stage_t stage, char const* camera_path, float near, float far, double time_code);
 
+/// Sets the horizontal and vertical aperture dimensions for a camera, controlling the visible area and aspect ratio.
+/// 
+/// @param stage Valid stage handle.
+/// @param camera_path USD path to an existing camera prim.
+/// @param width Horizontal aperture in tenths of a scene unit (e.g., millimeters if scene is in centimeters). This sets `float horizontalAperture`.
+/// @param height Vertical aperture in tenths of a scene unit (e.g., millimeters if scene is in centimeters). This sets `float verticalAperture`.
+/// @param time_code The time at which to set the aperture dimensions. Use NUSD_TIMECODE_DEFAULT 
+///                  for the default time. Time samples can be set for animation.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if no camera exists at the specified path
+/// 
+/// @note stage must not be null.
+/// @note camera_path must not be null and should point to an existing camera prim.
+/// @note width should be a positive value representing the horizontal aperture dimension.
+/// @note height should be a positive value representing the vertical aperture dimension.
+/// @note The aperture dimensions control the camera's field of view in conjunction with the focal length.
+/// @note Common film aperture sizes: 35mm full frame (36x24), Super 35 (24.89x18.66) in tenths of scene units.
+/// @note The aspect ratio is determined by width/height and affects the final rendered image proportions.
+NANOUSD_API
+nusd_result_t nusd_camera_set_aperture(nusd_stage_t stage, char const* camera_path, float width, float height, double time_code);
+
 /// @}
 
 

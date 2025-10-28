@@ -1922,3 +1922,34 @@ class Stage:
             raise SetPropertyError(
                 f'failed to set camera clipping range for "{camera_path}": {result}'
             )
+
+    def camera_set_aperture(
+        self, camera_path: str, width: float, height: float, time_code: float = 0.0
+    ):
+        """Set the horizontal and vertical aperture dimensions for a camera.
+
+        Args:
+            camera_path: USD path to an existing camera prim
+            width: Horizontal aperture in tenths of a scene unit (e.g., millimeters if scene is in centimeters)
+            height: Vertical aperture in tenths of a scene unit (e.g., millimeters if scene is in centimeters)
+            time_code: The time at which to set the aperture dimensions (default: 0.0)
+
+        Raises:
+            SetPropertyError: If camera_path is invalid
+
+        Note:
+            The aperture dimensions control the camera's field of view in conjunction with the focal length.
+            Common film aperture sizes: 35mm full frame (36x24), Super 35 (24.89x18.66) in tenths of scene units.
+            The aspect ratio is determined by width/height and affects the final rendered image proportions.
+        """
+        result = _lib.nusd_camera_set_aperture(
+            self._stage,
+            camera_path.encode("ascii"),
+            c_float(width),
+            c_float(height),
+            c_double(time_code),
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(
+                f'failed to set camera aperture for "{camera_path}": {result}'
+            )

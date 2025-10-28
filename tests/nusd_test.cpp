@@ -1042,3 +1042,33 @@ TEST(nusd, camera_set_clipping_range) {
     
     nusd_stage_destroy(stage);
 }
+
+TEST(nusd, camera_set_aperture) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-camera_set_aperture", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a camera
+    result = nusd_camera_define(stage, "/World/Camera");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Set aperture dimensions (e.g., 35mm full frame: 36x24 in tenths of scene units)
+    float width = 36.0f;   // horizontal aperture
+    float height = 24.0f;  // vertical aperture
+    
+    result = nusd_camera_set_aperture(stage, "/World/Camera", width, height, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Verify by reading the horizontalAperture and verticalAperture attributes
+    float read_width;
+    result = nusd_attribute_get_float(stage, "/World/Camera.horizontalAperture", NUSD_TIMECODE_DEFAULT, &read_width);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(read_width, width);
+    
+    float read_height;
+    result = nusd_attribute_get_float(stage, "/World/Camera.verticalAperture", NUSD_TIMECODE_DEFAULT, &read_height);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(read_height, height);
+    
+    nusd_stage_destroy(stage);
+}

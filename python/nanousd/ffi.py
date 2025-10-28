@@ -2795,6 +2795,15 @@ if _libs["nanousd"].has("nusd_camera_set_clipping_range", "cdecl"):
     nusd_camera_set_clipping_range.argtypes = [nusd_stage_t, String, c_float, c_float, c_double]
     nusd_camera_set_clipping_range.restype = nusd_result_t
 
+# /home/anders/code/nanousd/nanousd-cameras.h: 118
+for _lib in _libs.values():
+    if not _lib.has("nusd_camera_set_aperture", "cdecl"):
+        continue
+    nusd_camera_set_aperture = _lib.get("nusd_camera_set_aperture", "cdecl")
+    nusd_camera_set_aperture.argtypes = [nusd_stage_t, String, c_float, c_float, c_double]
+    nusd_camera_set_aperture.restype = nusd_result_t
+    break
+
 # /home/anders/code/nanousd/nanousd-types.h: 10
 try:
     NUSD_TIMECODE_DEFAULT = 0.0

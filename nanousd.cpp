@@ -2653,4 +2653,18 @@ nusd_result_t nusd_prim_compute_local_to_world_transform(nusd_stage_t stage, cha
     return NUSD_RESULT_OK;
 }
 
+nusd_result_t nusd_camera_set_aperture(nusd_stage_t stage, char const* camera_path, float width, float height, double time_code) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+
+    UsdGeomCamera camera = UsdGeomCamera::Get(UsdStageWeakPtr(_stage), SdfPath(camera_path));
+    if (!camera) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    camera.GetHorizontalApertureAttr().Set(width, time_code);
+    camera.GetVerticalApertureAttr().Set(height, time_code);
+
+    return NUSD_RESULT_OK;
+}
+
 }
