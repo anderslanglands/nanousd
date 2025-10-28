@@ -110,8 +110,7 @@ struct nusd_uchar_array_s {
 };
 
 struct nusd_int64_array_s {
-    int64_t* data;
-    size_t size;
+    PXR_NS::VtArray<int64_t> value;
 };
 
 struct nusd_bool_array_s {
@@ -2153,28 +2152,20 @@ nusd_result_t nusd_attribute_get_int64_array(nusd_stage_t stage, char const* att
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    VtArray<int64_t> array;
-    attr.Get(&array, time_code);
-
-    (*int64_array)->data = new int64_t[array.size()];
-    for (size_t i = 0; i < array.size(); i++) {
-        (*int64_array)->data[i] = array[i];
-    }
-    (*int64_array)->size = array.size();
+    attr.Get(&(*int64_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
 
 size_t nusd_int64_array_size(nusd_int64_array_t int64_array) {
-    return int64_array->size;
+    return int64_array->value.size();
 }
 
 int64_t* nusd_int64_array_data(nusd_int64_array_t int64_array) {
-    return int64_array->data;
+    return int64_array->value.data();
 }
 
 void nusd_int64_array_destroy(nusd_int64_array_t int64_array) {
-    delete[] int64_array->data;
     delete int64_array;
 }
 
