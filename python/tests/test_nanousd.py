@@ -597,3 +597,326 @@ def test_camera_set_aperture_with_time_code():
     
     assert abs(horizontal_aperture - width) < 1e-4
     assert abs(vertical_aperture - height) < 1e-4
+
+
+def test_material_define():
+    """Test material definition"""
+    stage = nusd.Stage.create_in_memory("test_material_define")
+    stage.material_define("/World/Materials/MyMaterial")
+    # Material should now exist as a valid prim
+
+
+def test_shader_define():
+    """Test shader definition with shader ID"""
+    stage = nusd.Stage.create_in_memory("test_shader_define")
+    stage.shader_define("/World/Materials/Mat/Surface", "UsdPreviewSurface")
+    # Shader should now exist as a valid prim
+
+
+def test_shader_create_input():
+    """Test shader input creation"""
+    stage = nusd.Stage.create_in_memory("test_shader_input")
+    
+    # Define a shader first
+    stage.shader_define("/World/Materials/Mat/Surface", "UsdPreviewSurface")
+    
+    # Create a diffuseColor input of type COLOR3F
+    stage.shader_create_input("/World/Materials/Mat/Surface", "diffuseColor", nusd.COLOR3F)
+    
+    # Create a roughness input of type FLOAT
+    stage.shader_create_input("/World/Materials/Mat/Surface", "roughness", nusd.FLOAT)
+
+
+def test_shader_create_output():
+    """Test shader output creation"""
+    stage = nusd.Stage.create_in_memory("test_shader_output")
+    
+    # Define a shader first
+    stage.shader_define("/World/Materials/Mat/Surface", "UsdPreviewSurface")
+    
+    # Create a surface output of type TOKEN
+    stage.shader_create_output("/World/Materials/Mat/Surface", "surface", nusd.TOKEN)
+    
+    # Define a texture shader
+    stage.shader_define("/World/Materials/Mat/Texture", "UsdUVTexture")
+    
+    # Create an rgb output of type COLOR3F
+    stage.shader_create_output("/World/Materials/Mat/Texture", "rgb", nusd.COLOR3F)
+
+
+def test_shader_connect():
+    """Test shader connection functionality"""
+    stage = nusd.Stage.create_in_memory("test_shader_connect")
+    
+    # Define a material and two shaders
+    stage.material_define("/World/Materials/Mat")
+    stage.shader_define("/World/Materials/Mat/Surface", "UsdPreviewSurface")
+    stage.shader_define("/World/Materials/Mat/Texture", "UsdUVTexture")
+    
+    # Create inputs and outputs
+    stage.shader_create_input("/World/Materials/Mat/Surface", "diffuseColor", nusd.COLOR3F)
+    stage.shader_create_output("/World/Materials/Mat/Texture", "rgb", nusd.COLOR3F)
+    
+    # Connect the texture output to the surface input
+    stage.shader_connect(
+        "/World/Materials/Mat/Texture.outputs:rgb",
+        "/World/Materials/Mat/Surface.inputs:diffuseColor"
+    )
+
+
+def test_material_shader_workflow():
+    """Test complete material and shader workflow"""
+    stage = nusd.Stage.create_in_memory("test_material_workflow")
+    
+    # Create a material
+    stage.material_define("/World/Materials/TestMaterial")
+    
+    # Create a UsdPreviewSurface shader
+    stage.shader_define("/World/Materials/TestMaterial/PreviewSurface", "UsdPreviewSurface")
+    
+    # Create a UsdUVTexture shader for diffuse texture
+    stage.shader_define("/World/Materials/TestMaterial/DiffuseTexture", "UsdUVTexture")
+    
+    # Create inputs on the surface shader
+    stage.shader_create_input("/World/Materials/TestMaterial/PreviewSurface", "diffuseColor", nusd.COLOR3F)
+    stage.shader_create_input("/World/Materials/TestMaterial/PreviewSurface", "roughness", nusd.FLOAT)
+    stage.shader_create_input("/World/Materials/TestMaterial/PreviewSurface", "metallic", nusd.FLOAT)
+    
+    # Create outputs on the texture shader
+    stage.shader_create_output("/World/Materials/TestMaterial/DiffuseTexture", "rgb", nusd.COLOR3F)
+    stage.shader_create_output("/World/Materials/TestMaterial/DiffuseTexture", "a", nusd.FLOAT)
+    
+    # Create surface output on the material shader
+    stage.shader_create_output("/World/Materials/TestMaterial/PreviewSurface", "surface", nusd.TOKEN)
+    
+    # Connect texture to surface shader
+    stage.shader_connect(
+        "/World/Materials/TestMaterial/DiffuseTexture.outputs:rgb",
+        "/World/Materials/TestMaterial/PreviewSurface.inputs:diffuseColor"
+    )
+    
+    # Verify we can set some properties on the inputs
+    stage.set_property("/World/Materials/TestMaterial/PreviewSurface.inputs:roughness", nusd.FLOAT, 0.8)
+    stage.set_property("/World/Materials/TestMaterial/PreviewSurface.inputs:metallic", nusd.FLOAT, 0.0)
+    
+    # Verify we can read them back
+    roughness = stage.get_property("/World/Materials/TestMaterial/PreviewSurface.inputs:roughness")
+    metallic = stage.get_property("/World/Materials/TestMaterial/PreviewSurface.inputs:metallic")
+    
+    assert abs(roughness - 0.8) < 1e-6
+    assert abs(metallic - 0.0) < 1e-6
+
+
+def test_shader_create_input_with_value():
+    """Test shader input creation with optional value parameter"""
+    stage = nusd.Stage.create_in_memory("test_shader_input_value")
+    
+    # Define a shader first
+    stage.shader_define("/World/Materials/Mat/Surface", "UsdPreviewSurface")
+    
+    # Create inputs with values
+    stage.shader_create_input("/World/Materials/Mat/Surface", "diffuseColor", nusd.COLOR3F, [1.0, 0.5, 0.0])
+    stage.shader_create_input("/World/Materials/Mat/Surface", "roughness", nusd.FLOAT, 0.8)
+    stage.shader_create_input("/World/Materials/Mat/Surface", "metallic", nusd.FLOAT, 0.0)
+    
+    # Verify the values were set correctly
+    diffuse_color = stage.get_property("/World/Materials/Mat/Surface.inputs:diffuseColor")
+    roughness = stage.get_property("/World/Materials/Mat/Surface.inputs:roughness")
+    metallic = stage.get_property("/World/Materials/Mat/Surface.inputs:metallic")
+    
+    assert len(diffuse_color) == 3
+    assert abs(diffuse_color[0] - 1.0) < 1e-6
+    assert abs(diffuse_color[1] - 0.5) < 1e-6 
+    assert abs(diffuse_color[2] - 0.0) < 1e-6
+    assert abs(roughness - 0.8) < 1e-6
+    assert abs(metallic - 0.0) < 1e-6
+
+
+def test_shader_create_output_with_value():
+    """Test shader output creation with optional value parameter"""
+    stage = nusd.Stage.create_in_memory("test_shader_output_value")
+    
+    # Define a shader first
+    stage.shader_define("/World/Materials/Mat/Surface", "UsdPreviewSurface")
+    
+    # Create outputs with values
+    stage.shader_create_output("/World/Materials/Mat/Surface", "surface", nusd.TOKEN, "surface")
+    
+    # Define a texture shader
+    stage.shader_define("/World/Materials/Mat/Texture", "UsdUVTexture")
+    
+    # Create an rgb output with a color value
+    stage.shader_create_output("/World/Materials/Mat/Texture", "rgb", nusd.COLOR3F, [0.8, 0.2, 0.1])
+    
+    # Verify the values were set correctly
+    surface_output = stage.get_property("/World/Materials/Mat/Surface.outputs:surface")
+    rgb_output = stage.get_property("/World/Materials/Mat/Texture.outputs:rgb")
+    
+    assert surface_output == "surface"
+    assert len(rgb_output) == 3
+    assert abs(rgb_output[0] - 0.8) < 1e-6
+    assert abs(rgb_output[1] - 0.2) < 1e-6
+    assert abs(rgb_output[2] - 0.1) < 1e-6
+
+
+def test_shader_create_input_output_mixed():
+    """Test shader creation with both value and no-value parameters"""
+    stage = nusd.Stage.create_in_memory("test_shader_mixed")
+    
+    # Define a shader first
+    stage.shader_define("/World/Materials/Mat/Surface", "UsdPreviewSurface")
+    
+    # Create some inputs with values and some without
+    stage.shader_create_input("/World/Materials/Mat/Surface", "diffuseColor", nusd.COLOR3F, [1.0, 0.0, 0.0])
+    stage.shader_create_input("/World/Materials/Mat/Surface", "roughness", nusd.FLOAT)  # No value
+    stage.shader_create_input("/World/Materials/Mat/Surface", "metallic", nusd.FLOAT, 1.0)
+    
+    # Create some outputs with values and some without  
+    stage.shader_create_output("/World/Materials/Mat/Surface", "surface", nusd.TOKEN, "surface")
+    stage.shader_create_output("/World/Materials/Mat/Surface", "displacement", nusd.TOKEN)  # No value
+    
+    # Verify the values that were set
+    diffuse_color = stage.get_property("/World/Materials/Mat/Surface.inputs:diffuseColor")
+    metallic = stage.get_property("/World/Materials/Mat/Surface.inputs:metallic")
+    surface_output = stage.get_property("/World/Materials/Mat/Surface.outputs:surface")
+    
+    assert len(diffuse_color) == 3
+    assert abs(diffuse_color[0] - 1.0) < 1e-6
+    assert abs(diffuse_color[1] - 0.0) < 1e-6
+    assert abs(diffuse_color[2] - 0.0) < 1e-6
+    assert abs(metallic - 1.0) < 1e-6
+    assert surface_output == "surface"
+
+
+def test_set_token():
+    """Test setting token property values"""
+    stage = nusd.Stage.create_in_memory("test_token")
+    stage.define_prim("/World", "Xform")
+    
+    # Create and set a token property
+    stage.prim_create_property("/World", "shader_id", nusd.TOKEN, "UsdPreviewSurface")
+    
+    # Verify the value was set correctly
+    shader_id = stage.get_property("/World.shader_id")
+    assert shader_id == "UsdPreviewSurface"
+    
+    # Test setting a different token value
+    stage.set_property("/World.shader_id", nusd.TOKEN, "UsdUVTexture")
+    shader_id = stage.get_property("/World.shader_id")
+    assert shader_id == "UsdUVTexture"
+
+
+def test_set_token_array():
+    """Test setting token array property values"""
+    stage = nusd.Stage.create_in_memory("test_token_array")
+    stage.define_prim("/World", "Xform")
+    
+    # Create and set a token array property
+    stage.prim_create_property("/World", "testTokenArray", nusd.TOKENARRAY, ["default", "render", "proxy"])
+    
+    # Verify the values were set correctly
+    purposes = stage.get_property("/World.testTokenArray")
+    assert isinstance(purposes, list)
+    assert len(purposes) == 3
+    assert purposes[0] == "default"
+    assert purposes[1] == "render" 
+    assert purposes[2] == "proxy"
+
+
+def test_set_asset():
+    """Test setting asset property values"""
+    stage = nusd.Stage.create_in_memory("test_asset")
+    stage.define_prim("/World", "Xform")
+    
+    # Create and set an asset property
+    stage.prim_create_property("/World", "testAsset", nusd.ASSET, "textures/diffuse.jpg")
+    
+    # Verify the value was set correctly
+    asset_path = stage.get_property("/World.testAsset")
+    assert asset_path == "textures/diffuse.jpg"
+    
+    # Test setting a different asset value
+    stage.set_property("/World.testAsset", nusd.ASSET, "textures/normal.png")
+    asset_path = stage.get_property("/World.testAsset")
+    assert asset_path == "textures/normal.png"
+
+
+def test_set_asset_array():
+    """Test setting asset array property values"""
+    stage = nusd.Stage.create_in_memory("test_asset_array")
+    stage.define_prim("/World", "Xform")
+    
+    # Create and set an asset array property
+    test_assets = ["textures/diffuse.jpg", "textures/normal.png", "textures/roughness.tga"]
+    stage.prim_create_property("/World", "testAssetArray", nusd.ASSETARRAY, test_assets)
+    
+    # Verify the values were set correctly
+    assets = stage.get_property("/World.testAssetArray")
+    assert isinstance(assets, list)
+    assert len(assets) == 3
+    assert assets[0] == "textures/diffuse.jpg"
+    assert assets[1] == "textures/normal.png"
+    assert assets[2] == "textures/roughness.tga"
+    
+    # Test setting different asset array values
+    new_assets = ["models/chair.usd", "models/table.usd"]
+    stage.set_property("/World.testAssetArray", nusd.ASSETARRAY, new_assets)
+    assets = stage.get_property("/World.testAssetArray")
+    assert len(assets) == 2
+    assert assets[0] == "models/chair.usd"
+    assert assets[1] == "models/table.usd"
+
+
+def test_asset_empty_values():
+    """Test asset properties with empty values"""
+    stage = nusd.Stage.create_in_memory("test_asset_empty")
+    stage.define_prim("/World", "Xform")
+    
+    # Test empty asset path
+    stage.prim_create_property("/World", "emptyAsset", nusd.ASSET, "")
+    asset_path = stage.get_property("/World.emptyAsset")
+    assert asset_path == ""
+    
+    # Test empty asset array
+    stage.prim_create_property("/World", "emptyAssetArray", nusd.ASSETARRAY, [])
+    assets = stage.get_property("/World.emptyAssetArray")
+    assert isinstance(assets, list)
+    assert len(assets) == 0
+
+
+def test_asset_relative_paths():
+    """Test asset properties with relative paths"""
+    stage = nusd.Stage.create_in_memory("test_asset_relative")
+    stage.define_prim("/World", "Xform")
+    
+    # Test relative paths
+    relative_paths = ["./local.jpg", "../parent.png", "subfolder/nested.tiff"]
+    stage.prim_create_property("/World", "relativePaths", nusd.ASSETARRAY, relative_paths)
+    
+    assets = stage.get_property("/World.relativePaths")
+    assert len(assets) == 3
+    assert assets[0] == "./local.jpg"
+    assert assets[1] == "../parent.png"
+    assert assets[2] == "subfolder/nested.tiff"
+
+
+def test_asset_special_characters():
+    """Test asset properties with special characters in paths"""
+    stage = nusd.Stage.create_in_memory("test_asset_special")
+    stage.define_prim("/World", "Xform")
+    
+    # Test paths with spaces and special characters
+    special_paths = [
+        "path with spaces.jpg",
+        "path-with-dashes.png", 
+        "path_with_underscores.tga",
+        "path.with.dots.exr"
+    ]
+    stage.prim_create_property("/World", "specialPaths", nusd.ASSETARRAY, special_paths)
+    
+    assets = stage.get_property("/World.specialPaths")
+    assert len(assets) == 4
+    assert assets[0] == "path with spaces.jpg"
+    assert assets[1] == "path-with-dashes.png"
+    assert assets[2] == "path_with_underscores.tga"
+    assert assets[3] == "path.with.dots.exr"

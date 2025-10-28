@@ -5,6 +5,7 @@ from numpy.lib.mixins import NDArrayOperatorsMixin
 
 import ctypes
 from ctypes import (
+    c_char,
     c_void_p,
     c_bool,
     c_int,
@@ -135,7 +136,11 @@ def path_get_name(path: str) -> str:
     return _lib.nusd_path_get_name(path.encode("ascii")).decode("utf-8")
 
 
+# fix up ctypesgen's sometimes wonky typing
 _lib.nusd_prim_iterator_next.argtypes = [_lib.nusd_prim_iterator_t, POINTER(c_char_p)]
+_lib.nusd_attribute_get_token.argtypes = [_lib.nusd_stage_t, _lib.String, c_double, POINTER(c_char_p)]
+_lib.nusd_token_array_iterator_next.argtypes = [_lib.nusd_token_array_iterator_t, POINTER(c_char_p)]
+_lib.nusd_asset_path_array_iterator_next.argtypes = [_lib.nusd_asset_path_array_iterator_t, POINTER(c_char_p)]
 
 
 class PrimIterator:
@@ -976,7 +981,62 @@ class Stage:
                     f'failed to get value for "{property_path}": {result}'
                 )
             return UcharArray(value)
+        elif property_type == _lib.NUSD_TYPE_TOKEN:
+            value = c_char_p()
+            result = _lib.nusd_attribute_get_token(
+                self._stage, property_path, time_code, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            return value.value.decode("utf-8")
+        elif property_type == _lib.NUSD_TYPE_TOKENARRAY:
+            value = _lib.nusd_token_array_iterator_t()
+            result = _lib.nusd_attribute_get_token_array(
+                self._stage, property_path, time_code, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
 
+            result = []
+            tok = c_char_p()
+            while _lib.nusd_token_array_iterator_next(value, byref(tok)):
+                result.append(tok.value.decode("utf-8"))
+
+            return result
+        elif property_type == _lib.NUSD_TYPE_ASSET:
+            value = _lib.nusd_asset_path_t()
+            result = _lib.nusd_attribute_get_asset(
+                self._stage, property_path, time_code, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+            asset_value = _lib.nusd_asset_path_get_asset_path(value)
+            path_result = asset_value.decode("utf-8") if asset_value else ""
+            _lib.nusd_asset_path_destroy(value)
+            return path_result
+        elif property_type == _lib.NUSD_TYPE_ASSETARRAY:
+            value = _lib.nusd_asset_path_array_iterator_t()
+            result = _lib.nusd_attribute_get_asset_array(
+                self._stage, property_path, time_code, byref(value)
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise GetPropertyError(
+                    f'failed to get value for "{property_path}": {result}'
+                )
+
+            result = []
+            asset_path = c_char_p()
+            while _lib.nusd_asset_path_array_iterator_next(value, byref(asset_path)):
+                result.append(asset_path.value.decode("utf-8"))
+
+            _lib.nusd_asset_path_array_iterator_destroy(value)
+            return result
         else:
             raise GetPropertyError(
                 f'unknown type "{property_type}" for property "{property_path}"'
@@ -1795,6 +1855,60 @@ class Stage:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
                 )
+        elif property_type == TOKEN:
+            if not isinstance(value, str):
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_token(
+                self._stage, property_path.encode("ascii"), value.encode("ascii"), time_code
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == TOKENARRAY:
+            if not isinstance(value, (list, tuple)) or not all(isinstance(v, str) for v in value):
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            # Convert string list to C array of char pointers
+            c_strings = [v.encode("ascii") for v in value]
+            c_array = (c_char_p * len(c_strings))(*c_strings)
+            result = _lib.nusd_attribute_set_token_array(
+                self._stage, property_path.encode("ascii"), ctypes.cast(c_array, POINTER(POINTER(c_char))), c_size_t(len(value)), time_code
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == ASSET:
+            if not isinstance(value, str):
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            result = _lib.nusd_attribute_set_asset(
+                self._stage, property_path.encode("ascii"), value.encode("ascii"), time_code
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
+        elif property_type == ASSETARRAY:
+            if not isinstance(value, (list, tuple)) or not all(isinstance(v, str) for v in value):
+                raise SetPropertyError(
+                    f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+                )
+            # Convert string list to C array of char pointers
+            c_strings = [v.encode("ascii") for v in value]
+            c_array = (c_char_p * len(c_strings))(*c_strings)
+            result = _lib.nusd_attribute_set_asset_array(
+                self._stage, property_path.encode("ascii"), ctypes.cast(c_array, POINTER(POINTER(c_char))), c_size_t(len(value)), time_code
+            )
+            if result != _lib.NUSD_RESULT_OK:
+                raise SetPropertyError(
+                    f'failed to set property "{property_path}: {result}'
+                )
         else:
             raise SetPropertyError(f"invalid type for property: {type(value)}")
 
@@ -1953,3 +2067,132 @@ class Stage:
             raise SetPropertyError(
                 f'failed to set camera aperture for "{camera_path}": {result}'
             )
+
+    def material_define(self, material_path: str):
+        """Define a new USD material prim at the specified path.
+
+        Args:
+            material_path: USD path where the material should be created (e.g., "/World/Materials/MyMaterial")
+
+        Raises:
+            DefinePrimError: If the material cannot be defined at the specified path
+        """
+        result = _lib.nusd_material_define(self._stage, material_path.encode("ascii"))
+        if result != _lib.NUSD_RESULT_OK:
+            raise DefinePrimError(f'failed to define material at "{material_path}": {result}')
+
+    def shader_define(self, shader_path: str, shader_id: str):
+        """Define a new USD shader prim at the specified path with the given shader identifier.
+
+        Args:
+            shader_path: USD path where the shader should be created (e.g., "/World/Materials/MyMaterial/Shader")
+            shader_id: Shader type identifier (e.g., "UsdPreviewSurface", "UsdUVTexture", "UsdPrimvarReader_float2")
+
+        Raises:
+            DefinePrimError: If the shader cannot be defined at the specified path
+
+        Note:
+            Common shader_id values include "UsdPreviewSurface" for materials, "UsdUVTexture" for textures.
+        """
+        result = _lib.nusd_shader_define(
+            self._stage, shader_path.encode("ascii"), shader_id.encode("ascii")
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise DefinePrimError(f'failed to define shader at "{shader_path}" with id "{shader_id}": {result}')
+
+    def shader_create_input(self, shader_path: str, input_name: str, input_type: str, value=None, time_code=0.0):
+        """Create an input parameter on a shader for receiving values or connections from other shaders.
+
+        Args:
+            shader_path: USD path to an existing shader prim
+            input_name: Name of the input parameter to create (e.g., "diffuseColor", "roughness", "st")
+            input_type: USD type for the input parameter (e.g., COLOR3F, FLOAT, FLOAT2)
+            value: Optional value to set on the input parameter
+            time_code: Time code for the value (default: 0.0)
+
+        Raises:
+            CreatePropertyError: If the input cannot be created
+            SetPropertyError: If input_type is RELATIONSHIP (not supported for shader inputs)
+
+        Note:
+            The created input will be automatically placed in the "inputs:" namespace (e.g., "inputs:diffuseColor").
+            Shader inputs can receive constant values or connections from other shader outputs.
+            If value is provided, it will be automatically set on the input parameter.
+        """
+        result = _lib.nusd_shader_create_input(
+            self._stage, 
+            shader_path.encode("ascii"), 
+            input_name.encode("ascii"), 
+            input_type
+        )
+        if result == _lib.NUSD_RESULT_WRONG_TYPE:
+            raise SetPropertyError(f'RELATIONSHIP type not supported for shader input "{input_name}"')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise CreatePropertyError(f'failed to create shader input "{input_name}" on "{shader_path}": {result}')
+
+        if value is not None:
+            input_path = f"{shader_path}.inputs:{input_name}"
+            self.set_property(input_path, input_type, value, time_code)
+
+
+    def shader_create_output(self, shader_path: str, output_name: str, output_type: str, value=None, time_code=0.0):
+        """Create an output parameter on a shader for providing values to other shaders or materials.
+
+        Args:
+            shader_path: USD path to an existing shader prim
+            output_name: Name of the output parameter to create (e.g., "surface", "rgb", "r")
+            output_type: USD type for the output parameter (e.g., TOKEN, COLOR3F, FLOAT)
+            value: Optional value to set on the output parameter
+            time_code: Time code for the value (default: 0.0)
+
+        Raises:
+            CreatePropertyError: If the output cannot be created
+            SetPropertyError: If output_type is RELATIONSHIP (not supported for shader outputs)
+
+        Note:
+            The created output will be automatically placed in the "outputs:" namespace (e.g., "outputs:rgb").
+            Shader outputs provide computed values that can be connected to inputs of other shaders.
+            If value is provided, it will be automatically set on the output parameter.
+        """
+        result = _lib.nusd_shader_create_output(
+            self._stage, 
+            shader_path.encode("ascii"), 
+            output_name.encode("ascii"), 
+            output_type
+        )
+        if result == _lib.NUSD_RESULT_WRONG_TYPE:
+            raise SetPropertyError(f'RELATIONSHIP type not supported for shader output "{output_name}"')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise CreatePropertyError(f'failed to create shader output "{output_name}" on "{shader_path}": {result}')
+
+        if value is not None:
+            output_path = f"{shader_path}.outputs:{output_name}"
+            self.set_property(output_path, output_type, value, time_code)
+
+    def shader_connect(self, source_output_path: str, destination_input_path: str):
+        """Connect a shader output to a shader input, creating a data flow connection in the shader network.
+
+        Args:
+            source_output_path: Full USD path to the source shader output (e.g., "/World/Materials/Mat/Texture.outputs:rgb")
+            destination_input_path: Full USD path to the destination shader input (e.g., "/World/Materials/Mat/Surface.inputs:diffuseColor")
+
+        Raises:
+            GetPropertyError: If either the source output or destination input cannot be found
+            SetPropertyError: If the connection cannot be established
+
+        Note:
+            The connection creates a data flow from the source shader's output to the destination shader's input.
+            Connected inputs override any authored constant values on the destination input.
+            Both the source and destination must exist before calling this function.
+        """
+        result = _lib.nusd_shader_connect(
+            self._stage, 
+            source_output_path.encode("ascii"), 
+            destination_input_path.encode("ascii")
+        )
+        if result == _lib.NUSD_RESULT_INVALID_ATTRIBUTE_PATH:
+            raise GetPropertyError(f'cannot find source output "{source_output_path}" or destination input "{destination_input_path}"')
+        elif result == _lib.NUSD_RESULT_CONNECTION_FAILED:
+            raise SetPropertyError(f'failed to connect "{source_output_path}" to "{destination_input_path}"')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(f'failed to connect shaders: {result}')

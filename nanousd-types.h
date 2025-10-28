@@ -27,11 +27,13 @@ enum nusd_result_e {
     NUSD_RESULT_CREATE_RELATIONSHIP_FAILED,
     NUSD_RESULT_CREATE_ATTRIBUTE_FAILED,
     NUSD_RESULT_NULL_PARAMETER,
+    NUSD_RESULT_CONNECTION_FAILED,
 };
 typedef int nusd_result_t;
 
 typedef char const* nusd_type_t;
 typedef void* nusd_stage_t;
+typedef struct nusd_asset_path_s* nusd_asset_path_t;
 
 extern nusd_type_t NUSD_TYPE_ASSET;
 extern nusd_type_t NUSD_TYPE_ASSETARRAY;

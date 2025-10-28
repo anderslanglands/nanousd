@@ -1,5 +1,7 @@
 #include "nanousd.h"
 
+#include <pxr/usd/sdf/assetPath.h>
+
 #include <pxr/usd/usd/attribute.h>
 #include <pxr/usd/usd/prim.h>
 #include <pxr/usd/usd/primRange.h>
@@ -10,6 +12,7 @@
 #include <pxr/usd/usdGeom/camera.h>
 #include <pxr/usd/usdGeom/xformable.h>
 #include <pxr/usd/usdGeom/mesh.h>
+#include <pxr/usd/usdShade/material.h>
 
 #include <pxr/base/tf/refPtr.h>
 #include <pxr/base/vt/value.h>
@@ -53,8 +56,18 @@ struct nusd_relationship_targets_iterator_s {
     PXR_NS::SdfPathVector::iterator current;
 };
 
-struct nusd_token_array_s {
-    PXR_NS::VtTokenArray value;
+struct nusd_token_array_iterator_s {
+    PXR_NS::VtTokenArray tokens;
+    PXR_NS::VtTokenArray::iterator current;
+};
+
+struct nusd_asset_path_s {
+    PXR_NS::SdfAssetPath path;
+};
+
+struct nusd_asset_path_array_iterator_s {
+    PXR_NS::VtArray<PXR_NS::SdfAssetPath> paths;
+    PXR_NS::VtArray<PXR_NS::SdfAssetPath>::iterator current;
 };
 
 struct nusd_float_array_s {
@@ -731,11 +744,11 @@ nusd_result_t nusd_attribute_get_token(nusd_stage_t stage, char const* attribute
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_token_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_token_array_t* token_array) {
+nusd_result_t nusd_attribute_get_token_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_token_array_iterator_t* token_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
-    *token_array = new nusd_token_array_s();
+    *token_array = new nusd_token_array_iterator_s();
 
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
@@ -745,21 +758,77 @@ nusd_result_t nusd_attribute_get_token_array(nusd_stage_t stage, char const* att
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*token_array)->value, time_code);
+    attr.Get(&(*token_array)->tokens, time_code);
+    (*token_array)->current = (*token_array)->tokens.begin();
 
     return NUSD_RESULT_OK;
 }
 
-size_t nusd_token_array_size(nusd_token_array_t token_array) {
-    return token_array->value.size();
+bool nusd_token_array_iterator_next(nusd_token_array_iterator_t iterator, char const** token) {
+    if (iterator->current == iterator->tokens.end()) {
+        return false;
+    }
+
+    *token = iterator->current->GetText();
+    iterator->current++;
+
+    return true;
 }
 
-char const* nusd_token_array_index(nusd_token_array_t token_array, size_t index) {
-    return token_array->value[index].GetText();
+size_t nusd_token_array_iterator_size(nusd_token_array_iterator_t iterator) {
+    return iterator->tokens.size();
 }
 
-void nusd_token_array_destroy(nusd_token_array_t token_array) {
-    delete token_array;
+nusd_result_t nusd_token_array_iterator_destroy(nusd_token_array_iterator_t iterator) {
+    delete iterator;
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_get_asset(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_asset_path_t* asset_path) {
+    if (stage == nullptr || attribute_path == nullptr || asset_path == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_ASSET) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    *asset_path = new nusd_asset_path_s();
+    attr.Get(&(*asset_path)->path, time_code);
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_get_asset_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_asset_path_array_iterator_t* asset_path_array) {
+    if (stage == nullptr || attribute_path == nullptr || asset_path_array == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    *asset_path_array = new nusd_asset_path_array_iterator_s();
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_ASSETARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    attr.Get(&(*asset_path_array)->paths, time_code);
+    (*asset_path_array)->current = (*asset_path_array)->paths.begin();
+
+    return NUSD_RESULT_OK;
 }
 
 // float
@@ -1819,6 +1888,50 @@ char const* nusd_path_get_name(char const* path) {
     return strstr(path, ".") + 1;
 }
 
+char const* nusd_asset_path_get_asset_path(nusd_asset_path_t asset_path) {
+    if (!asset_path) {
+        return nullptr;
+    }
+    
+    return asset_path->path.GetAssetPath().c_str();
+}
+
+void nusd_asset_path_destroy(nusd_asset_path_t asset_path) {
+    if (asset_path) {
+        delete asset_path;
+    }
+}
+
+bool nusd_asset_path_array_iterator_next(nusd_asset_path_array_iterator_t asset_paths, char const** asset_path) {
+    if (!asset_paths || !asset_path) {
+        return false;
+    }
+    
+    if (asset_paths->current == asset_paths->paths.end()) {
+        return false;
+    }
+    
+    *asset_path = asset_paths->current->GetAssetPath().c_str();
+    
+    ++asset_paths->current;
+    return true;
+}
+
+size_t nusd_asset_path_array_iterator_size(nusd_asset_path_array_iterator_t iterator) {
+    if (!iterator) {
+        return 0;
+    }
+    
+    return iterator->paths.size();
+}
+
+nusd_result_t nusd_asset_path_array_iterator_destroy(nusd_asset_path_array_iterator_t asset_paths) {
+    if (asset_paths) {
+        delete asset_paths;
+    }
+    return NUSD_RESULT_OK;
+}
+
 nusd_result_t nusd_attribute_set_float(nusd_stage_t stage, char const* attribute_path, float value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -2664,6 +2777,183 @@ nusd_result_t nusd_camera_set_aperture(nusd_stage_t stage, char const* camera_pa
     camera.GetHorizontalApertureAttr().Set(width, time_code);
     camera.GetVerticalApertureAttr().Set(height, time_code);
 
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_material_define(nusd_stage_t stage, char const* material_path) {
+    if (stage == nullptr || material_path == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+
+    UsdShadeMaterial material = UsdShadeMaterial::Define(UsdStageWeakPtr(_stage), SdfPath(material_path));
+    if (!material) {
+        return NUSD_RESULT_DEFINE_PRIM_FAILED;
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_shader_define(nusd_stage_t stage, char const* shader_path, char const* shader_id) {
+    if (stage == nullptr || shader_path == nullptr || shader_id == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+
+    UsdShadeShader shader = UsdShadeShader::Define(UsdStageWeakPtr(_stage), SdfPath(shader_path));
+    if (!shader) {
+        return NUSD_RESULT_DEFINE_PRIM_FAILED;
+    }
+
+    shader.SetShaderId(TfToken(shader_id));
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_shader_create_input(nusd_stage_t stage, char const* shader_path, char const* input_name, nusd_type_t input_type) {
+    if (stage == nullptr || shader_path == nullptr || input_name == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    if (input_type == NUSD_TYPE_RELATIONSHIP) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdShadeShader shader = UsdShadeShader(_stage->GetPrimAtPath(SdfPath(shader_path)));
+    if (!shader) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    UsdShadeInput input = shader.CreateInput(TfToken(input_name), TOKEN_TO_TYPENAME[input_type]);
+    if (!input) {
+        return NUSD_RESULT_CREATE_ATTRIBUTE_FAILED;
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_shader_create_output(nusd_stage_t stage, char const* shader_path, char const* output_name, nusd_type_t output_type) {
+    if (stage == nullptr || shader_path == nullptr || output_name == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    if (output_type == NUSD_TYPE_RELATIONSHIP) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdShadeShader shader = UsdShadeShader(_stage->GetPrimAtPath(SdfPath(shader_path)));
+    if (!shader) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    UsdShadeOutput output = shader.CreateOutput(TfToken(output_name), TOKEN_TO_TYPENAME[output_type]);
+    if (!output) {
+        return NUSD_RESULT_CREATE_ATTRIBUTE_FAILED;
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_shader_connect(nusd_stage_t stage, char const* source_output_path, char const* destination_input_path) {
+    if (stage == nullptr || source_output_path== nullptr || destination_input_path == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdShadeOutput source = UsdShadeOutput(_stage->GetAttributeAtPath(SdfPath(source_output_path)));
+    UsdShadeInput destination = UsdShadeInput(_stage->GetAttributeAtPath(SdfPath(destination_input_path)));
+    if (!source || !destination) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (!destination.ConnectToSource(SdfPath(source_output_path))) {
+        return NUSD_RESULT_CONNECTION_FAILED;
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_token(nusd_stage_t stage, char const* attribute_path, char const* value, double time_code) {
+    if (stage == nullptr || attribute_path== nullptr || value == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_TOKEN) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Set(TfToken(value), time_code);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_token_array(nusd_stage_t stage, char const* attribute_path, char const** value, size_t num_elements, double time_code) {
+    if (stage == nullptr || attribute_path== nullptr || value == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_TOKENARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    VtTokenArray arr;
+    for (size_t i = 0; i < num_elements; ++i) {
+        arr.push_back(TfToken(value[i]));
+    }
+
+    attr.Set(arr, time_code);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_asset(nusd_stage_t stage, char const* attribute_path, char const* value, double time_code) {
+    if (stage == nullptr || attribute_path== nullptr || value == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_ASSET) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Set(SdfAssetPath(value), time_code);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_asset_array(nusd_stage_t stage, char const* attribute_path, char const** value, size_t num_elements, double time_code) {
+    if (stage == nullptr || attribute_path== nullptr || value == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_ASSETARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    VtArray<SdfAssetPath> arr;
+    for (size_t i = 0; i < num_elements; ++i) {
+        arr.push_back(SdfAssetPath(value[i]));
+    }
+
+    attr.Set(arr, time_code);
     return NUSD_RESULT_OK;
 }
 

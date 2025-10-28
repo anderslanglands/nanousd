@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <nanousd.h>
 #include <nanousd-cameras.h>
+#include <nanousd-materials.h>
 #include <cmath>
 #include <iostream>
 
@@ -1070,5 +1071,178 @@ TEST(nusd, camera_set_aperture) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_FLOAT_EQ(read_height, height);
     
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, material_define) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-material_define", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a material at the specified path
+    result = nusd_material_define(stage, "/World/Materials/MyMaterial");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Verify the material was created as a valid prim
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Materials/MyMaterial"), true);
+    
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, shader_define) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-shader_define", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a shader with UsdPreviewSurface identifier
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Surface", "UsdPreviewSurface");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Verify the shader was created as a valid prim
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Materials/Mat/Surface"), true);
+    
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, shader_create_input) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-shader_create_input", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a shader first
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Surface", "UsdPreviewSurface");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Create a diffuseColor input of type COLOR3F
+    result = nusd_shader_create_input(stage, "/World/Materials/Mat/Surface", "diffuseColor", NUSD_TYPE_COLOR3F);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Create a roughness input of type FLOAT
+    result = nusd_shader_create_input(stage, "/World/Materials/Mat/Surface", "roughness", NUSD_TYPE_FLOAT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, shader_create_output) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-shader_create_output", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a shader first
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Surface", "UsdPreviewSurface");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Create a surface output of type TOKEN
+    result = nusd_shader_create_output(stage, "/World/Materials/Mat/Surface", "surface", NUSD_TYPE_TOKEN);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a texture shader
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Texture", "UsdUVTexture");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Create an rgb output of type COLOR3F
+    result = nusd_shader_create_output(stage, "/World/Materials/Mat/Texture", "rgb", NUSD_TYPE_COLOR3F);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, shader_connect) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-shader_connect", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a material and two shaders
+    result = nusd_material_define(stage, "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Surface", "UsdPreviewSurface");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Texture", "UsdUVTexture");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Create inputs and outputs
+    result = nusd_shader_create_input(stage, "/World/Materials/Mat/Surface", "diffuseColor", NUSD_TYPE_COLOR3F);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_shader_create_output(stage, "/World/Materials/Mat/Texture", "rgb", NUSD_TYPE_COLOR3F);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Connect the texture output to the surface input
+    result = nusd_shader_connect(stage, 
+                                "/World/Materials/Mat/Texture.outputs:rgb", 
+                                "/World/Materials/Mat/Surface.inputs:diffuseColor");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, set_asset_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_ASSET);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_attribute_set_asset(stage, "/World.testattr", "texture.jpg", NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_asset_path_t asset_path;
+    result = nusd_attribute_get_asset(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &asset_path);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    char const* path_string = nusd_asset_path_get_asset_path(asset_path);
+    EXPECT_STREQ(path_string, "texture.jpg");
+
+    nusd_asset_path_destroy(asset_path);
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, set_asset_array_attribute) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_ASSETARRAY);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    char const* test_data[] = {"texture1.jpg", "texture2.png", "model.usd"};
+    result = nusd_attribute_set_asset_array(stage, "/World.testattr", test_data, 3, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_asset_path_array_iterator_t asset_array;
+    result = nusd_attribute_get_asset_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &asset_array);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    size_t size = nusd_asset_path_array_iterator_size(asset_array);
+    EXPECT_EQ(size, 3);
+
+    // Test iteration through the array
+    char const* asset_path;
+    bool has_next;
+    
+    has_next = nusd_asset_path_array_iterator_next(asset_array, &asset_path);
+    EXPECT_TRUE(has_next);
+    EXPECT_STREQ(asset_path, "texture1.jpg");
+    
+    has_next = nusd_asset_path_array_iterator_next(asset_array, &asset_path);
+    EXPECT_TRUE(has_next);
+    EXPECT_STREQ(asset_path, "texture2.png");
+    
+    has_next = nusd_asset_path_array_iterator_next(asset_array, &asset_path);
+    EXPECT_TRUE(has_next);
+    EXPECT_STREQ(asset_path, "model.usd");
+    
+    has_next = nusd_asset_path_array_iterator_next(asset_array, &asset_path);
+    EXPECT_FALSE(has_next);  // Should be end of array
+
+    nusd_asset_path_array_iterator_destroy(asset_array);
     nusd_stage_destroy(stage);
 }

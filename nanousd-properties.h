@@ -1,6 +1,7 @@
 #ifndef NANOUSD_PROPERTIES_H
 #define NANOUSD_PROPERTIES_H
 
+#include "nanousd-iterators.h"
 #include "nanousd-types.h"
 #include "nanousd-arrays.h"
 
@@ -70,7 +71,7 @@ nusd_result_t nusd_attribute_get_token(nusd_stage_t stage, char const* attribute
 /// @note attribute_path must not be null.
 /// @note token_array must not be null.
 NANOUSD_API
-nusd_result_t nusd_attribute_get_token_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_token_array_t* token_array);
+nusd_result_t nusd_attribute_get_token_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_token_array_iterator_t* token_array_iterator);
 
 // float
 /// Gets the value of the given attribute as a float, if the attribute is of that type.
@@ -1717,6 +1718,46 @@ nusd_result_t nusd_attribute_set_uchar(nusd_stage_t stage, char const* attribute
 NANOUSD_API
 nusd_result_t nusd_attribute_set_uchar_array(nusd_stage_t stage, char const* attribute_path, unsigned char* data, size_t num_elements, double time_code);
 
+/// Sets a token attribute value at a specified time.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute to set.
+/// @param value Token string value to set.
+/// @param time_code Time code at which to set the value.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or value is null
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of token type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null.
+/// @note Token attributes store string identifiers commonly used for shader types, material bindings, and enumerated values.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_token(nusd_stage_t stage, char const* attribute_path, char const* value, double time_code);
+
+/// Sets a token array attribute value at a specified time.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute to set.
+/// @param value Array of token string pointers to set.
+/// @param num_elements Number of elements in the array.
+/// @param time_code Time code at which to set the value.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or value is null
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of token array type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null.
+/// @note num_elements must be greater than 0.
+/// @note Token arrays store collections of string identifiers.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_token_array(nusd_stage_t stage, char const* attribute_path, char const** value, size_t num_elements, double time_code);
+
 /// Gets an iterator for the target paths of a relationship.
 /// 
 /// @param stage Valid stage handle.
@@ -1734,6 +1775,83 @@ nusd_result_t nusd_attribute_set_uchar_array(nusd_stage_t stage, char const* att
 NANOUSD_API
 nusd_result_t nusd_relationship_get_targets(nusd_stage_t stage, char const* relationship_path, nusd_relationship_targets_iterator_t* targets, size_t* num_targets);
 
+/// Gets the value of the given attribute as an asset path, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param time_code Time code at which to get the value.
+/// @param asset_path Output pointer that will contain the asset path handle.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or asset_path is null
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of asset type
+/// 
+/// @note The returned asset path must be released with nusd_asset_path_destroy() when no longer needed.
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note asset_path must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_asset(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_asset_path_t* asset_path);
+
+/// Gets the value of the given attribute as an asset path array, if the attribute is of that type.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param time_code Time code at which to get the value.
+/// @param asset_path_array Output pointer that will contain the asset path array iterator.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or asset_path_array is null
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of asset array type
+/// 
+/// @note The returned asset path array must be released with nusd_asset_path_array_iterator_destroy() when no longer needed.
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note asset_path_array must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_asset_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_asset_path_array_iterator_t* asset_path_array);
+
+/// Sets an asset attribute value at a specified time.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute to set.
+/// @param asset_path Asset path string value to set.
+/// @param time_code Time code at which to set the value.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or asset_path is null
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of asset type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note asset_path must not be null.
+/// @note Asset attributes store file system paths or URIs to external assets like textures, geometry files, etc.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_asset(nusd_stage_t stage, char const* attribute_path, char const* asset_path, double time_code);
+
+/// Sets an asset array attribute value at a specified time.
+/// 
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute to set.
+/// @param asset_path_array Array of asset path string pointers to set.
+/// @param num_elements Number of elements in the array.
+/// @param time_code Time code at which to set the value.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or asset_path_array is null
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of asset array type
+/// 
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note asset_path_array must not be null.
+/// @note num_elements must be greater than 0.
+/// @note Asset arrays store collections of file system paths or URIs to external assets.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_asset_array(nusd_stage_t stage, char const* attribute_path, char const** asset_path_array, size_t num_elements, double time_code);
 
 /// @}
 

@@ -29,8 +29,6 @@ typedef struct nusd_matrix2d_array_s* nusd_matrix2d_array_t;
 typedef struct nusd_matrix3d_array_s* nusd_matrix3d_array_t;
 typedef struct nusd_matrix4d_array_s* nusd_matrix4d_array_t;
 
-typedef struct nusd_token_array_s* nusd_token_array_t;
-
 typedef struct nusd_uint_array_s* nusd_uint_array_t;
 typedef struct nusd_uint64_array_s* nusd_uint64_array_t;
 typedef struct nusd_uchar_array_s* nusd_uchar_array_t;
@@ -561,39 +559,6 @@ double* nusd_matrix4d_array_data(nusd_matrix4d_array_t matrix4d_array);
 /// @note It is safe to call this function with a null array handle.
 NANOUSD_API
 void nusd_matrix4d_array_destroy(nusd_matrix4d_array_t matrix4d_array);
-
-// token
-/// Returns the number of tokens in a token array.
-/// 
-/// @param token_array Valid token array handle.
-/// 
-/// @return Number of tokens in the array
-/// 
-/// @note token_array must not be null.
-NANOUSD_API
-size_t nusd_token_array_size(nusd_token_array_t token_array);
-
-/// Returns the token at the specified index in a token array.
-/// 
-/// @param token_array Valid token array handle.
-/// @param index Index of the token to retrieve (must be < nusd_token_array_size()).
-/// 
-/// @return Pointer to the token string at the specified index
-/// 
-/// @note token_array must not be null.
-/// @note index must be a valid index within the array bounds.
-/// @note The returned pointer is valid until the array is destroyed.
-NANOUSD_API
-char const* nusd_token_array_index(nusd_token_array_t token_array, size_t index);
-
-/// Destroys a token array and releases associated resources.
-/// 
-/// @param token_array Valid token array handle to destroy. Can be null (no-op).
-/// 
-/// @note After calling this function, the array handle becomes invalid and must not be used.
-/// @note It is safe to call this function with a null array handle.
-NANOUSD_API
-void nusd_token_array_destroy(nusd_token_array_t token_array);
 
 /// Returns the number of elements in a uchar array.
 /// 

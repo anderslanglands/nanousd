@@ -285,6 +285,27 @@ nusd_result_t nusd_prim_compute_local_to_world_transform(nusd_stage_t stage, cha
 NANOUSD_API
 char const* nusd_path_get_name(char const* path);
 
+/// Gets the asset path string from an asset path handle.
+/// 
+/// @param asset_path Valid asset path handle.
+/// 
+/// @return The asset path string, or null if asset_path is null.
+/// 
+/// @note asset_path must not be null for valid results.
+/// @note The returned string is valid as long as the asset_path handle remains valid.
+/// @note Asset paths represent file system paths or URIs to external assets like textures, geometry files, etc.
+NANOUSD_API
+char const* nusd_asset_path_get_asset_path(nusd_asset_path_t asset_path);
+
+/// Destroys an asset path handle and releases associated resources.
+/// 
+/// @param asset_path Valid asset path handle to destroy. Can be null (no-op).
+/// 
+/// @note After calling this function, the asset_path handle becomes invalid and must not be used.
+/// @note It is safe to call this function with a null asset_path handle.
+NANOUSD_API
+void nusd_asset_path_destroy(nusd_asset_path_t asset_path);
+
 #ifdef __cplusplus
 }
 #endif
