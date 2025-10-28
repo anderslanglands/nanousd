@@ -1,6 +1,10 @@
 #ifndef NANOUSD_H
 #define NANOUSD_H
 
+/// @file nanousd.h
+///
+/// @brief C API for nanousd
+
 #include "nanousd-types.h"
 #include "nanousd-iterators.h"
 #include "nanousd-arrays.h"
@@ -9,6 +13,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/// @defgroup StageFunctions Stage Functions
+/// 
+/// @brief Functions related to stage management
+///
+/// @{
 
 /// Opens an existing USD stage from a file.
 /// 
@@ -137,6 +147,16 @@ bool nusd_stage_path_is_valid_prim(nusd_stage_t stage, char const* prim_path);
 NANOUSD_API
 nusd_result_t nusd_stage_traverse(nusd_stage_t stage, nusd_prim_iterator_t* iterator);
 
+
+/// @}
+
+
+/// @defgroup PrimFunctions Prim Functions
+/// 
+/// @brief Functions related to managing prims
+///
+/// @{
+
 /// Creates an iterator for all properties (attributes and relationships) of a prim.
 /// 
 /// @param stage Valid stage handle.
@@ -152,26 +172,6 @@ nusd_result_t nusd_stage_traverse(nusd_stage_t stage, nusd_prim_iterator_t* iter
 /// @note iterator must not be null.
 NANOUSD_API
 nusd_result_t nusd_prim_get_properties(nusd_stage_t stage, char const* prim_path, nusd_property_iterator_t* iterator);
-
-/// Creates a new property (attribute or relationship) on a prim.
-/// 
-/// @param stage Valid stage handle.
-/// @param prim_path USD path to the prim where the property should be created.
-/// @param property_name Name of the property to create.
-/// @param property_type Type of the property (use NUSD_TYPE_RELATIONSHIP for relationships, or any attribute type).
-/// 
-/// @return NUSD_RESULT_OK on success
-/// @return NUSD_RESULT_INVALID_PRIM_PATH if no prim exists at the specified path
-/// @return NUSD_RESULT_INVALID_PROPERTY_TYPE if the property type is not recognized
-/// @return NUSD_RESULT_CREATE_RELATIONSHIP_FAILED if relationship creation fails
-/// @return NUSD_RESULT_CREATE_ATTRIBUTE_FAILED if attribute creation fails
-/// 
-/// @note stage must not be null.
-/// @note prim_path must not be null.
-/// @note property_name must not be null.
-/// @note property_type must not be null and should be a valid USD type token.
-NANOUSD_API
-nusd_result_t nusd_prim_create_property(nusd_stage_t stage, char const* prim_path, char const* property_name, nusd_type_t property_type);
 
 /// Creates an iterator for all attributes of a prim.
 /// 
@@ -204,6 +204,30 @@ nusd_result_t nusd_prim_get_attributes(nusd_stage_t stage, char const* prim_path
 /// @note iterator must not be null.
 NANOUSD_API
 nusd_result_t nusd_prim_get_relationships(nusd_stage_t stage, char const* prim_path, nusd_relationship_iterator_t* iterator);
+
+/// Creates a new property (attribute or relationship) on a prim.
+/// 
+/// @param stage Valid stage handle.
+/// @param prim_path USD path to the prim where the property should be created.
+/// @param property_name Name of the property to create.
+/// @param property_type Type of the property (use NUSD_TYPE_RELATIONSHIP for relationships, or any attribute type).
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if no prim exists at the specified path
+/// @return NUSD_RESULT_INVALID_PROPERTY_TYPE if the property type is not recognized
+/// @return NUSD_RESULT_CREATE_RELATIONSHIP_FAILED if relationship creation fails
+/// @return NUSD_RESULT_CREATE_ATTRIBUTE_FAILED if attribute creation fails
+/// 
+/// @note stage must not be null.
+/// @note prim_path must not be null.
+/// @note property_name must not be null.
+/// @note property_type must not be null and should be a valid USD type token.
+NANOUSD_API
+nusd_result_t nusd_prim_create_property(nusd_stage_t stage, char const* prim_path, char const* property_name, nusd_type_t property_type);
+
+
+/// @}
+
 
 /// Extracts the name from a USD path.
 /// 

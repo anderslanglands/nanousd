@@ -21,3 +21,6 @@ pytest:
 
 pyexample:
     cd python && uv run example01.py; cd -
+
+docs:
+    cmake --build build --target docs
