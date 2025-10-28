@@ -14,6 +14,7 @@ bind:
         $PWD/../nanousd-arrays.h \
         $PWD/../nanousd-iterators.h \
         $PWD/../nanousd-properties.h \
+        $PWD/../nanousd-cameras.h \
         ; cd - 
 
 pytest:

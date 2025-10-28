@@ -555,7 +555,9 @@ class Stage:
             return FloatArray(value)
         elif property_type in [_lib.NUSD_TYPE_FLOAT2, _lib.NUSD_TYPE_TEXCOORD2F]:
             value = (c_float * 2)()
-            result = _lib.nusd_attribute_get_float2(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_float2(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -583,7 +585,9 @@ class Stage:
             _lib.NUSD_TYPE_NORMAL3F,
         ]:
             value = (c_float * 3)()
-            result = _lib.nusd_attribute_get_float3(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_float3(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -608,7 +612,9 @@ class Stage:
             return Float3Array(value)
         elif property_type in [_lib.NUSD_TYPE_FLOAT4, _lib.NUSD_TYPE_COLOR4F]:
             value = (c_float * 4)()
-            result = _lib.nusd_attribute_get_float4(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_float4(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -646,7 +652,9 @@ class Stage:
             return DoubleArray(value)
         elif property_type in [_lib.NUSD_TYPE_DOUBLE2, _lib.NUSD_TYPE_TEXCOORD2D]:
             value = (c_double * 2)()
-            result = _lib.nusd_attribute_get_double2(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_double2(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -674,7 +682,9 @@ class Stage:
             _lib.NUSD_TYPE_NORMAL3D,
         ]:
             value = (c_double * 3)()
-            result = _lib.nusd_attribute_get_double3(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_double3(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -699,7 +709,9 @@ class Stage:
             return Double3Array(value)
         elif property_type in [_lib.NUSD_TYPE_DOUBLE4, _lib.NUSD_TYPE_COLOR4D]:
             value = (c_double * 4)()
-            result = _lib.nusd_attribute_get_double4(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_double4(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -740,7 +752,9 @@ class Stage:
             return IntArray(value)
         elif property_type == _lib.NUSD_TYPE_INT2:
             value = (c_int * 2)()
-            result = _lib.nusd_attribute_get_int2(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_int2(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -758,7 +772,9 @@ class Stage:
             return Int2Array(value)
         elif property_type == _lib.NUSD_TYPE_INT3:
             value = (c_int * 3)()
-            result = _lib.nusd_attribute_get_int3(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_int3(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -776,7 +792,9 @@ class Stage:
             return Int3Array(value)
         elif property_type == _lib.NUSD_TYPE_INT4:
             value = (c_int * 4)()
-            result = _lib.nusd_attribute_get_int4(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_int4(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -834,7 +852,9 @@ class Stage:
             return BoolArray(value)
         elif property_type == _lib.NUSD_TYPE_MATRIX2D:
             value = (c_double * 4)()
-            result = _lib.nusd_attribute_get_matrix2d(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_matrix2d(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -852,7 +872,9 @@ class Stage:
             return Matrix2dArray(value)
         elif property_type == _lib.NUSD_TYPE_MATRIX3D:
             value = (c_double * 9)()
-            result = _lib.nusd_attribute_get_matrix3d(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_matrix3d(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -870,7 +892,9 @@ class Stage:
             return Matrix3dArray(value)
         elif property_type == _lib.NUSD_TYPE_MATRIX4D:
             value = (c_double * 16)()
-            result = _lib.nusd_attribute_get_matrix4d(self._stage, property_path, time_code, value)
+            result = _lib.nusd_attribute_get_matrix4d(
+                self._stage, property_path, time_code, value
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -888,6 +912,7 @@ class Stage:
             return Matrix4dArray(value)
         elif property_type == _lib.NUSD_TYPE_UINT:
             from ctypes import c_uint
+
             value = c_uint(0)
             result = _lib.nusd_attribute_get_uint(
                 self._stage, property_path, time_code, byref(value)
@@ -909,6 +934,7 @@ class Stage:
             return UintArray(value)
         elif property_type == _lib.NUSD_TYPE_UINT64:
             from ctypes import c_ulonglong
+
             value = c_ulonglong(0)
             result = _lib.nusd_attribute_get_uint64(
                 self._stage, property_path, time_code, byref(value)
@@ -930,6 +956,7 @@ class Stage:
             return Uint64Array(value)
         elif property_type == _lib.NUSD_TYPE_UCHAR:
             from ctypes import c_ubyte
+
             value = c_ubyte(0)
             result = _lib.nusd_attribute_get_uchar(
                 self._stage, property_path, time_code, byref(value)
@@ -962,7 +989,74 @@ class Stage:
                 f'failed to define prim <{prim_path}> of type "{prim_type}": {result}'
             )
 
-    def set_property(self, property_path: str, property_type, value: Any, time_code: float = 0.0):
+    def prim_set_transform(
+        self,
+        xformable_path: str,
+        local_to_parent_matrix: np.ndarray,
+        time_code: float = 0.0,
+    ):
+        """Set the transform matrix for an Xformable prim, positioning it relative to its parent.
+
+        Args:
+            xformable_path: USD path to an existing Xformable prim
+            local_to_parent_matrix: 4x4 transformation matrix as NumPy array (float64) that transforms
+                            from local space to its parent space (row-major order)
+            time_code: The time at which to set the transform (default: 0.0)
+
+        Raises:
+            SetPropertyError: If xformable_path is invalid or local_to_parent_matrix is wrong shape/type
+        """
+        if (
+            not isinstance(local_to_parent_matrix, np.ndarray)
+            or local_to_parent_matrix.shape != (4, 4)
+            or local_to_parent_matrix.dtype != np.float64
+        ):
+            raise SetPropertyError(
+                f"local_to_parent_matrix must be a 4x4 float64 NumPy array, got {type(local_to_parent_matrix)} with shape {getattr(local_to_parent_matrix, 'shape', 'N/A')} and dtype {getattr(local_to_parent_matrix, 'dtype', 'N/A')}"
+            )
+
+        flat_matrix = local_to_parent_matrix.flatten()
+        result = _lib.nusd_prim_set_transform(
+            self._stage,
+            xformable_path.encode("ascii"),
+            flat_matrix.ctypes.data_as(POINTER(c_double)),
+            c_double(time_code),
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(
+                f'failed to set local transform for "{xformable_path}": {result}'
+            )
+
+    def prim_compute_local_to_world_transform(
+        self, xformable_path: str, time_code: float = 0.0
+    ) -> np.ndarray:
+        """Compute the complete transformation matrix from a prim's local space to world space.
+
+        Args:
+            xformable_path: USD path to a transformable prim (must inherit from UsdGeomXformable)
+            time_code: The time at which to evaluate the transformation (default: 0.0)
+
+        Returns:
+            4x4 transformation matrix as NumPy array (float64) in row-major order that transforms
+            points from the prim's local coordinate space to world space
+
+        Raises:
+            GetPropertyError: If xformable_path is invalid or prim is not transformable
+        """
+        transform = (c_double * 16)()
+        result = _lib.nusd_prim_compute_local_to_world_transform(
+            self._stage, xformable_path.encode("ascii"), c_double(time_code), transform
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise GetPropertyError(
+                f'failed to compute local-to-world transform for "{xformable_path}": {result}'
+            )
+
+        return np.array(transform).reshape(4, 4)
+
+    def set_property(
+        self, property_path: str, property_type, value: Any, time_code: float = 0.0
+    ):
         if property_type == FLOAT:
             if not isinstance(value, float):
                 raise SetPropertyError(
@@ -1023,13 +1117,20 @@ class Stage:
                     )
 
             c_value = (c_float * 2)(value[0], value[1])
-            result = _lib.nusd_attribute_set_float2(self._stage, property_path, c_value, time_code)
+            result = _lib.nusd_attribute_set_float2(
+                self._stage, property_path, c_value, time_code
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type in [FLOAT2ARRAY, TEXCOORD2FARRAY]:
-            if not isinstance(value, np.ndarray) or not value.dtype == np.float32 or value.ndim != 2 or value.shape[1] != 2:
+            if (
+                not isinstance(value, np.ndarray)
+                or not value.dtype == np.float32
+                or value.ndim != 2
+                or value.shape[1] != 2
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
                 )
@@ -1045,8 +1146,20 @@ class Stage:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
                 )
-        elif property_type in [FLOAT3ARRAY, TEXCOORD3FARRAY, COLOR3FARRAY, POINT3FARRAY, VECTOR3FARRAY, NORMAL3FARRAY]:
-            if not isinstance(value, np.ndarray) or value.dtype != np.float32 or value.ndim != 2 or value.shape[1] != 3:
+        elif property_type in [
+            FLOAT3ARRAY,
+            TEXCOORD3FARRAY,
+            COLOR3FARRAY,
+            POINT3FARRAY,
+            VECTOR3FARRAY,
+            NORMAL3FARRAY,
+        ]:
+            if (
+                not isinstance(value, np.ndarray)
+                or value.dtype != np.float32
+                or value.ndim != 2
+                or value.shape[1] != 3
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
                 )
@@ -1063,7 +1176,12 @@ class Stage:
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type in [FLOAT4ARRAY, COLOR4FARRAY]:
-            if not isinstance(value, np.ndarray) or value.dtype != np.float32 or value.ndim != 2 or value.shape[1] != 4:
+            if (
+                not isinstance(value, np.ndarray)
+                or value.dtype != np.float32
+                or value.ndim != 2
+                or value.shape[1] != 4
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
                 )
@@ -1106,7 +1224,9 @@ class Stage:
                     )
 
             c_value = (c_float * 3)(value[0], value[1], value[2])
-            result = _lib.nusd_attribute_set_float3(self._stage, property_path, c_value, time_code)
+            result = _lib.nusd_attribute_set_float3(
+                self._stage, property_path, c_value, time_code
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -1131,7 +1251,9 @@ class Stage:
                     )
 
             c_value = (c_float * 4)(value[0], value[1], value[2], value[3])
-            result = _lib.nusd_attribute_set_float4(self._stage, property_path, c_value, time_code)
+            result = _lib.nusd_attribute_set_float4(
+                self._stage, property_path, c_value, time_code
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -1168,7 +1290,9 @@ class Stage:
                     )
 
             c_value = (c_int * 2)(int(value[0]), int(value[1]))
-            result = _lib.nusd_attribute_set_int2(self._stage, property_path, c_value, time_code)
+            result = _lib.nusd_attribute_set_int2(
+                self._stage, property_path, c_value, time_code
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -1193,7 +1317,9 @@ class Stage:
                     )
 
             c_value = (c_int * 3)(int(value[0]), int(value[1]), int(value[2]))
-            result = _lib.nusd_attribute_set_int3(self._stage, property_path, c_value, time_code)
+            result = _lib.nusd_attribute_set_int3(
+                self._stage, property_path, c_value, time_code
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -1220,7 +1346,9 @@ class Stage:
             c_value = (c_int * 4)(
                 int(value[0]), int(value[1]), int(value[2]), int(value[3])
             )
-            result = _lib.nusd_attribute_set_int4(self._stage, property_path, c_value, time_code)
+            result = _lib.nusd_attribute_set_int4(
+                self._stage, property_path, c_value, time_code
+            )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -1254,7 +1382,12 @@ class Stage:
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == INT2ARRAY:
-            if not isinstance(value, np.ndarray) or value.dtype != np.int32 or value.ndim != 2 or value.shape[1] != 2:
+            if (
+                not isinstance(value, np.ndarray)
+                or value.dtype != np.int32
+                or value.ndim != 2
+                or value.shape[1] != 2
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
                 )
@@ -1271,7 +1404,12 @@ class Stage:
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == INT3ARRAY:
-            if not isinstance(value, np.ndarray) or value.dtype != np.int32 or value.ndim != 2 or value.shape[1] != 3:
+            if (
+                not isinstance(value, np.ndarray)
+                or value.dtype != np.int32
+                or value.ndim != 2
+                or value.shape[1] != 3
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
                 )
@@ -1288,7 +1426,12 @@ class Stage:
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == INT4ARRAY:
-            if not isinstance(value, np.ndarray) or value.dtype != np.int32 or value.ndim != 2 or value.shape[1] != 4:
+            if (
+                not isinstance(value, np.ndarray)
+                or value.dtype != np.int32
+                or value.ndim != 2
+                or value.shape[1] != 4
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
                 )
@@ -1337,7 +1480,12 @@ class Stage:
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == DOUBLE2ARRAY:
-            if not isinstance(value, np.ndarray) or value.dtype != np.float64 or value.ndim != 2 or value.shape[1] != 2:
+            if (
+                not isinstance(value, np.ndarray)
+                or value.dtype != np.float64
+                or value.ndim != 2
+                or value.shape[1] != 2
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
                 )
@@ -1354,7 +1502,12 @@ class Stage:
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == DOUBLE3ARRAY:
-            if not isinstance(value, np.ndarray) or value.dtype != np.float64 or value.ndim != 2 or value.shape[1] != 3:
+            if (
+                not isinstance(value, np.ndarray)
+                or value.dtype != np.float64
+                or value.ndim != 2
+                or value.shape[1] != 3
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
                 )
@@ -1371,7 +1524,12 @@ class Stage:
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == DOUBLE4ARRAY:
-            if not isinstance(value, np.ndarray) or value.dtype != np.float64 or value.ndim != 2 or value.shape[1] != 4:
+            if (
+                not isinstance(value, np.ndarray)
+                or value.dtype != np.float64
+                or value.ndim != 2
+                or value.shape[1] != 4
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
                 )
@@ -1416,7 +1574,11 @@ class Stage:
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == MATRIX2D:
-            if not isinstance(value, np.ndarray) or value.shape != (2, 2) or value.dtype != np.float64:
+            if (
+                not isinstance(value, np.ndarray)
+                or value.shape != (2, 2)
+                or value.dtype != np.float64
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}>: expected 2x2 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
                 )
@@ -1425,14 +1587,19 @@ class Stage:
                 self._stage,
                 property_path,
                 flat_data.ctypes.data_as(POINTER(c_double)),
-                time_code
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == MATRIX2DARRAY:
-            if not isinstance(value, np.ndarray) or len(value.shape) != 3 or value.shape[1:] != (2, 2) or value.dtype != np.float64:
+            if (
+                not isinstance(value, np.ndarray)
+                or len(value.shape) != 3
+                or value.shape[1:] != (2, 2)
+                or value.dtype != np.float64
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}>: expected Nx2x2 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
                 )
@@ -1442,14 +1609,18 @@ class Stage:
                 property_path,
                 flat_data.ctypes.data_as(POINTER(c_double)),
                 c_size_t(value.shape[0]),
-                time_code
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == MATRIX3D:
-            if not isinstance(value, np.ndarray) or value.shape != (3, 3) or value.dtype != np.float64:
+            if (
+                not isinstance(value, np.ndarray)
+                or value.shape != (3, 3)
+                or value.dtype != np.float64
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}>: expected 3x3 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
                 )
@@ -1458,14 +1629,19 @@ class Stage:
                 self._stage,
                 property_path,
                 flat_data.ctypes.data_as(POINTER(c_double)),
-                time_code
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == MATRIX3DARRAY:
-            if not isinstance(value, np.ndarray) or len(value.shape) != 3 or value.shape[1:] != (3, 3) or value.dtype != np.float64:
+            if (
+                not isinstance(value, np.ndarray)
+                or len(value.shape) != 3
+                or value.shape[1:] != (3, 3)
+                or value.dtype != np.float64
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}>: expected Nx3x3 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
                 )
@@ -1475,14 +1651,18 @@ class Stage:
                 property_path,
                 flat_data.ctypes.data_as(POINTER(c_double)),
                 c_size_t(value.shape[0]),
-                time_code
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == MATRIX4D:
-            if not isinstance(value, np.ndarray) or value.shape != (4, 4) or value.dtype != np.float64:
+            if (
+                not isinstance(value, np.ndarray)
+                or value.shape != (4, 4)
+                or value.dtype != np.float64
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}>: expected 4x4 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
                 )
@@ -1491,14 +1671,19 @@ class Stage:
                 self._stage,
                 property_path,
                 flat_data.ctypes.data_as(POINTER(c_double)),
-                time_code
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
                 )
         elif property_type == MATRIX4DARRAY:
-            if not isinstance(value, np.ndarray) or len(value.shape) != 3 or value.shape[1:] != (4, 4) or value.dtype != np.float64:
+            if (
+                not isinstance(value, np.ndarray)
+                or len(value.shape) != 3
+                or value.shape[1:] != (4, 4)
+                or value.dtype != np.float64
+            ):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}>: expected Nx4x4 float64 array, got {type(value)} with shape {getattr(value, 'shape', 'N/A')} and dtype {getattr(value, 'dtype', 'N/A')}"
                 )
@@ -1508,7 +1693,7 @@ class Stage:
                 property_path,
                 flat_data.ctypes.data_as(POINTER(c_double)),
                 c_size_t(value.shape[0]),
-                time_code
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1516,6 +1701,7 @@ class Stage:
                 )
         elif property_type == UINT:
             from ctypes import c_uint
+
             if not isinstance(value, int):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
@@ -1529,6 +1715,7 @@ class Stage:
                 )
         elif property_type == UINTARRAY:
             from ctypes import c_uint
+
             if not isinstance(value, np.ndarray) or value.dtype != np.uint32:
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
@@ -1546,6 +1733,7 @@ class Stage:
                 )
         elif property_type == UINT64:
             from ctypes import c_ulonglong
+
             if not isinstance(value, int):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
@@ -1559,6 +1747,7 @@ class Stage:
                 )
         elif property_type == UINT64ARRAY:
             from ctypes import c_ulonglong
+
             if not isinstance(value, np.ndarray) or value.dtype != np.uint64:
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
@@ -1576,6 +1765,7 @@ class Stage:
                 )
         elif property_type == UCHAR:
             from ctypes import c_ubyte
+
             if not isinstance(value, int):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
@@ -1589,6 +1779,7 @@ class Stage:
                 )
         elif property_type == UCHARARRAY:
             from ctypes import c_ubyte
+
             if not isinstance(value, np.ndarray) or value.dtype != np.uint8:
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
@@ -1608,7 +1799,12 @@ class Stage:
             raise SetPropertyError(f"invalid type for property: {type(value)}")
 
     def prim_create_property(
-        self, prim: str, property_name: str, property_type: str, value=None, time_code: float = 0.0
+        self,
+        prim: str,
+        property_name: str,
+        property_type: str,
+        value=None,
+        time_code: float = 0.0,
     ):
         result = _lib.nusd_prim_create_property(
             self._stage, prim, property_name, property_type
@@ -1619,4 +1815,110 @@ class Stage:
             )
 
         if value is not None:
-            self.set_property(f"{prim}.{property_name}", property_type, value, time_code)
+            self.set_property(
+                f"{prim}.{property_name}", property_type, value, time_code
+            )
+
+    def camera_define(self, camera_path: str):
+        """Define a new USD camera prim at the specified path.
+
+        Args:
+            camera_path: USD path where the camera should be created (e.g., "/World/Camera")
+
+        Raises:
+            DefinePrimError: If the camera cannot be defined at the specified path
+        """
+        result = _lib.nusd_camera_define(self._stage, camera_path.encode("ascii"))
+        if result != _lib.NUSD_RESULT_OK:
+            raise DefinePrimError(
+                f'failed to define camera at "{camera_path}": {result}'
+            )
+
+    def camera_set_fov_w(
+        self, camera_path: str, fov_w_deg: float, time_code: float = 0.0
+    ):
+        """Set the horizontal field of view for a camera by setting its focal length.
+
+        Args:
+            camera_path: USD path to an existing camera prim
+            fov_w_deg: Horizontal field of view in degrees
+            time_code: The time at which to set the field of view (default: 0.0)
+
+        Raises:
+            SetPropertyError: If camera_path is invalid
+        """
+        result = _lib.nusd_camera_set_fov_w(
+            self._stage,
+            camera_path.encode("ascii"),
+            c_float(fov_w_deg),
+            c_double(time_code),
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(
+                f'failed to set camera FOV for "{camera_path}": {result}'
+            )
+
+    def camera_set_exposure(
+        self,
+        camera_path: str,
+        iso: float,
+        time: float,
+        f_stop: float,
+        compensation: float,
+        responsivity: float,
+        time_code: float = 0.0,
+    ):
+        """Set the exposure parameters for a camera, simulating real camera controls.
+
+        Args:
+            camera_path: USD path to an existing camera prim
+            iso: ISO sensitivity value (e.g., 100, 400, 800, 1600)
+            time: Exposure time in seconds (e.g., 1/60 = 0.0167 for 60fps)
+            f_stop: F-stop value controlling depth of field (e.g., 1.4, 2.8, 5.6, 11)
+            compensation: Exposure compensation in stops (positive brightens, negative darkens)
+            responsivity: Camera sensor responsivity factor
+            time_code: The time at which to set the exposure parameters (default: 0.0)
+
+        Raises:
+            SetPropertyError: If camera_path is invalid
+        """
+        result = _lib.nusd_camera_set_exposure(
+            self._stage,
+            camera_path.encode("ascii"),
+            c_float(iso),
+            c_float(time),
+            c_float(f_stop),
+            c_float(compensation),
+            c_float(responsivity),
+            c_double(time_code),
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(
+                f'failed to set camera exposure for "{camera_path}": {result}'
+            )
+
+    def camera_set_clipping_range(
+        self, camera_path: str, near: float, far: float, time_code: float = 0.0
+    ):
+        """Set the near and far clipping distances for a camera's viewing frustum.
+
+        Args:
+            camera_path: USD path to an existing camera prim
+            near: Near clipping distance in scene units (should be small positive value like 0.1)
+            far: Far clipping distance in scene units (should be greater than near)
+            time_code: The time at which to set the clipping range (default: 0.0)
+
+        Raises:
+            SetPropertyError: If camera_path is invalid
+        """
+        result = _lib.nusd_camera_set_clipping_range(
+            self._stage,
+            camera_path.encode("ascii"),
+            c_float(near),
+            c_float(far),
+            c_double(time_code),
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(
+                f'failed to set camera clipping range for "{camera_path}": {result}'
+            )

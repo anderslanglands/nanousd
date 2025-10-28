@@ -415,3 +415,141 @@ def test_set_property_uchar_array():
     value = stage.get_property("/World.testUcharArray")
     assert isinstance(value, nusd.UcharArray)
     assert np.array_equal(value, test_data)
+
+
+def test_camera_define():
+    """Test camera definition"""
+    stage = nusd.Stage.create_in_memory("test_camera_define")
+    stage.camera_define("/World/Camera")
+    # Camera should now exist as a valid prim (assuming stage has method to check this)
+
+
+def test_prim_set_transform():
+    """Test prim transform setting and verification using world transform"""
+    stage = nusd.Stage.create_in_memory("test_prim_transform")
+    stage.camera_define("/World/Camera")
+    
+    # Set up a test transformation matrix
+    transform_matrix = np.array([
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [5.0, 3.0, 10.0, 1.0]
+    ], dtype=np.float64)
+    
+    # Set the camera transform
+    stage.prim_set_transform("/World/Camera", transform_matrix)
+    
+    # Use prim_compute_local_to_world_transform to verify the resulting world transform
+    world_transform = stage.prim_compute_local_to_world_transform("/World/Camera")
+    
+    # Since camera is a direct child of World and World has identity transform,
+    # the world transform should match our camera_to_parent_matrix
+    assert world_transform.shape == (4, 4)
+    assert world_transform.dtype == np.float64
+    assert np.allclose(world_transform, transform_matrix)
+
+
+def test_camera_set_fov_w():
+    """Test camera field of view setting"""
+    stage = nusd.Stage.create_in_memory("test_camera_fov")
+    stage.camera_define("/World/Camera")
+    
+    # Get the default horizontal aperture first
+    horizontal_aperture = stage.get_property("/World/Camera.horizontalAperture")
+    
+    # Set horizontal field of view to 60 degrees
+    test_fov = 60.0
+    stage.camera_set_fov_w("/World/Camera", test_fov)
+    
+    # Verify by reading the focalLength attribute that was set
+    focal_length = stage.get_property("/World/Camera.focalLength")
+    
+    # The focal length should be calculated from FOV and the actual horizontal aperture
+    # focal_length = aperture / (2 * tan(fov/2))
+    expected_focal_length = horizontal_aperture / (2.0 * np.tan(np.radians(test_fov) / 2.0))
+    assert abs(focal_length - expected_focal_length) < 0.01
+
+
+def test_camera_set_exposure():
+    """Test camera exposure parameter setting"""
+    stage = nusd.Stage.create_in_memory("test_camera_exposure")
+    stage.camera_define("/World/Camera")
+    
+    # Set exposure parameters
+    iso = 400.0
+    time = 1.0 / 60.0  # 1/60 second
+    f_stop = 2.8
+    compensation = 0.5
+    responsivity = 1.0
+    
+    stage.camera_set_exposure("/World/Camera", iso, time, f_stop, compensation, responsivity)
+    
+    # Verify each exposure attribute was set correctly (using approximate equality for float precision)
+    assert abs(stage.get_property("/World/Camera.exposure:iso") - iso) < 1e-6
+    assert abs(stage.get_property("/World/Camera.exposure:time") - time) < 1e-6
+    assert abs(stage.get_property("/World/Camera.exposure:fStop") - f_stop) < 1e-6
+    assert abs(stage.get_property("/World/Camera.exposure") - compensation) < 1e-6
+    assert abs(stage.get_property("/World/Camera.exposure:responsivity") - responsivity) < 1e-6
+
+
+def test_camera_set_clipping_range():
+    """Test camera clipping range setting"""
+    stage = nusd.Stage.create_in_memory("test_camera_clipping")
+    stage.camera_define("/World/Camera")
+    
+    # Set clipping range
+    near = 0.1
+    far = 1000.0
+    
+    stage.camera_set_clipping_range("/World/Camera", near, far)
+    
+    # Verify by reading the clippingRange attribute (float2)
+    clipping_range = stage.get_property("/World/Camera.clippingRange")
+    
+    # Should be a numpy array with [near, far]
+    assert isinstance(clipping_range, np.ndarray)
+    assert len(clipping_range) == 2
+    assert clipping_range[0] == near
+    assert clipping_range[1] == far
+
+
+def test_prim_compute_local_to_world_transform():
+    """Test local-to-world transform computation"""
+    stage = nusd.Stage.create_in_memory("test_transform_compute")
+    
+    # Create a simple hierarchy: World -> Parent -> Child
+    stage.define_prim("/World", "Xform")
+    stage.define_prim("/World/Parent", "Xform")
+    stage.define_prim("/World/Parent/Child", "Xform")
+    
+    # For World prim, the transform should be identity
+    world_transform = stage.prim_compute_local_to_world_transform("/World")
+    expected_identity = np.eye(4, dtype=np.float64)
+    assert np.allclose(world_transform, expected_identity)
+    
+    # Test that the function returns proper shape and type
+    assert world_transform.shape == (4, 4)
+    assert world_transform.dtype == np.float64
+
+
+def test_camera_functions_with_time_code():
+    """Test camera functions with explicit time codes"""
+    stage = nusd.Stage.create_in_memory("test_camera_time")
+    stage.camera_define("/World/Camera")
+    
+    # Test with non-default time code
+    time_code = 24.0
+    
+    # Set transform at specific time
+    transform_matrix = np.eye(4, dtype=np.float64)
+    transform_matrix[0, 3] = 10.0  # Translation in X
+    stage.prim_set_transform("/World/Camera", transform_matrix, time_code)
+    
+    # Set other properties at the same time
+    stage.camera_set_fov_w("/World/Camera", 45.0, time_code)
+    stage.camera_set_clipping_range("/World/Camera", 0.5, 500.0, time_code)
+    
+    # Verify transform computation at that time
+    world_transform = stage.prim_compute_local_to_world_transform("/World/Camera", time_code)
+    assert np.allclose(world_transform, transform_matrix)

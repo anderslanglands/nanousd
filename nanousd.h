@@ -225,6 +225,49 @@ nusd_result_t nusd_prim_get_relationships(nusd_stage_t stage, char const* prim_p
 NANOUSD_API
 nusd_result_t nusd_prim_create_property(nusd_stage_t stage, char const* prim_path, char const* property_name, nusd_type_t property_type);
 
+/// Sets the transform matrix for a prim, positioning it relative to its parent.
+/// 
+/// @param stage Valid stage handle.
+/// @param xformable_path USD path to an existing Xformable prim.
+/// @param camera_to_parent_matrix Pointer to 16 double values representing a 4x4 transformation matrix 
+///                                in row-major order that transforms from local space to its parent space.
+/// @param time_code The time at which to set the transform. Use NUSD_TIMECODE_DEFAULT 
+///                  for the default time. Time samples can be set for animation.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if no prim exists at the specified path
+/// @return NUSD_RESULT_NULL_PARAMETER if local_to_parent is null
+/// 
+/// @note stage must not be null.
+/// @note xformable_path must not be null and should point to an existing Xformable prim.
+/// @note local_to_parent must not be null and should contain 16 valid double values.
+/// @note The matrix should represent the transformation from prim space to its parent's coordinate space.
+/// @note USD cameras use a "Y up" coordinate system regardless of stage orientation.
+NANOUSD_API
+nusd_result_t nusd_prim_set_transform(nusd_stage_t stage, char const* xformable_path, double* local_to_parent, double time_code);
+
+/// Computes the complete transformation matrix from a prim's local space to world space.
+/// 
+/// @param stage Valid stage handle.
+/// @param xformable_path USD path to a transformable prim (must inherit from UsdGeomXformable).
+/// @param time_code The time at which to evaluate the transformation. Use NUSD_TIMECODE_DEFAULT 
+///                  for the default time. Different times may yield different transforms for animated objects.
+/// @param transform Output pointer to a 16-element double array that will receive the 4x4 transformation matrix 
+///                  in row-major order. The matrix transforms points from the prim's local coordinate space to world space.
+/// 
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if any parameter is null
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if no transformable prim exists at the specified path
+/// 
+/// @note stage must not be null.
+/// @note xformable_path must not be null and should point to a prim that inherits from UsdGeomXformable.
+/// @note transform must not be null and should point to a buffer capable of holding 16 double values.
+/// @note The computed matrix includes all transformations from the prim up to the root of the scene.
+/// @note This includes the prim's own local transforms as well as all inherited parent transforms.
+/// @note The resulting matrix can be used to position geometry or cameras in world space.
+/// @note For animated prims, the transformation may vary over time based on the time_code parameter.
+NANOUSD_API
+nusd_result_t nusd_prim_compute_local_to_world_transform(nusd_stage_t stage, char const* xformable_path, double time_code, double* transform);
 
 /// @}
 

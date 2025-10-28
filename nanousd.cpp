@@ -7,6 +7,9 @@
 #include <pxr/usd/usd/relationship.h>
 #include <pxr/usd/sdf/types.h>
 #include <pxr/usd/usd/stage.h>
+#include <pxr/usd/usdGeom/camera.h>
+#include <pxr/usd/usdGeom/xformable.h>
+#include <pxr/usd/usdGeom/mesh.h>
 
 #include <pxr/base/tf/refPtr.h>
 #include <pxr/base/vt/value.h>
@@ -20,7 +23,9 @@
 
 #include <string.h>
 
-#include <iostream>
+#include <math.h>
+
+#include <stdio.h>
 
 struct nusd_prim_iterator_s {
     // TODO - do we need to hold the range here for iterator to be valid?
@@ -255,6 +260,13 @@ using namespace PXR_NS;
 
 using StageMap = std::unordered_map<UsdStage*, UsdStageRefPtr>;
 StageMap STAGES;
+
+
+float C_PI = 3.141592653589793f;
+
+static float radians(float degrees) {
+    return degrees * C_PI / 180.0f;
+}
 
 static void initialize_tokens() {
     std::lock_guard<std::mutex> lock(MTX_TOKEN_INIT);
@@ -2542,6 +2554,102 @@ nusd_result_t nusd_attribute_set_double4_array(nusd_stage_t stage, char const* a
     GfVec4d* data = reinterpret_cast<GfVec4d*>(_data);
     VtArray<GfVec4d> value(data, data + num_elements);
     attr.Set(std::move(value), time_code);
+    return NUSD_RESULT_OK;
+}
+
+
+nusd_result_t nusd_camera_define(nusd_stage_t stage, char const* camera_path) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+
+    UsdGeomCamera camera = UsdGeomCamera::Define(UsdStageWeakPtr(_stage), SdfPath(camera_path));
+    if (!camera) {
+        return NUSD_RESULT_DEFINE_PRIM_FAILED;
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_prim_set_transform(nusd_stage_t stage, char const* xformable_path, double* local_to_parent_matrix, double time_code) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+
+    UsdGeomXformable xformable = UsdGeomXformable::Get(UsdStageWeakPtr(_stage), SdfPath(xformable_path));
+    if (!xformable) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    if (local_to_parent_matrix) {
+        UsdGeomXformOp op = xformable.AddTransformOp();
+        op.Set(*reinterpret_cast<GfMatrix4d*>(local_to_parent_matrix), time_code);
+    } else {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_camera_set_fov_w(nusd_stage_t stage, char const* camera_path, float fov_w, double time_code) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+
+    UsdGeomCamera camera = UsdGeomCamera::Get(UsdStageWeakPtr(_stage), SdfPath(camera_path));
+    if (!camera) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    float w;
+    camera.GetHorizontalApertureAttr().Get(&w);
+    float f = w / (2.0f * tanf(radians(fov_w) / 2.0f));
+
+    camera.GetFocalLengthAttr().Set(f, time_code);
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_camera_set_exposure(nusd_stage_t stage, char const* camera_path, float iso, float time, float f_stop, float compensation, float responsivity, double time_code) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+
+    UsdGeomCamera camera = UsdGeomCamera::Get(UsdStageWeakPtr(_stage), SdfPath(camera_path));
+    if (!camera) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    camera.GetExposureIsoAttr().Set(iso, time_code);
+    camera.GetExposureTimeAttr().Set(time, time_code);
+    camera.GetExposureFStopAttr().Set(f_stop, time_code);
+    camera.GetExposureAttr().Set(compensation, time_code);
+    camera.GetExposureResponsivityAttr().Set(responsivity, time_code);
+
+    return NUSD_RESULT_OK;
+}
+
+
+nusd_result_t nusd_camera_set_clipping_range(nusd_stage_t stage, char const* camera_path, float near, float far, double time_code) {
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+
+    UsdGeomCamera camera = UsdGeomCamera::Get(UsdStageWeakPtr(_stage), SdfPath(camera_path));
+    if (!camera) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    camera.GetClippingRangeAttr().Set(GfVec2f(near, far), time_code);
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_prim_compute_local_to_world_transform(nusd_stage_t stage, char const* xformable_path, double time_code, double* transform) {
+    if (stage == nullptr || xformable_path == nullptr || transform == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+
+    UsdGeomXformable xformable = UsdGeomXformable::Get(UsdStageWeakPtr(_stage), SdfPath(xformable_path));
+    if (!xformable) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    GfMatrix4d matrix = xformable.ComputeLocalToWorldTransform(time_code);
+    memcpy(transform, matrix.data(), sizeof(double) * 16);
+
     return NUSD_RESULT_OK;
 }
 
