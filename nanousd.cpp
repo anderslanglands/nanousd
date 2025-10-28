@@ -702,7 +702,7 @@ nusd_result_t nusd_attribute_iterator_destroy(nusd_attribute_iterator_t iterator
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_token(nusd_stage_t stage, char const* attribute_path, char const** token) {
+nusd_result_t nusd_attribute_get_token(nusd_stage_t stage, char const* attribute_path, double time_code, char const** token) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -714,13 +714,13 @@ nusd_result_t nusd_attribute_get_token(nusd_stage_t stage, char const* attribute
     }
 
     TfToken tok;
-    attr.Get(&tok);
+    attr.Get(&tok, time_code);
     *token = tok.GetText();
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_token_array(nusd_stage_t stage, char const* attribute_path, nusd_token_array_t* token_array) {
+nusd_result_t nusd_attribute_get_token_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_token_array_t* token_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -734,7 +734,7 @@ nusd_result_t nusd_attribute_get_token_array(nusd_stage_t stage, char const* att
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*token_array)->value);
+    attr.Get(&(*token_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -752,7 +752,7 @@ void nusd_token_array_destroy(nusd_token_array_t token_array) {
 }
 
 // float
-nusd_result_t nusd_attribute_get_float(nusd_stage_t stage, char const* attribute_path, float* value) {
+nusd_result_t nusd_attribute_get_float(nusd_stage_t stage, char const* attribute_path, double time_code, float* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -764,12 +764,12 @@ nusd_result_t nusd_attribute_get_float(nusd_stage_t stage, char const* attribute
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(value);
+    attr.Get(value, time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_float_array(nusd_stage_t stage, char const* attribute_path, nusd_float_array_t* float_array) {
+nusd_result_t nusd_attribute_get_float_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_float_array_t* float_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -783,7 +783,7 @@ nusd_result_t nusd_attribute_get_float_array(nusd_stage_t stage, char const* att
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*float_array)->value);
+    attr.Get(&(*float_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -800,7 +800,7 @@ void nusd_float_array_destroy(nusd_float_array_t float_array) {
     delete float_array;
 }
 
-nusd_result_t nusd_attribute_get_float2(nusd_stage_t stage, char const* attribute_path, float* value) {
+nusd_result_t nusd_attribute_get_float2(nusd_stage_t stage, char const* attribute_path, double time_code, float* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -813,12 +813,12 @@ nusd_result_t nusd_attribute_get_float2(nusd_stage_t stage, char const* attribut
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(reinterpret_cast<GfVec2f*>(value));
+    attr.Get(reinterpret_cast<GfVec2f*>(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_float2_array(nusd_stage_t stage, char const* attribute_path, nusd_float2_array_t* float2_array) {
+nusd_result_t nusd_attribute_get_float2_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_float2_array_t* float2_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -833,7 +833,7 @@ nusd_result_t nusd_attribute_get_float2_array(nusd_stage_t stage, char const* at
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*float2_array)->value);
+    attr.Get(&(*float2_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -850,7 +850,7 @@ void nusd_float2_array_destroy(nusd_float2_array_t float2_array) {
     delete float2_array;
 }
 
-nusd_result_t nusd_attribute_get_float3(nusd_stage_t stage, char const* attribute_path, float* value) {
+nusd_result_t nusd_attribute_get_float3(nusd_stage_t stage, char const* attribute_path, double time_code, float* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -868,12 +868,12 @@ nusd_result_t nusd_attribute_get_float3(nusd_stage_t stage, char const* attribut
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(reinterpret_cast<GfVec3f*>(value));
+    attr.Get(reinterpret_cast<GfVec3f*>(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_float3_array(nusd_stage_t stage, char const* attribute_path, nusd_float3_array_t* float3_array) {
+nusd_result_t nusd_attribute_get_float3_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_float3_array_t* float3_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -893,7 +893,7 @@ nusd_result_t nusd_attribute_get_float3_array(nusd_stage_t stage, char const* at
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*float3_array)->value);
+    attr.Get(&(*float3_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -910,7 +910,7 @@ void nusd_float3_array_destroy(nusd_float3_array_t float3_array) {
     delete float3_array;
 }
 
-nusd_result_t nusd_attribute_get_float4(nusd_stage_t stage, char const* attribute_path, float* value) {
+nusd_result_t nusd_attribute_get_float4(nusd_stage_t stage, char const* attribute_path, double time_code, float* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -924,12 +924,12 @@ nusd_result_t nusd_attribute_get_float4(nusd_stage_t stage, char const* attribut
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(reinterpret_cast<GfVec4f*>(value));
+    attr.Get(reinterpret_cast<GfVec4f*>(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_float4_array(nusd_stage_t stage, char const* attribute_path, nusd_float4_array_t* float4_array) {
+nusd_result_t nusd_attribute_get_float4_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_float4_array_t* float4_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -945,7 +945,7 @@ nusd_result_t nusd_attribute_get_float4_array(nusd_stage_t stage, char const* at
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*float4_array)->value);
+    attr.Get(&(*float4_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -964,7 +964,7 @@ void nusd_float4_array_destroy(nusd_float4_array_t float4_array) {
 
 
 // double
-nusd_result_t nusd_attribute_get_double(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_get_double(nusd_stage_t stage, char const* attribute_path, double time_code, double* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -976,12 +976,12 @@ nusd_result_t nusd_attribute_get_double(nusd_stage_t stage, char const* attribut
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(value);
+    attr.Get(value, time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_double_array(nusd_stage_t stage, char const* attribute_path, nusd_double_array_t* double_array) {
+nusd_result_t nusd_attribute_get_double_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_double_array_t* double_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -995,7 +995,7 @@ nusd_result_t nusd_attribute_get_double_array(nusd_stage_t stage, char const* at
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*double_array)->value);
+    attr.Get(&(*double_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1012,7 +1012,7 @@ void nusd_double_array_destroy(nusd_double_array_t double_array) {
     delete double_array;
 }
 
-nusd_result_t nusd_attribute_get_double2(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_get_double2(nusd_stage_t stage, char const* attribute_path, double time_code, double* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1025,12 +1025,12 @@ nusd_result_t nusd_attribute_get_double2(nusd_stage_t stage, char const* attribu
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(reinterpret_cast<GfVec2d*>(value));
+    attr.Get(reinterpret_cast<GfVec2d*>(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_double2_array(nusd_stage_t stage, char const* attribute_path, nusd_double2_array_t* double2_array) {
+nusd_result_t nusd_attribute_get_double2_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_double2_array_t* double2_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -1045,7 +1045,7 @@ nusd_result_t nusd_attribute_get_double2_array(nusd_stage_t stage, char const* a
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*double2_array)->value);
+    attr.Get(&(*double2_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1062,7 +1062,7 @@ void nusd_double2_array_destroy(nusd_double2_array_t double2_array) {
     delete double2_array;
 }
 
-nusd_result_t nusd_attribute_get_double3(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_get_double3(nusd_stage_t stage, char const* attribute_path, double time_code, double* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1080,12 +1080,12 @@ nusd_result_t nusd_attribute_get_double3(nusd_stage_t stage, char const* attribu
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(reinterpret_cast<GfVec3d*>(value));
+    attr.Get(reinterpret_cast<GfVec3d*>(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_double3_array(nusd_stage_t stage, char const* attribute_path, nusd_double3_array_t* double3_array) {
+nusd_result_t nusd_attribute_get_double3_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_double3_array_t* double3_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -1105,7 +1105,7 @@ nusd_result_t nusd_attribute_get_double3_array(nusd_stage_t stage, char const* a
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*double3_array)->value);
+    attr.Get(&(*double3_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1122,7 +1122,7 @@ void nusd_double3_array_destroy(nusd_double3_array_t double3_array) {
     delete double3_array;
 }
 
-nusd_result_t nusd_attribute_get_double4(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_get_double4(nusd_stage_t stage, char const* attribute_path, double time_code, double* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1136,12 +1136,12 @@ nusd_result_t nusd_attribute_get_double4(nusd_stage_t stage, char const* attribu
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(reinterpret_cast<GfVec4d*>(value));
+    attr.Get(reinterpret_cast<GfVec4d*>(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_double4_array(nusd_stage_t stage, char const* attribute_path, nusd_double4_array_t* double4_array) {
+nusd_result_t nusd_attribute_get_double4_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_double4_array_t* double4_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -1157,7 +1157,7 @@ nusd_result_t nusd_attribute_get_double4_array(nusd_stage_t stage, char const* a
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*double4_array)->value);
+    attr.Get(&(*double4_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1176,7 +1176,7 @@ void nusd_double4_array_destroy(nusd_double4_array_t double4_array) {
 
 
 // int
-nusd_result_t nusd_attribute_get_int(nusd_stage_t stage, char const* attribute_path, int* value) {
+nusd_result_t nusd_attribute_get_int(nusd_stage_t stage, char const* attribute_path, double time_code, int* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1188,12 +1188,12 @@ nusd_result_t nusd_attribute_get_int(nusd_stage_t stage, char const* attribute_p
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(value);
+    attr.Get(value, time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_int_array(nusd_stage_t stage, char const* attribute_path, nusd_int_array_t* int_array) {
+nusd_result_t nusd_attribute_get_int_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_int_array_t* int_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -1207,7 +1207,7 @@ nusd_result_t nusd_attribute_get_int_array(nusd_stage_t stage, char const* attri
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*int_array)->value);
+    attr.Get(&(*int_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1224,7 +1224,7 @@ void nusd_int_array_destroy(nusd_int_array_t int_array) {
     delete int_array;
 }
 
-nusd_result_t nusd_attribute_get_int2(nusd_stage_t stage, char const* attribute_path, int* value) {
+nusd_result_t nusd_attribute_get_int2(nusd_stage_t stage, char const* attribute_path, double time_code, int* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1237,12 +1237,12 @@ nusd_result_t nusd_attribute_get_int2(nusd_stage_t stage, char const* attribute_
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(reinterpret_cast<GfVec2i*>(value));
+    attr.Get(reinterpret_cast<GfVec2i*>(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_int2_array(nusd_stage_t stage, char const* attribute_path, nusd_int2_array_t* int2_array) {
+nusd_result_t nusd_attribute_get_int2_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_int2_array_t* int2_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -1257,7 +1257,7 @@ nusd_result_t nusd_attribute_get_int2_array(nusd_stage_t stage, char const* attr
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*int2_array)->value);
+    attr.Get(&(*int2_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1274,7 +1274,7 @@ void nusd_int2_array_destroy(nusd_int2_array_t int2_array) {
     delete int2_array;
 }
 
-nusd_result_t nusd_attribute_get_int3(nusd_stage_t stage, char const* attribute_path, int* value) {
+nusd_result_t nusd_attribute_get_int3(nusd_stage_t stage, char const* attribute_path, double time_code, int* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1287,12 +1287,12 @@ nusd_result_t nusd_attribute_get_int3(nusd_stage_t stage, char const* attribute_
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(reinterpret_cast<GfVec3i*>(value));
+    attr.Get(reinterpret_cast<GfVec3i*>(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_int3_array(nusd_stage_t stage, char const* attribute_path, nusd_int3_array_t* int3_array) {
+nusd_result_t nusd_attribute_get_int3_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_int3_array_t* int3_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -1307,7 +1307,7 @@ nusd_result_t nusd_attribute_get_int3_array(nusd_stage_t stage, char const* attr
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*int3_array)->value);
+    attr.Get(&(*int3_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1324,7 +1324,7 @@ void nusd_int3_array_destroy(nusd_int3_array_t int3_array) {
     delete int3_array;
 }
 
-nusd_result_t nusd_attribute_get_int4(nusd_stage_t stage, char const* attribute_path, int* value) {
+nusd_result_t nusd_attribute_get_int4(nusd_stage_t stage, char const* attribute_path, double time_code, int* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1337,12 +1337,12 @@ nusd_result_t nusd_attribute_get_int4(nusd_stage_t stage, char const* attribute_
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(reinterpret_cast<GfVec4i*>(value));
+    attr.Get(reinterpret_cast<GfVec4i*>(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_int4_array(nusd_stage_t stage, char const* attribute_path, nusd_int4_array_t* int4_array) {
+nusd_result_t nusd_attribute_get_int4_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_int4_array_t* int4_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -1357,7 +1357,7 @@ nusd_result_t nusd_attribute_get_int4_array(nusd_stage_t stage, char const* attr
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*int4_array)->value);
+    attr.Get(&(*int4_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1376,7 +1376,7 @@ void nusd_int4_array_destroy(nusd_int4_array_t int4_array) {
 
 
 // bool
-nusd_result_t nusd_attribute_get_bool(nusd_stage_t stage, char const* attribute_path, bool* value) {
+nusd_result_t nusd_attribute_get_bool(nusd_stage_t stage, char const* attribute_path, double time_code, bool* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1388,12 +1388,12 @@ nusd_result_t nusd_attribute_get_bool(nusd_stage_t stage, char const* attribute_
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(value);
+    attr.Get(value, time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_bool_array(nusd_stage_t stage, char const* attribute_path, nusd_bool_array_t* bool_array) {
+nusd_result_t nusd_attribute_get_bool_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_bool_array_t* bool_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -1407,7 +1407,7 @@ nusd_result_t nusd_attribute_get_bool_array(nusd_stage_t stage, char const* attr
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&(*bool_array)->value);
+    attr.Get(&(*bool_array)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1425,7 +1425,7 @@ void nusd_bool_array_destroy(nusd_bool_array_t bool_array) {
 }
 
 // Bool setters
-nusd_result_t nusd_attribute_set_bool(nusd_stage_t stage, char const* attribute_path, bool value) {
+nusd_result_t nusd_attribute_set_bool(nusd_stage_t stage, char const* attribute_path, bool value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -1434,11 +1434,11 @@ nusd_result_t nusd_attribute_set_bool(nusd_stage_t stage, char const* attribute_
     if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_BOOL) {
         return NUSD_RESULT_WRONG_TYPE;
     }
-    attr.Set(value);
+    attr.Set(value, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_bool_array(nusd_stage_t stage, char const* attribute_path, bool* data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_bool_array(nusd_stage_t stage, char const* attribute_path, bool* data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -1448,12 +1448,12 @@ nusd_result_t nusd_attribute_set_bool_array(nusd_stage_t stage, char const* attr
         return NUSD_RESULT_WRONG_TYPE;
     }
     VtArray<bool> vt_array(data, data + num_elements);
-    attr.Set(vt_array);
+    attr.Set(vt_array, time_code);
     return NUSD_RESULT_OK;
 }
 
 // matrix2d getters
-nusd_result_t nusd_attribute_get_matrix2d(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_get_matrix2d(nusd_stage_t stage, char const* attribute_path, double time_code, double* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1465,7 +1465,7 @@ nusd_result_t nusd_attribute_get_matrix2d(nusd_stage_t stage, char const* attrib
     }
 
     GfMatrix2d matrix;
-    attr.Get(&matrix);
+    attr.Get(&matrix, time_code);
     
     // Copy matrix data in row-major order
     const double* data = matrix.GetArray();
@@ -1476,7 +1476,7 @@ nusd_result_t nusd_attribute_get_matrix2d(nusd_stage_t stage, char const* attrib
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_matrix2d_array(nusd_stage_t stage, char const* attribute_path, nusd_matrix2d_array_t* matrix2d_array) {
+nusd_result_t nusd_attribute_get_matrix2d_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_matrix2d_array_t* matrix2d_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -1489,7 +1489,7 @@ nusd_result_t nusd_attribute_get_matrix2d_array(nusd_stage_t stage, char const* 
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&((*matrix2d_array)->value));
+    attr.Get(&((*matrix2d_array)->value), time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1507,7 +1507,7 @@ void nusd_matrix2d_array_destroy(nusd_matrix2d_array_t matrix2d_array) {
 }
 
 // matrix3d getters
-nusd_result_t nusd_attribute_get_matrix3d(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_get_matrix3d(nusd_stage_t stage, char const* attribute_path, double time_code, double* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1519,7 +1519,7 @@ nusd_result_t nusd_attribute_get_matrix3d(nusd_stage_t stage, char const* attrib
     }
 
     GfMatrix3d matrix;
-    attr.Get(&matrix);
+    attr.Get(&matrix, time_code);
     
     // Copy matrix data in row-major order
     const double* data = matrix.GetArray();
@@ -1530,7 +1530,7 @@ nusd_result_t nusd_attribute_get_matrix3d(nusd_stage_t stage, char const* attrib
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_matrix3d_array(nusd_stage_t stage, char const* attribute_path, nusd_matrix3d_array_t* matrix3d_array) {
+nusd_result_t nusd_attribute_get_matrix3d_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_matrix3d_array_t* matrix3d_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -1543,7 +1543,7 @@ nusd_result_t nusd_attribute_get_matrix3d_array(nusd_stage_t stage, char const* 
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&((*matrix3d_array)->value));
+    attr.Get(&((*matrix3d_array)->value), time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1561,7 +1561,7 @@ void nusd_matrix3d_array_destroy(nusd_matrix3d_array_t matrix3d_array) {
 }
 
 // matrix4d getters
-nusd_result_t nusd_attribute_get_matrix4d(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_get_matrix4d(nusd_stage_t stage, char const* attribute_path, double time_code, double* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1573,7 +1573,7 @@ nusd_result_t nusd_attribute_get_matrix4d(nusd_stage_t stage, char const* attrib
     }
 
     GfMatrix4d matrix;
-    attr.Get(&matrix);
+    attr.Get(&matrix, time_code);
     
     // Copy matrix data in row-major order
     const double* data = matrix.GetArray();
@@ -1584,7 +1584,7 @@ nusd_result_t nusd_attribute_get_matrix4d(nusd_stage_t stage, char const* attrib
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_matrix4d_array(nusd_stage_t stage, char const* attribute_path, nusd_matrix4d_array_t* matrix4d_array) {
+nusd_result_t nusd_attribute_get_matrix4d_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_matrix4d_array_t* matrix4d_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -1597,7 +1597,7 @@ nusd_result_t nusd_attribute_get_matrix4d_array(nusd_stage_t stage, char const* 
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(&((*matrix4d_array)->value));
+    attr.Get(&((*matrix4d_array)->value), time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1615,7 +1615,7 @@ void nusd_matrix4d_array_destroy(nusd_matrix4d_array_t matrix4d_array) {
 }
 
 // matrix2d setters
-nusd_result_t nusd_attribute_set_matrix2d(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_set_matrix2d(nusd_stage_t stage, char const* attribute_path, double* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -1625,11 +1625,11 @@ nusd_result_t nusd_attribute_set_matrix2d(nusd_stage_t stage, char const* attrib
         return NUSD_RESULT_WRONG_TYPE;
     }
     GfMatrix2d matrix(value[0], value[1], value[2], value[3]);
-    attr.Set(matrix);
+    attr.Set(matrix, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_matrix2d_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_matrix2d_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -1641,12 +1641,12 @@ nusd_result_t nusd_attribute_set_matrix2d_array(nusd_stage_t stage, char const* 
     
     GfMatrix2d* data = reinterpret_cast<GfMatrix2d*>(_data);
     VtArray<GfMatrix2d> value(data, data + num_elements);
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
 }
 
 // matrix3d setters
-nusd_result_t nusd_attribute_set_matrix3d(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_set_matrix3d(nusd_stage_t stage, char const* attribute_path, double* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -1658,11 +1658,11 @@ nusd_result_t nusd_attribute_set_matrix3d(nusd_stage_t stage, char const* attrib
     GfMatrix3d matrix(value[0], value[1], value[2], 
                       value[3], value[4], value[5], 
                       value[6], value[7], value[8]);
-    attr.Set(matrix);
+    attr.Set(matrix, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_matrix3d_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_matrix3d_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -1674,12 +1674,12 @@ nusd_result_t nusd_attribute_set_matrix3d_array(nusd_stage_t stage, char const* 
     
     GfMatrix3d* data = reinterpret_cast<GfMatrix3d*>(_data);
     VtArray<GfMatrix3d> value(data, data + num_elements);
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
 }
 
 // matrix4d setters
-nusd_result_t nusd_attribute_set_matrix4d(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_set_matrix4d(nusd_stage_t stage, char const* attribute_path, double* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -1692,11 +1692,11 @@ nusd_result_t nusd_attribute_set_matrix4d(nusd_stage_t stage, char const* attrib
                       value[4], value[5], value[6], value[7],
                       value[8], value[9], value[10], value[11],
                       value[12], value[13], value[14], value[15]);
-    attr.Set(matrix);
+    attr.Set(matrix, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_matrix4d_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_matrix4d_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -1708,7 +1708,7 @@ nusd_result_t nusd_attribute_set_matrix4d_array(nusd_stage_t stage, char const* 
     
     GfMatrix4d* data = reinterpret_cast<GfMatrix4d*>(_data);
     VtArray<GfMatrix4d> value(data, data + num_elements);
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
 }
 
@@ -1808,7 +1808,7 @@ char const* nusd_path_get_name(char const* path) {
     return strstr(path, ".") + 1;
 }
 
-nusd_result_t nusd_attribute_set_float(nusd_stage_t stage, char const* attribute_path, float value) {
+nusd_result_t nusd_attribute_set_float(nusd_stage_t stage, char const* attribute_path, float value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1820,12 +1820,12 @@ nusd_result_t nusd_attribute_set_float(nusd_stage_t stage, char const* attribute
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Set(value);
+    attr.Set(value, time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_float_array(nusd_stage_t stage, char const* attribute_path, float* data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_float_array(nusd_stage_t stage, char const* attribute_path, float* data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1839,12 +1839,12 @@ nusd_result_t nusd_attribute_set_float_array(nusd_stage_t stage, char const* att
 
     VtFloatArray value(data, data+num_elements);
 
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_float2(nusd_stage_t stage, char const* attribute_path, float* value) {
+nusd_result_t nusd_attribute_set_float2(nusd_stage_t stage, char const* attribute_path, float* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1859,12 +1859,12 @@ nusd_result_t nusd_attribute_set_float2(nusd_stage_t stage, char const* attribut
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Set(GfVec2f(value[0], value[1]));
+    attr.Set(GfVec2f(value[0], value[1]), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_float2_array(nusd_stage_t stage, char const* attribute_path, float* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_float2_array(nusd_stage_t stage, char const* attribute_path, float* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1882,13 +1882,13 @@ nusd_result_t nusd_attribute_set_float2_array(nusd_stage_t stage, char const* at
     GfVec2f* data = reinterpret_cast<GfVec2f*>(_data);
     VtArray<GfVec2f> value(data, data+num_elements);
 
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
 
-nusd_result_t nusd_attribute_set_float3(nusd_stage_t stage, char const* attribute_path, float* value) {
+nusd_result_t nusd_attribute_set_float3(nusd_stage_t stage, char const* attribute_path, float* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1907,12 +1907,12 @@ nusd_result_t nusd_attribute_set_float3(nusd_stage_t stage, char const* attribut
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Set(GfVec3f(value[0], value[1], value[2]));
+    attr.Set(GfVec3f(value[0], value[1], value[2]), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_float3_array(nusd_stage_t stage, char const* attribute_path, float* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_float3_array(nusd_stage_t stage, char const* attribute_path, float* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1934,13 +1934,13 @@ nusd_result_t nusd_attribute_set_float3_array(nusd_stage_t stage, char const* at
     GfVec3f* data = reinterpret_cast<GfVec3f*>(_data);
     VtArray<GfVec3f> value(data, data+num_elements);
 
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
 
-nusd_result_t nusd_attribute_set_float4(nusd_stage_t stage, char const* attribute_path, float* value) {
+nusd_result_t nusd_attribute_set_float4(nusd_stage_t stage, char const* attribute_path, float* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1955,12 +1955,12 @@ nusd_result_t nusd_attribute_set_float4(nusd_stage_t stage, char const* attribut
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Set(GfVec4f(value[0], value[1], value[2], value[3]));
+    attr.Set(GfVec4f(value[0], value[1], value[2], value[3]), time_code);
 
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_float4_array(nusd_stage_t stage, char const* attribute_path, float* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_float4_array(nusd_stage_t stage, char const* attribute_path, float* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1978,13 +1978,13 @@ nusd_result_t nusd_attribute_set_float4_array(nusd_stage_t stage, char const* at
     GfVec4f* data = reinterpret_cast<GfVec4f*>(_data);
     VtArray<GfVec4f> value(data, data+num_elements);
 
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
 
     return NUSD_RESULT_OK;
 }
 
 // Int setters
-nusd_result_t nusd_attribute_set_int(nusd_stage_t stage, char const* attribute_path, int value) {
+nusd_result_t nusd_attribute_set_int(nusd_stage_t stage, char const* attribute_path, int value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -1996,11 +1996,11 @@ nusd_result_t nusd_attribute_set_int(nusd_stage_t stage, char const* attribute_p
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Set(value);
+    attr.Set(value, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_int_array(nusd_stage_t stage, char const* attribute_path, int* data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_int_array(nusd_stage_t stage, char const* attribute_path, int* data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2013,11 +2013,11 @@ nusd_result_t nusd_attribute_set_int_array(nusd_stage_t stage, char const* attri
     }
 
     VtArray<int> vt_array(data, data + num_elements);
-    attr.Set(vt_array);
+    attr.Set(vt_array, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_int2(nusd_stage_t stage, char const* attribute_path, int* value) {
+nusd_result_t nusd_attribute_set_int2(nusd_stage_t stage, char const* attribute_path, int* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2030,11 +2030,11 @@ nusd_result_t nusd_attribute_set_int2(nusd_stage_t stage, char const* attribute_
     }
 
     GfVec2i vec(value[0], value[1]);
-    attr.Set(vec);
+    attr.Set(vec, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_int2_array(nusd_stage_t stage, char const* attribute_path, int* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_int2_array(nusd_stage_t stage, char const* attribute_path, int* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2048,11 +2048,11 @@ nusd_result_t nusd_attribute_set_int2_array(nusd_stage_t stage, char const* attr
 
     GfVec2i* data = reinterpret_cast<GfVec2i*>(_data);
     VtArray<GfVec2i> value(data, data + num_elements);
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_int3(nusd_stage_t stage, char const* attribute_path, int* value) {
+nusd_result_t nusd_attribute_set_int3(nusd_stage_t stage, char const* attribute_path, int* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2065,11 +2065,11 @@ nusd_result_t nusd_attribute_set_int3(nusd_stage_t stage, char const* attribute_
     }
 
     GfVec3i vec(value[0], value[1], value[2]);
-    attr.Set(vec);
+    attr.Set(vec, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_int3_array(nusd_stage_t stage, char const* attribute_path, int* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_int3_array(nusd_stage_t stage, char const* attribute_path, int* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2083,11 +2083,11 @@ nusd_result_t nusd_attribute_set_int3_array(nusd_stage_t stage, char const* attr
 
     GfVec3i* data = reinterpret_cast<GfVec3i*>(_data);
     VtArray<GfVec3i> value(data, data + num_elements);
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_int4(nusd_stage_t stage, char const* attribute_path, int* value) {
+nusd_result_t nusd_attribute_set_int4(nusd_stage_t stage, char const* attribute_path, int* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2100,11 +2100,11 @@ nusd_result_t nusd_attribute_set_int4(nusd_stage_t stage, char const* attribute_
     }
 
     GfVec4i vec(value[0], value[1], value[2], value[3]);
-    attr.Set(vec);
+    attr.Set(vec, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_int4_array(nusd_stage_t stage, char const* attribute_path, int* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_int4_array(nusd_stage_t stage, char const* attribute_path, int* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2118,12 +2118,12 @@ nusd_result_t nusd_attribute_set_int4_array(nusd_stage_t stage, char const* attr
 
     GfVec4i* data = reinterpret_cast<GfVec4i*>(_data);
     VtArray<GfVec4i> value(data, data + num_elements);
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
 }
 
 // Int64 getters
-nusd_result_t nusd_attribute_get_int64(nusd_stage_t stage, char const* attribute_path, int64_t* value) {
+nusd_result_t nusd_attribute_get_int64(nusd_stage_t stage, char const* attribute_path, double time_code, int64_t* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2135,11 +2135,11 @@ nusd_result_t nusd_attribute_get_int64(nusd_stage_t stage, char const* attribute
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Get(value);
+    attr.Get(value, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_int64_array(nusd_stage_t stage, char const* attribute_path, nusd_int64_array_t* int64_array) {
+nusd_result_t nusd_attribute_get_int64_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_int64_array_t* int64_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -2154,7 +2154,7 @@ nusd_result_t nusd_attribute_get_int64_array(nusd_stage_t stage, char const* att
     }
 
     VtArray<int64_t> array;
-    attr.Get(&array);
+    attr.Get(&array, time_code);
 
     (*int64_array)->data = new int64_t[array.size()];
     for (size_t i = 0; i < array.size(); i++) {
@@ -2179,7 +2179,7 @@ void nusd_int64_array_destroy(nusd_int64_array_t int64_array) {
 }
 
 // Unsigned integer getters
-nusd_result_t nusd_attribute_get_uint(nusd_stage_t stage, char const* attribute_path, unsigned int* value) {
+nusd_result_t nusd_attribute_get_uint(nusd_stage_t stage, char const* attribute_path, double time_code, unsigned int* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -2188,11 +2188,11 @@ nusd_result_t nusd_attribute_get_uint(nusd_stage_t stage, char const* attribute_
     if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT) {
         return NUSD_RESULT_WRONG_TYPE;
     }
-    attr.Get(value);
+    attr.Get(value, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_uint_array(nusd_stage_t stage, char const* attribute_path, nusd_uint_array_t* uint_array) {
+nusd_result_t nusd_attribute_get_uint_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_uint_array_t* uint_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -2203,7 +2203,7 @@ nusd_result_t nusd_attribute_get_uint_array(nusd_stage_t stage, char const* attr
     if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINTARRAY) {
         return NUSD_RESULT_WRONG_TYPE;
     }
-    attr.Get(&(*uint_array)->value);
+    attr.Get(&(*uint_array)->value, time_code);
     return NUSD_RESULT_OK;
 }
 
@@ -2219,7 +2219,7 @@ void nusd_uint_array_destroy(nusd_uint_array_t uint_array) {
     delete uint_array;
 }
 
-nusd_result_t nusd_attribute_get_uint64(nusd_stage_t stage, char const* attribute_path, uint64_t* value) {
+nusd_result_t nusd_attribute_get_uint64(nusd_stage_t stage, char const* attribute_path, double time_code, uint64_t* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -2228,11 +2228,11 @@ nusd_result_t nusd_attribute_get_uint64(nusd_stage_t stage, char const* attribut
     if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT64) {
         return NUSD_RESULT_WRONG_TYPE;
     }
-    attr.Get(value);
+    attr.Get(value, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_uint64_array(nusd_stage_t stage, char const* attribute_path, nusd_uint64_array_t* uint64_array) {
+nusd_result_t nusd_attribute_get_uint64_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_uint64_array_t* uint64_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -2243,7 +2243,7 @@ nusd_result_t nusd_attribute_get_uint64_array(nusd_stage_t stage, char const* at
     if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT64ARRAY) {
         return NUSD_RESULT_WRONG_TYPE;
     }
-    attr.Get(&(*uint64_array)->value);
+    attr.Get(&(*uint64_array)->value, time_code);
     return NUSD_RESULT_OK;
 }
 
@@ -2259,7 +2259,7 @@ void nusd_uint64_array_destroy(nusd_uint64_array_t uint64_array) {
     delete uint64_array;
 }
 
-nusd_result_t nusd_attribute_get_uchar(nusd_stage_t stage, char const* attribute_path, unsigned char* value) {
+nusd_result_t nusd_attribute_get_uchar(nusd_stage_t stage, char const* attribute_path, double time_code, unsigned char* value) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -2268,11 +2268,11 @@ nusd_result_t nusd_attribute_get_uchar(nusd_stage_t stage, char const* attribute
     if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UCHAR) {
         return NUSD_RESULT_WRONG_TYPE;
     }
-    attr.Get(value);
+    attr.Get(value, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_get_uchar_array(nusd_stage_t stage, char const* attribute_path, nusd_uchar_array_t* uchar_array) {
+nusd_result_t nusd_attribute_get_uchar_array(nusd_stage_t stage, char const* attribute_path, double time_code, nusd_uchar_array_t* uchar_array) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     
@@ -2283,7 +2283,7 @@ nusd_result_t nusd_attribute_get_uchar_array(nusd_stage_t stage, char const* att
     if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UCHARARRAY) {
         return NUSD_RESULT_WRONG_TYPE;
     }
-    attr.Get(&(*uchar_array)->value);
+    attr.Get(&(*uchar_array)->value, time_code);
     return NUSD_RESULT_OK;
 }
 
@@ -2300,7 +2300,7 @@ void nusd_uchar_array_destroy(nusd_uchar_array_t uchar_array) {
 }
 
 // Int64 setters
-nusd_result_t nusd_attribute_set_int64(nusd_stage_t stage, char const* attribute_path, int64_t value) {
+nusd_result_t nusd_attribute_set_int64(nusd_stage_t stage, char const* attribute_path, int64_t value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2312,11 +2312,11 @@ nusd_result_t nusd_attribute_set_int64(nusd_stage_t stage, char const* attribute
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Set(value);
+    attr.Set(value, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_int64_array(nusd_stage_t stage, char const* attribute_path, int64_t* data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_int64_array(nusd_stage_t stage, char const* attribute_path, int64_t* data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2329,12 +2329,12 @@ nusd_result_t nusd_attribute_set_int64_array(nusd_stage_t stage, char const* att
     }
 
     VtArray<int64_t> vt_array(data, data + num_elements);
-    attr.Set(vt_array);
+    attr.Set(vt_array, time_code);
     return NUSD_RESULT_OK;
 }
 
 // Unsigned integer setters
-nusd_result_t nusd_attribute_set_uint(nusd_stage_t stage, char const* attribute_path, unsigned int value) {
+nusd_result_t nusd_attribute_set_uint(nusd_stage_t stage, char const* attribute_path, unsigned int value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -2343,11 +2343,11 @@ nusd_result_t nusd_attribute_set_uint(nusd_stage_t stage, char const* attribute_
     if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT) {
         return NUSD_RESULT_WRONG_TYPE;
     }
-    attr.Set(value);
+    attr.Set(value, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_uint_array(nusd_stage_t stage, char const* attribute_path, unsigned int* data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_uint_array(nusd_stage_t stage, char const* attribute_path, unsigned int* data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -2357,11 +2357,11 @@ nusd_result_t nusd_attribute_set_uint_array(nusd_stage_t stage, char const* attr
         return NUSD_RESULT_WRONG_TYPE;
     }
     VtArray<unsigned int> vt_array(data, data + num_elements);
-    attr.Set(vt_array);
+    attr.Set(vt_array, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_uint64(nusd_stage_t stage, char const* attribute_path, uint64_t value) {
+nusd_result_t nusd_attribute_set_uint64(nusd_stage_t stage, char const* attribute_path, uint64_t value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -2370,11 +2370,11 @@ nusd_result_t nusd_attribute_set_uint64(nusd_stage_t stage, char const* attribut
     if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT64) {
         return NUSD_RESULT_WRONG_TYPE;
     }
-    attr.Set(value);
+    attr.Set(value, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_uint64_array(nusd_stage_t stage, char const* attribute_path, uint64_t* data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_uint64_array(nusd_stage_t stage, char const* attribute_path, uint64_t* data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -2384,11 +2384,11 @@ nusd_result_t nusd_attribute_set_uint64_array(nusd_stage_t stage, char const* at
         return NUSD_RESULT_WRONG_TYPE;
     }
     VtArray<uint64_t> vt_array(data, data + num_elements);
-    attr.Set(vt_array);
+    attr.Set(vt_array, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_uchar(nusd_stage_t stage, char const* attribute_path, unsigned char value) {
+nusd_result_t nusd_attribute_set_uchar(nusd_stage_t stage, char const* attribute_path, unsigned char value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -2397,11 +2397,11 @@ nusd_result_t nusd_attribute_set_uchar(nusd_stage_t stage, char const* attribute
     if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UCHAR) {
         return NUSD_RESULT_WRONG_TYPE;
     }
-    attr.Set(value);
+    attr.Set(value, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_uchar_array(nusd_stage_t stage, char const* attribute_path, unsigned char* data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_uchar_array(nusd_stage_t stage, char const* attribute_path, unsigned char* data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
     if (!attr) {
@@ -2411,12 +2411,12 @@ nusd_result_t nusd_attribute_set_uchar_array(nusd_stage_t stage, char const* att
         return NUSD_RESULT_WRONG_TYPE;
     }
     VtArray<unsigned char> vt_array(data, data + num_elements);
-    attr.Set(vt_array);
+    attr.Set(vt_array, time_code);
     return NUSD_RESULT_OK;
 }
 
 // Double setters
-nusd_result_t nusd_attribute_set_double(nusd_stage_t stage, char const* attribute_path, double value) {
+nusd_result_t nusd_attribute_set_double(nusd_stage_t stage, char const* attribute_path, double value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2428,11 +2428,11 @@ nusd_result_t nusd_attribute_set_double(nusd_stage_t stage, char const* attribut
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    attr.Set(value);
+    attr.Set(value, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_double_array(nusd_stage_t stage, char const* attribute_path, double* data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_double_array(nusd_stage_t stage, char const* attribute_path, double* data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2445,11 +2445,11 @@ nusd_result_t nusd_attribute_set_double_array(nusd_stage_t stage, char const* at
     }
 
     VtArray<double> value(data, data + num_elements);
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_double2(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_set_double2(nusd_stage_t stage, char const* attribute_path, double* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2462,11 +2462,11 @@ nusd_result_t nusd_attribute_set_double2(nusd_stage_t stage, char const* attribu
     }
 
     GfVec2d vec(value[0], value[1]);
-    attr.Set(vec);
+    attr.Set(vec, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_double2_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_double2_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2480,11 +2480,11 @@ nusd_result_t nusd_attribute_set_double2_array(nusd_stage_t stage, char const* a
 
     GfVec2d* data = reinterpret_cast<GfVec2d*>(_data);
     VtArray<GfVec2d> value(data, data + num_elements);
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_double3(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_set_double3(nusd_stage_t stage, char const* attribute_path, double* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2497,11 +2497,11 @@ nusd_result_t nusd_attribute_set_double3(nusd_stage_t stage, char const* attribu
     }
 
     GfVec3d vec(value[0], value[1], value[2]);
-    attr.Set(vec);
+    attr.Set(vec, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_double3_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_double3_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2515,11 +2515,11 @@ nusd_result_t nusd_attribute_set_double3_array(nusd_stage_t stage, char const* a
 
     GfVec3d* data = reinterpret_cast<GfVec3d*>(_data);
     VtArray<GfVec3d> value(data, data + num_elements);
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_double4(nusd_stage_t stage, char const* attribute_path, double* value) {
+nusd_result_t nusd_attribute_set_double4(nusd_stage_t stage, char const* attribute_path, double* value, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2532,11 +2532,11 @@ nusd_result_t nusd_attribute_set_double4(nusd_stage_t stage, char const* attribu
     }
 
     GfVec4d vec(value[0], value[1], value[2], value[3]);
-    attr.Set(vec);
+    attr.Set(vec, time_code);
     return NUSD_RESULT_OK;
 }
 
-nusd_result_t nusd_attribute_set_double4_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements) {
+nusd_result_t nusd_attribute_set_double4_array(nusd_stage_t stage, char const* attribute_path, double* _data, size_t num_elements, double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
 
@@ -2550,7 +2550,7 @@ nusd_result_t nusd_attribute_set_double4_array(nusd_stage_t stage, char const* a
 
     GfVec4d* data = reinterpret_cast<GfVec4d*>(_data);
     VtArray<GfVec4d> value(data, data + num_elements);
-    attr.Set(std::move(value));
+    attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
 }
 

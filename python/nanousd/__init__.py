@@ -522,7 +522,7 @@ class Stage:
 
         return PropertyIterator(it)
 
-    def get_property(self, property_path: str):
+    def get_property(self, property_path: str, time_code: float = 0.0):
         property_type = _lib.nusd_type_t()
         result = _lib.nusd_property_get_type(
             self._stage, property_path, byref(property_type)
@@ -536,7 +536,7 @@ class Stage:
         if property_type == _lib.NUSD_TYPE_FLOAT:
             value = c_float(0.0)
             result = _lib.nusd_attribute_get_float(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -546,7 +546,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_FLOATARRAY:
             value = _lib.nusd_float_array_t()
             result = _lib.nusd_attribute_get_float_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -555,7 +555,7 @@ class Stage:
             return FloatArray(value)
         elif property_type in [_lib.NUSD_TYPE_FLOAT2, _lib.NUSD_TYPE_TEXCOORD2F]:
             value = (c_float * 2)()
-            result = _lib.nusd_attribute_get_float2(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_float2(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -567,7 +567,7 @@ class Stage:
         ]:
             value = _lib.nusd_float2_array_t()
             result = _lib.nusd_attribute_get_float2_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -583,7 +583,7 @@ class Stage:
             _lib.NUSD_TYPE_NORMAL3F,
         ]:
             value = (c_float * 3)()
-            result = _lib.nusd_attribute_get_float3(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_float3(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -599,7 +599,7 @@ class Stage:
         ]:
             value = _lib.nusd_float3_array_t()
             result = _lib.nusd_attribute_get_float3_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -608,7 +608,7 @@ class Stage:
             return Float3Array(value)
         elif property_type in [_lib.NUSD_TYPE_FLOAT4, _lib.NUSD_TYPE_COLOR4F]:
             value = (c_float * 4)()
-            result = _lib.nusd_attribute_get_float4(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_float4(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -617,7 +617,7 @@ class Stage:
         elif property_type in [_lib.NUSD_TYPE_FLOAT4ARRAY, _lib.NUSD_TYPE_COLOR4FARRAY]:
             value = _lib.nusd_float4_array_t()
             result = _lib.nusd_attribute_get_float4_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -627,7 +627,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_DOUBLE:
             value = c_double(0.0)
             result = _lib.nusd_attribute_get_double(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -637,7 +637,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_DOUBLEARRAY:
             value = _lib.nusd_double_array_t()
             result = _lib.nusd_attribute_get_double_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -646,7 +646,7 @@ class Stage:
             return DoubleArray(value)
         elif property_type in [_lib.NUSD_TYPE_DOUBLE2, _lib.NUSD_TYPE_TEXCOORD2D]:
             value = (c_double * 2)()
-            result = _lib.nusd_attribute_get_double2(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_double2(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -658,7 +658,7 @@ class Stage:
         ]:
             value = _lib.nusd_double2_array_t()
             result = _lib.nusd_attribute_get_double2_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -674,7 +674,7 @@ class Stage:
             _lib.NUSD_TYPE_NORMAL3D,
         ]:
             value = (c_double * 3)()
-            result = _lib.nusd_attribute_get_double3(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_double3(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -690,7 +690,7 @@ class Stage:
         ]:
             value = _lib.nusd_double3_array_t()
             result = _lib.nusd_attribute_get_double3_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -699,7 +699,7 @@ class Stage:
             return Double3Array(value)
         elif property_type in [_lib.NUSD_TYPE_DOUBLE4, _lib.NUSD_TYPE_COLOR4D]:
             value = (c_double * 4)()
-            result = _lib.nusd_attribute_get_double4(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_double4(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -711,7 +711,7 @@ class Stage:
         ]:
             value = _lib.nusd_double4_array_t()
             result = _lib.nusd_attribute_get_double4_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -721,7 +721,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_INT:
             value = c_int(0)
             result = _lib.nusd_attribute_get_int(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -731,7 +731,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_INTARRAY:
             value = _lib.nusd_int_array_t()
             result = _lib.nusd_attribute_get_int_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -740,7 +740,7 @@ class Stage:
             return IntArray(value)
         elif property_type == _lib.NUSD_TYPE_INT2:
             value = (c_int * 2)()
-            result = _lib.nusd_attribute_get_int2(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_int2(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -749,7 +749,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_INT2ARRAY:
             value = _lib.nusd_int2_array_t()
             result = _lib.nusd_attribute_get_int2_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -758,7 +758,7 @@ class Stage:
             return Int2Array(value)
         elif property_type == _lib.NUSD_TYPE_INT3:
             value = (c_int * 3)()
-            result = _lib.nusd_attribute_get_int3(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_int3(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -767,7 +767,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_INT3ARRAY:
             value = _lib.nusd_int3_array_t()
             result = _lib.nusd_attribute_get_int3_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -776,7 +776,7 @@ class Stage:
             return Int3Array(value)
         elif property_type == _lib.NUSD_TYPE_INT4:
             value = (c_int * 4)()
-            result = _lib.nusd_attribute_get_int4(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_int4(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -785,7 +785,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_INT4ARRAY:
             value = _lib.nusd_int4_array_t()
             result = _lib.nusd_attribute_get_int4_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -795,7 +795,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_INT64:
             value = c_longlong(0)
             result = _lib.nusd_attribute_get_int64(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -805,7 +805,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_INT64ARRAY:
             value = _lib.nusd_int64_array_t()
             result = _lib.nusd_attribute_get_int64_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -815,7 +815,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_BOOL:
             value = c_bool(False)
             result = _lib.nusd_attribute_get_bool(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -825,7 +825,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_BOOLARRAY:
             value = _lib.nusd_bool_array_t()
             result = _lib.nusd_attribute_get_bool_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -834,7 +834,7 @@ class Stage:
             return BoolArray(value)
         elif property_type == _lib.NUSD_TYPE_MATRIX2D:
             value = (c_double * 4)()
-            result = _lib.nusd_attribute_get_matrix2d(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_matrix2d(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -843,7 +843,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_MATRIX2DARRAY:
             value = _lib.nusd_matrix2d_array_t()
             result = _lib.nusd_attribute_get_matrix2d_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -852,7 +852,7 @@ class Stage:
             return Matrix2dArray(value)
         elif property_type == _lib.NUSD_TYPE_MATRIX3D:
             value = (c_double * 9)()
-            result = _lib.nusd_attribute_get_matrix3d(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_matrix3d(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -861,7 +861,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_MATRIX3DARRAY:
             value = _lib.nusd_matrix3d_array_t()
             result = _lib.nusd_attribute_get_matrix3d_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -870,7 +870,7 @@ class Stage:
             return Matrix3dArray(value)
         elif property_type == _lib.NUSD_TYPE_MATRIX4D:
             value = (c_double * 16)()
-            result = _lib.nusd_attribute_get_matrix4d(self._stage, property_path, value)
+            result = _lib.nusd_attribute_get_matrix4d(self._stage, property_path, time_code, value)
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
                     f'failed to get value for "{property_path}": {result}'
@@ -879,7 +879,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_MATRIX4DARRAY:
             value = _lib.nusd_matrix4d_array_t()
             result = _lib.nusd_attribute_get_matrix4d_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -890,7 +890,7 @@ class Stage:
             from ctypes import c_uint
             value = c_uint(0)
             result = _lib.nusd_attribute_get_uint(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -900,7 +900,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_UINTARRAY:
             value = _lib.nusd_uint_array_t()
             result = _lib.nusd_attribute_get_uint_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -911,7 +911,7 @@ class Stage:
             from ctypes import c_ulonglong
             value = c_ulonglong(0)
             result = _lib.nusd_attribute_get_uint64(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -921,7 +921,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_UINT64ARRAY:
             value = _lib.nusd_uint64_array_t()
             result = _lib.nusd_attribute_get_uint64_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -932,7 +932,7 @@ class Stage:
             from ctypes import c_ubyte
             value = c_ubyte(0)
             result = _lib.nusd_attribute_get_uchar(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -942,7 +942,7 @@ class Stage:
         elif property_type == _lib.NUSD_TYPE_UCHARARRAY:
             value = _lib.nusd_uchar_array_t()
             result = _lib.nusd_attribute_get_uchar_array(
-                self._stage, property_path, byref(value)
+                self._stage, property_path, time_code, byref(value)
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise GetPropertyError(
@@ -962,14 +962,14 @@ class Stage:
                 f'failed to define prim <{prim_path}> of type "{prim_type}": {result}'
             )
 
-    def set_property(self, property_path: str, property_type, value: Any):
+    def set_property(self, property_path: str, property_type, value: Any, time_code: float = 0.0):
         if property_type == FLOAT:
             if not isinstance(value, float):
                 raise SetPropertyError(
                     f"incompatible types for property <{property_path}> with value type of float and requested type of {property_type}"
                 )
             result = _lib.nusd_attribute_set_float(
-                self._stage, property_path, c_float(value)
+                self._stage, property_path, c_float(value), time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -985,6 +985,7 @@ class Stage:
                 property_path,
                 value.ctypes.data_as(POINTER(c_float)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -996,7 +997,7 @@ class Stage:
                     f"incompatible types for property <{property_path}> with value type of float and requested type of {property_type}"
                 )
             result = _lib.nusd_attribute_set_double(
-                self._stage, property_path, c_double(value)
+                self._stage, property_path, c_double(value), time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1022,7 +1023,7 @@ class Stage:
                     )
 
             c_value = (c_float * 2)(value[0], value[1])
-            result = _lib.nusd_attribute_set_float2(self._stage, property_path, c_value)
+            result = _lib.nusd_attribute_set_float2(self._stage, property_path, c_value, time_code)
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -1038,6 +1039,7 @@ class Stage:
                 property_path,
                 value_flat.ctypes.data_as(POINTER(c_float)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1054,6 +1056,7 @@ class Stage:
                 property_path,
                 value_flat.ctypes.data_as(POINTER(c_float)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1070,6 +1073,7 @@ class Stage:
                 property_path,
                 value_flat.ctypes.data_as(POINTER(c_float)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1102,7 +1106,7 @@ class Stage:
                     )
 
             c_value = (c_float * 3)(value[0], value[1], value[2])
-            result = _lib.nusd_attribute_set_float3(self._stage, property_path, c_value)
+            result = _lib.nusd_attribute_set_float3(self._stage, property_path, c_value, time_code)
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -1126,8 +1130,8 @@ class Stage:
                         f"incompatible types for property <{property_path}>: requested {property_type} but value has length {len(value)} instead of 4"
                     )
 
-            c_value = (c_float * 4)(value[0], value[1], value[2])
-            result = _lib.nusd_attribute_set_float4(self._stage, property_path, c_value)
+            c_value = (c_float * 4)(value[0], value[1], value[2], value[3])
+            result = _lib.nusd_attribute_set_float4(self._stage, property_path, c_value, time_code)
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -1138,7 +1142,7 @@ class Stage:
                     f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
                 )
             result = _lib.nusd_attribute_set_int(
-                self._stage, property_path, c_int(value)
+                self._stage, property_path, c_int(value), time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1164,7 +1168,7 @@ class Stage:
                     )
 
             c_value = (c_int * 2)(int(value[0]), int(value[1]))
-            result = _lib.nusd_attribute_set_int2(self._stage, property_path, c_value)
+            result = _lib.nusd_attribute_set_int2(self._stage, property_path, c_value, time_code)
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -1189,7 +1193,7 @@ class Stage:
                     )
 
             c_value = (c_int * 3)(int(value[0]), int(value[1]), int(value[2]))
-            result = _lib.nusd_attribute_set_int3(self._stage, property_path, c_value)
+            result = _lib.nusd_attribute_set_int3(self._stage, property_path, c_value, time_code)
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -1216,7 +1220,7 @@ class Stage:
             c_value = (c_int * 4)(
                 int(value[0]), int(value[1]), int(value[2]), int(value[3])
             )
-            result = _lib.nusd_attribute_set_int4(self._stage, property_path, c_value)
+            result = _lib.nusd_attribute_set_int4(self._stage, property_path, c_value, time_code)
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
                     f'failed to set property "{property_path}: {result}'
@@ -1227,7 +1231,7 @@ class Stage:
                     f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
                 )
             result = _lib.nusd_attribute_set_int64(
-                self._stage, property_path, c_longlong(value)
+                self._stage, property_path, c_longlong(value), time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1243,6 +1247,7 @@ class Stage:
                 property_path,
                 value.ctypes.data_as(POINTER(c_int)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1259,6 +1264,7 @@ class Stage:
                 property_path,
                 value_flat.ctypes.data_as(POINTER(c_int)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1275,6 +1281,7 @@ class Stage:
                 property_path,
                 value_flat.ctypes.data_as(POINTER(c_int)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1291,6 +1298,7 @@ class Stage:
                 property_path,
                 value_flat.ctypes.data_as(POINTER(c_int)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1306,6 +1314,7 @@ class Stage:
                 property_path,
                 value.ctypes.data_as(POINTER(c_longlong)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1321,6 +1330,7 @@ class Stage:
                 property_path,
                 value.ctypes.data_as(POINTER(c_double)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1337,6 +1347,7 @@ class Stage:
                 property_path,
                 value_flat.ctypes.data_as(POINTER(c_double)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1353,6 +1364,7 @@ class Stage:
                 property_path,
                 value_flat.ctypes.data_as(POINTER(c_double)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1369,6 +1381,7 @@ class Stage:
                 property_path,
                 value_flat.ctypes.data_as(POINTER(c_double)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1380,7 +1393,7 @@ class Stage:
                     f"incompatible types for property <{property_path}> with value type of bool and requested type of {property_type}"
                 )
             result = _lib.nusd_attribute_set_bool(
-                self._stage, property_path, c_bool(value)
+                self._stage, property_path, c_bool(value), time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1396,6 +1409,7 @@ class Stage:
                 property_path,
                 value.ctypes.data_as(POINTER(c_bool)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1410,7 +1424,8 @@ class Stage:
             result = _lib.nusd_attribute_set_matrix2d(
                 self._stage,
                 property_path,
-                flat_data.ctypes.data_as(POINTER(c_double))
+                flat_data.ctypes.data_as(POINTER(c_double)),
+                time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1426,7 +1441,8 @@ class Stage:
                 self._stage,
                 property_path,
                 flat_data.ctypes.data_as(POINTER(c_double)),
-                c_size_t(value.shape[0])
+                c_size_t(value.shape[0]),
+                time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1441,7 +1457,8 @@ class Stage:
             result = _lib.nusd_attribute_set_matrix3d(
                 self._stage,
                 property_path,
-                flat_data.ctypes.data_as(POINTER(c_double))
+                flat_data.ctypes.data_as(POINTER(c_double)),
+                time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1457,7 +1474,8 @@ class Stage:
                 self._stage,
                 property_path,
                 flat_data.ctypes.data_as(POINTER(c_double)),
-                c_size_t(value.shape[0])
+                c_size_t(value.shape[0]),
+                time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1472,7 +1490,8 @@ class Stage:
             result = _lib.nusd_attribute_set_matrix4d(
                 self._stage,
                 property_path,
-                flat_data.ctypes.data_as(POINTER(c_double))
+                flat_data.ctypes.data_as(POINTER(c_double)),
+                time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1488,7 +1507,8 @@ class Stage:
                 self._stage,
                 property_path,
                 flat_data.ctypes.data_as(POINTER(c_double)),
-                c_size_t(value.shape[0])
+                c_size_t(value.shape[0]),
+                time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1501,7 +1521,7 @@ class Stage:
                     f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
                 )
             result = _lib.nusd_attribute_set_uint(
-                self._stage, property_path, c_uint(value)
+                self._stage, property_path, c_uint(value), time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1518,6 +1538,7 @@ class Stage:
                 property_path,
                 value.ctypes.data_as(POINTER(c_uint)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1530,7 +1551,7 @@ class Stage:
                     f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
                 )
             result = _lib.nusd_attribute_set_uint64(
-                self._stage, property_path, c_ulonglong(value)
+                self._stage, property_path, c_ulonglong(value), time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1547,6 +1568,7 @@ class Stage:
                 property_path,
                 value.ctypes.data_as(POINTER(c_ulonglong)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1559,7 +1581,7 @@ class Stage:
                     f"incompatible types for property <{property_path}> with value type of int and requested type of {property_type}"
                 )
             result = _lib.nusd_attribute_set_uchar(
-                self._stage, property_path, c_ubyte(value)
+                self._stage, property_path, c_ubyte(value), time_code
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1576,6 +1598,7 @@ class Stage:
                 property_path,
                 value.ctypes.data_as(POINTER(c_ubyte)),
                 c_size_t(value.shape[0]),
+                time_code,
             )
             if result != _lib.NUSD_RESULT_OK:
                 raise SetPropertyError(
@@ -1585,7 +1608,7 @@ class Stage:
             raise SetPropertyError(f"invalid type for property: {type(value)}")
 
     def prim_create_property(
-        self, prim: str, property_name: str, property_type: str, value=None
+        self, prim: str, property_name: str, property_type: str, value=None, time_code: float = 0.0
     ):
         result = _lib.nusd_prim_create_property(
             self._stage, prim, property_name, property_type
@@ -1596,4 +1619,4 @@ class Stage:
             )
 
         if value is not None:
-            self.set_property(f"{prim}.{property_name}", property_type, value)
+            self.set_property(f"{prim}.{property_name}", property_type, value, time_code)

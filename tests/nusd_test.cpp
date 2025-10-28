@@ -61,11 +61,11 @@ TEST(nusd, set_float_attribute) {
     result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_FLOAT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
-    result = nusd_attribute_set_float(stage, "/World.testattr", 1.0f);
+    result = nusd_attribute_set_float(stage, "/World.testattr", 1.0f, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     float value = 0.0f;
-    result = nusd_attribute_get_float(stage, "/World.testattr", &value);
+    result = nusd_attribute_get_float(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_EQ(value, 1.0f);
 }
@@ -81,11 +81,11 @@ TEST(nusd, set_float2_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     float test_data[] = {1, 2, 3, 4, 5, 6};  // 3 float2 values
-    result = nusd_attribute_set_float2_array(stage, "/World.testattr", test_data, 3);
+    result = nusd_attribute_set_float2_array(stage, "/World.testattr", test_data, 3, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_float2_array_t float2_array;
-    result = nusd_attribute_get_float2_array(stage, "/World.testattr", &float2_array);
+    result = nusd_attribute_get_float2_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &float2_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_float2_array_size(float2_array);
@@ -110,11 +110,11 @@ TEST(nusd, set_int_attribute) {
     result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_INT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
-    result = nusd_attribute_set_int(stage, "/World.testattr", 42);
+    result = nusd_attribute_set_int(stage, "/World.testattr", 42, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int value = 0;
-    result = nusd_attribute_get_int(stage, "/World.testattr", &value);
+    result = nusd_attribute_get_int(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_EQ(value, 42);
 }
@@ -130,11 +130,11 @@ TEST(nusd, set_int_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int test_data[] = {1, 2, 3, 4, 5};
-    result = nusd_attribute_set_int_array(stage, "/World.testattr", test_data, 5);
+    result = nusd_attribute_set_int_array(stage, "/World.testattr", test_data, 5, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_int_array_t int_array;
-    result = nusd_attribute_get_int_array(stage, "/World.testattr", &int_array);
+    result = nusd_attribute_get_int_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &int_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_int_array_size(int_array);
@@ -159,11 +159,11 @@ TEST(nusd, set_int2_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int test_value[] = {10, 20};
-    result = nusd_attribute_set_int2(stage, "/World.testattr", test_value);
+    result = nusd_attribute_set_int2(stage, "/World.testattr", test_value, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int value[2] = {0, 0};
-    result = nusd_attribute_get_int2(stage, "/World.testattr", value);
+    result = nusd_attribute_get_int2(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_EQ(value[0], 10);
     EXPECT_EQ(value[1], 20);
@@ -180,11 +180,11 @@ TEST(nusd, set_int2_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int test_data[] = {1, 2, 3, 4, 5, 6};  // 3 int2 values
-    result = nusd_attribute_set_int2_array(stage, "/World.testattr", test_data, 3);
+    result = nusd_attribute_set_int2_array(stage, "/World.testattr", test_data, 3, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_int2_array_t int2_array;
-    result = nusd_attribute_get_int2_array(stage, "/World.testattr", &int2_array);
+    result = nusd_attribute_get_int2_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &int2_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_int2_array_size(int2_array);
@@ -209,11 +209,11 @@ TEST(nusd, set_int3_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int test_value[] = {100, 200, 300};
-    result = nusd_attribute_set_int3(stage, "/World.testattr", test_value);
+    result = nusd_attribute_set_int3(stage, "/World.testattr", test_value, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int value[3] = {0, 0, 0};
-    result = nusd_attribute_get_int3(stage, "/World.testattr", value);
+    result = nusd_attribute_get_int3(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_EQ(value[0], 100);
     EXPECT_EQ(value[1], 200);
@@ -231,11 +231,11 @@ TEST(nusd, set_int3_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int test_data[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};  // 3 int3 values
-    result = nusd_attribute_set_int3_array(stage, "/World.testattr", test_data, 3);
+    result = nusd_attribute_set_int3_array(stage, "/World.testattr", test_data, 3, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_int3_array_t int3_array;
-    result = nusd_attribute_get_int3_array(stage, "/World.testattr", &int3_array);
+    result = nusd_attribute_get_int3_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &int3_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_int3_array_size(int3_array);
@@ -260,11 +260,11 @@ TEST(nusd, set_int4_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int test_value[] = {1000, 2000, 3000, 4000};
-    result = nusd_attribute_set_int4(stage, "/World.testattr", test_value);
+    result = nusd_attribute_set_int4(stage, "/World.testattr", test_value, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int value[4] = {0, 0, 0, 0};
-    result = nusd_attribute_get_int4(stage, "/World.testattr", value);
+    result = nusd_attribute_get_int4(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_EQ(value[0], 1000);
     EXPECT_EQ(value[1], 2000);
@@ -283,11 +283,11 @@ TEST(nusd, set_int4_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int test_data[] = {1, 2, 3, 4, 5, 6, 7, 8};  // 2 int4 values
-    result = nusd_attribute_set_int4_array(stage, "/World.testattr", test_data, 2);
+    result = nusd_attribute_set_int4_array(stage, "/World.testattr", test_data, 2, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_int4_array_t int4_array;
-    result = nusd_attribute_get_int4_array(stage, "/World.testattr", &int4_array);
+    result = nusd_attribute_get_int4_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &int4_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_int4_array_size(int4_array);
@@ -311,11 +311,11 @@ TEST(nusd, set_int64_attribute) {
     result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_INT64);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
-    result = nusd_attribute_set_int64(stage, "/World.testattr", 9223372036854775807LL);
+    result = nusd_attribute_set_int64(stage, "/World.testattr", 9223372036854775807LL, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int64_t value = 0;
-    result = nusd_attribute_get_int64(stage, "/World.testattr", &value);
+    result = nusd_attribute_get_int64(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_EQ(value, 9223372036854775807LL);
 }
@@ -331,11 +331,11 @@ TEST(nusd, set_int64_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     int64_t test_data[] = {1000000000000LL, 2000000000000LL, 3000000000000LL, 4000000000000LL, 5000000000000LL};
-    result = nusd_attribute_set_int64_array(stage, "/World.testattr", test_data, 5);
+    result = nusd_attribute_set_int64_array(stage, "/World.testattr", test_data, 5, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_int64_array_t int64_array;
-    result = nusd_attribute_get_int64_array(stage, "/World.testattr", &int64_array);
+    result = nusd_attribute_get_int64_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &int64_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_int64_array_size(int64_array);
@@ -359,11 +359,11 @@ TEST(nusd, set_double_attribute) {
     result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_DOUBLE);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
-    result = nusd_attribute_set_double(stage, "/World.testattr", 3.14159);
+    result = nusd_attribute_set_double(stage, "/World.testattr", 3.14159, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double value = 0.0;
-    result = nusd_attribute_get_double(stage, "/World.testattr", &value);
+    result = nusd_attribute_get_double(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_DOUBLE_EQ(value, 3.14159);
 }
@@ -379,11 +379,11 @@ TEST(nusd, set_double_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_data[] = {1.1, 2.2, 3.3, 4.4, 5.5};
-    result = nusd_attribute_set_double_array(stage, "/World.testattr", test_data, 5);
+    result = nusd_attribute_set_double_array(stage, "/World.testattr", test_data, 5, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_double_array_t double_array;
-    result = nusd_attribute_get_double_array(stage, "/World.testattr", &double_array);
+    result = nusd_attribute_get_double_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &double_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_double_array_size(double_array);
@@ -408,11 +408,11 @@ TEST(nusd, set_double2_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_value[] = {1.1, 2.2};
-    result = nusd_attribute_set_double2(stage, "/World.testattr", test_value);
+    result = nusd_attribute_set_double2(stage, "/World.testattr", test_value, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double value[2] = {0.0, 0.0};
-    result = nusd_attribute_get_double2(stage, "/World.testattr", value);
+    result = nusd_attribute_get_double2(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_DOUBLE_EQ(value[0], 1.1);
     EXPECT_DOUBLE_EQ(value[1], 2.2);
@@ -429,11 +429,11 @@ TEST(nusd, set_double2_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_data[] = {1.1, 2.2, 3.3, 4.4, 5.5, 6.6};  // 3 double2 values
-    result = nusd_attribute_set_double2_array(stage, "/World.testattr", test_data, 3);
+    result = nusd_attribute_set_double2_array(stage, "/World.testattr", test_data, 3, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_double2_array_t double2_array;
-    result = nusd_attribute_get_double2_array(stage, "/World.testattr", &double2_array);
+    result = nusd_attribute_get_double2_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &double2_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_double2_array_size(double2_array);
@@ -458,11 +458,11 @@ TEST(nusd, set_double3_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_value[] = {1.1, 2.2, 3.3};
-    result = nusd_attribute_set_double3(stage, "/World.testattr", test_value);
+    result = nusd_attribute_set_double3(stage, "/World.testattr", test_value, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double value[3] = {0.0, 0.0, 0.0};
-    result = nusd_attribute_get_double3(stage, "/World.testattr", value);
+    result = nusd_attribute_get_double3(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_DOUBLE_EQ(value[0], 1.1);
     EXPECT_DOUBLE_EQ(value[1], 2.2);
@@ -480,11 +480,11 @@ TEST(nusd, set_double3_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_data[] = {1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9};  // 3 double3 values
-    result = nusd_attribute_set_double3_array(stage, "/World.testattr", test_data, 3);
+    result = nusd_attribute_set_double3_array(stage, "/World.testattr", test_data, 3, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_double3_array_t double3_array;
-    result = nusd_attribute_get_double3_array(stage, "/World.testattr", &double3_array);
+    result = nusd_attribute_get_double3_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &double3_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_double3_array_size(double3_array);
@@ -509,11 +509,11 @@ TEST(nusd, set_double4_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_value[] = {1.1, 2.2, 3.3, 4.4};
-    result = nusd_attribute_set_double4(stage, "/World.testattr", test_value);
+    result = nusd_attribute_set_double4(stage, "/World.testattr", test_value, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double value[4] = {0.0, 0.0, 0.0, 0.0};
-    result = nusd_attribute_get_double4(stage, "/World.testattr", value);
+    result = nusd_attribute_get_double4(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_DOUBLE_EQ(value[0], 1.1);
     EXPECT_DOUBLE_EQ(value[1], 2.2);
@@ -532,11 +532,11 @@ TEST(nusd, set_double4_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_data[] = {1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8};  // 2 double4 values
-    result = nusd_attribute_set_double4_array(stage, "/World.testattr", test_data, 2);
+    result = nusd_attribute_set_double4_array(stage, "/World.testattr", test_data, 2, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_double4_array_t double4_array;
-    result = nusd_attribute_get_double4_array(stage, "/World.testattr", &double4_array);
+    result = nusd_attribute_get_double4_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &double4_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_double4_array_size(double4_array);
@@ -560,11 +560,11 @@ TEST(nusd, set_bool_attribute) {
     result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_BOOL);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
-    result = nusd_attribute_set_bool(stage, "/World.testattr", true);
+    result = nusd_attribute_set_bool(stage, "/World.testattr", true, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     bool value = false;
-    result = nusd_attribute_get_bool(stage, "/World.testattr", &value);
+    result = nusd_attribute_get_bool(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_EQ(value, true);
 }
@@ -580,11 +580,11 @@ TEST(nusd, set_bool_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     bool test_data[] = {true, false, true, false, true};
-    result = nusd_attribute_set_bool_array(stage, "/World.testattr", test_data, 5);
+    result = nusd_attribute_set_bool_array(stage, "/World.testattr", test_data, 5, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_bool_array_t bool_array;
-    result = nusd_attribute_get_bool_array(stage, "/World.testattr", &bool_array);
+    result = nusd_attribute_get_bool_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &bool_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_bool_array_size(bool_array);
@@ -609,11 +609,11 @@ TEST(nusd, set_matrix2d_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_matrix[4] = {1.0, 2.0, 3.0, 4.0};
-    result = nusd_attribute_set_matrix2d(stage, "/World.testattr", test_matrix);
+    result = nusd_attribute_set_matrix2d(stage, "/World.testattr", test_matrix, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double value[4] = {0.0, 0.0, 0.0, 0.0};
-    result = nusd_attribute_get_matrix2d(stage, "/World.testattr", value);
+    result = nusd_attribute_get_matrix2d(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     for (int i = 0; i < 4; i++) {
         EXPECT_DOUBLE_EQ(value[i], test_matrix[i]);
@@ -631,11 +631,11 @@ TEST(nusd, set_matrix2d_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_data[8] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};  // 2 matrix2d values
-    result = nusd_attribute_set_matrix2d_array(stage, "/World.testattr", test_data, 2);
+    result = nusd_attribute_set_matrix2d_array(stage, "/World.testattr", test_data, 2, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_matrix2d_array_t matrix2d_array;
-    result = nusd_attribute_get_matrix2d_array(stage, "/World.testattr", &matrix2d_array);
+    result = nusd_attribute_get_matrix2d_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &matrix2d_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_matrix2d_array_size(matrix2d_array);
@@ -660,11 +660,11 @@ TEST(nusd, set_matrix3d_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_matrix[9] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
-    result = nusd_attribute_set_matrix3d(stage, "/World.testattr", test_matrix);
+    result = nusd_attribute_set_matrix3d(stage, "/World.testattr", test_matrix, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double value[9] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    result = nusd_attribute_get_matrix3d(stage, "/World.testattr", value);
+    result = nusd_attribute_get_matrix3d(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     for (int i = 0; i < 9; i++) {
         EXPECT_DOUBLE_EQ(value[i], test_matrix[i]);
@@ -682,11 +682,11 @@ TEST(nusd, set_matrix3d_array_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_data[18] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0};  // 2 matrix3d values
-    result = nusd_attribute_set_matrix3d_array(stage, "/World.testattr", test_data, 2);
+    result = nusd_attribute_set_matrix3d_array(stage, "/World.testattr", test_data, 2, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_matrix3d_array_t matrix3d_array;
-    result = nusd_attribute_get_matrix3d_array(stage, "/World.testattr", &matrix3d_array);
+    result = nusd_attribute_get_matrix3d_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &matrix3d_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_matrix3d_array_size(matrix3d_array);
@@ -711,11 +711,11 @@ TEST(nusd, set_matrix4d_attribute) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double test_matrix[16] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0};
-    result = nusd_attribute_set_matrix4d(stage, "/World.testattr", test_matrix);
+    result = nusd_attribute_set_matrix4d(stage, "/World.testattr", test_matrix, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     double value[16] = {0.0};
-    result = nusd_attribute_get_matrix4d(stage, "/World.testattr", value);
+    result = nusd_attribute_get_matrix4d(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     for (int i = 0; i < 16; i++) {
         EXPECT_DOUBLE_EQ(value[i], test_matrix[i]);
@@ -736,11 +736,11 @@ TEST(nusd, set_matrix4d_array_attribute) {
     for (int i = 0; i < 32; i++) {
         test_data[i] = i + 1.0;
     }
-    result = nusd_attribute_set_matrix4d_array(stage, "/World.testattr", test_data, 2);
+    result = nusd_attribute_set_matrix4d_array(stage, "/World.testattr", test_data, 2, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_matrix4d_array_t matrix4d_array;
-    result = nusd_attribute_get_matrix4d_array(stage, "/World.testattr", &matrix4d_array);
+    result = nusd_attribute_get_matrix4d_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &matrix4d_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     size_t size = nusd_matrix4d_array_size(matrix4d_array);
@@ -761,10 +761,10 @@ TEST(nusd, set_uint_attribute) {
     EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
     result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UINT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
-    result = nusd_attribute_set_uint(stage, "/World.testattr", 42U);
+    result = nusd_attribute_set_uint(stage, "/World.testattr", 42U, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     unsigned int value = 0;
-    result = nusd_attribute_get_uint(stage, "/World.testattr", &value);
+    result = nusd_attribute_get_uint(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_EQ(value, 42U);
 }
@@ -777,10 +777,10 @@ TEST(nusd, set_uint_array_attribute) {
     result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UINTARRAY);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     unsigned int test_data[] = {1U, 2U, 3U, 4U, 5U};
-    result = nusd_attribute_set_uint_array(stage, "/World.testattr", test_data, 5);
+    result = nusd_attribute_set_uint_array(stage, "/World.testattr", test_data, 5, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     nusd_uint_array_t uint_array;
-    result = nusd_attribute_get_uint_array(stage, "/World.testattr", &uint_array);
+    result = nusd_attribute_get_uint_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &uint_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     
     size_t size = nusd_uint_array_size(uint_array);
@@ -801,10 +801,10 @@ TEST(nusd, set_uint64_attribute) {
     EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
     result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UINT64);
     EXPECT_EQ(result, NUSD_RESULT_OK);
-    result = nusd_attribute_set_uint64(stage, "/World.testattr", 18446744073709551615ULL);
+    result = nusd_attribute_set_uint64(stage, "/World.testattr", 18446744073709551615ULL, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     uint64_t value = 0;
-    result = nusd_attribute_get_uint64(stage, "/World.testattr", &value);
+    result = nusd_attribute_get_uint64(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_EQ(value, 18446744073709551615ULL);
 }
@@ -817,10 +817,10 @@ TEST(nusd, set_uint64_array_attribute) {
     result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UINT64ARRAY);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     uint64_t test_data[] = {1000000000000ULL, 2000000000000ULL, 3000000000000ULL, 4000000000000ULL, 5000000000000ULL};
-    result = nusd_attribute_set_uint64_array(stage, "/World.testattr", test_data, 5);
+    result = nusd_attribute_set_uint64_array(stage, "/World.testattr", test_data, 5, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     nusd_uint64_array_t uint64_array;
-    result = nusd_attribute_get_uint64_array(stage, "/World.testattr", &uint64_array);
+    result = nusd_attribute_get_uint64_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &uint64_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     
     size_t size = nusd_uint64_array_size(uint64_array);
@@ -841,10 +841,10 @@ TEST(nusd, set_uchar_attribute) {
     EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
     result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UCHAR);
     EXPECT_EQ(result, NUSD_RESULT_OK);
-    result = nusd_attribute_set_uchar(stage, "/World.testattr", 255);
+    result = nusd_attribute_set_uchar(stage, "/World.testattr", 255, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     unsigned char value = 0;
-    result = nusd_attribute_get_uchar(stage, "/World.testattr", &value);
+    result = nusd_attribute_get_uchar(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &value);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     EXPECT_EQ(value, 255);
 }
@@ -857,10 +857,10 @@ TEST(nusd, set_uchar_array_attribute) {
     result = nusd_prim_create_property(stage, "/World", "testattr", NUSD_TYPE_UCHARARRAY);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     unsigned char test_data[] = {100, 150, 200, 255, 50};
-    result = nusd_attribute_set_uchar_array(stage, "/World.testattr", test_data, 5);
+    result = nusd_attribute_set_uchar_array(stage, "/World.testattr", test_data, 5, NUSD_TIMECODE_DEFAULT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     nusd_uchar_array_t uchar_array;
-    result = nusd_attribute_get_uchar_array(stage, "/World.testattr", &uchar_array);
+    result = nusd_attribute_get_uchar_array(stage, "/World.testattr", NUSD_TIMECODE_DEFAULT, &uchar_array);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     
     size_t size = nusd_uchar_array_size(uchar_array);
