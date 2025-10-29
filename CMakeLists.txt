@@ -7,7 +7,11 @@ option(ENABLE_TESTS "Enable the ctest-based tests" ON)
 find_package(pxr REQUIRED)
 find_package(OpenGL REQUIRED)
 
-add_library(nanousd SHARED nanousd.cpp)
+add_library(nanousd SHARED 
+    nanousd.cpp
+    nanousd-property.cpp
+    nanousd-array.cpp
+)
 target_link_libraries(nanousd PUBLIC ${PXR_LIBRARIES})
 target_include_directories(nanousd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 

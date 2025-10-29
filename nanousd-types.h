@@ -1,9 +1,9 @@
 #ifndef NANOUSD_TYPES_H
 #define NANOUSD_TYPES_H
 
-#include <stdint.h>
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #define NANOUSD_API
 

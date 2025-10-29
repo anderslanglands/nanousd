@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <nanousd.h>
-#include <nanousd-cameras.h>
-#include <nanousd-materials.h>
+#include <nanousd-camera.h>
+#include <nanousd-material.h>
 #include <cmath>
 #include <iostream>
 

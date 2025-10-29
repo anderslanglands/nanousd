@@ -9,13 +9,7 @@ test:
 
 bind:
     cd python && uv run ctypesgen -L../build  -lnanousd -o nanousd/ffi.py \
-        $PWD/../nanousd.h \
-        $PWD/../nanousd-types.h \
-        $PWD/../nanousd-arrays.h \
-        $PWD/../nanousd-iterators.h \
-        $PWD/../nanousd-properties.h \
-        $PWD/../nanousd-cameras.h \
-        $PWD/../nanousd-materials.h \
+        $PWD/../*.h \
         ; cd - 
 
 pytest:
