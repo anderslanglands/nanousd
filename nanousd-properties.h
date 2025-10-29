@@ -1853,6 +1853,31 @@ nusd_result_t nusd_attribute_set_asset(nusd_stage_t stage, char const* attribute
 NANOUSD_API
 nusd_result_t nusd_attribute_set_asset_array(nusd_stage_t stage, char const* attribute_path, char const** asset_path_array, size_t num_elements, double time_code);
 
+/// Sets the color space metadata for an attribute.
+/// @param stage The USD stage handle.
+/// @param attribute_path The full path to the attribute (e.g., "/World/Mesh.displayColor").
+/// @param color_space The color space string to set (e.g., "sRGB", "linear", "rec709").
+/// @return NUSD_RESULT_OK on success.
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or color_space is null.
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if the attribute path does not exist.
+/// @note Color space metadata is used by renderers to correctly interpret color data.
+/// @note Common color spaces include "sRGB", "linear", "rec709", "acescg".
+NANOUSD_API
+nusd_result_t nusd_attribute_set_color_space(nusd_stage_t stage, char const* attribute_path, nusd_colorspace_t color_space);
+
+/// Gets the color space metadata for an attribute.
+/// @param stage The USD stage handle.
+/// @param attribute_path The full path to the attribute (e.g., "/World/Mesh.displayColor").
+/// @param color_space Pointer to store the retrieved color space string.
+/// @return NUSD_RESULT_OK on success.
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or color_space is null.
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if the attribute path does not exist.
+/// @note color_space must not be null.
+/// @note The returned string is valid until the stage is destroyed or modified.
+/// @note Returns an empty string if no color space metadata is set.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_color_space(nusd_stage_t stage, char const* attribute_path, nusd_colorspace_t* color_space);
+
 /// @}
 
 

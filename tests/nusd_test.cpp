@@ -1246,3 +1246,103 @@ TEST(nusd, set_asset_array_attribute) {
     nusd_asset_path_array_iterator_destroy(asset_array);
     nusd_stage_destroy(stage);
 }
+
+TEST(nusd, color_space_set_get_basic) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-color_space", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Mesh"), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_COLOR3F), NUSD_RESULT_OK);
+
+    // Set color space
+    EXPECT_EQ(nusd_attribute_set_color_space(stage, "/World.displayColor", "sRGB"), NUSD_RESULT_OK);
+
+    // Get color space
+    nusd_colorspace_t retrieved_color_space;
+    EXPECT_EQ(nusd_attribute_get_color_space(stage, "/World.displayColor", &retrieved_color_space), NUSD_RESULT_OK);
+    EXPECT_STREQ(retrieved_color_space, "sRGB");
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, color_space_different_values) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-color_space_values", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Mesh"), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_COLOR3F), NUSD_RESULT_OK);
+
+    const char* test_color_spaces[] = {"linear", "rec709", "acescg", "prophoto"};
+    
+    for (const char* color_space : test_color_spaces) {
+        EXPECT_EQ(nusd_attribute_set_color_space(stage, "/World.displayColor", color_space), NUSD_RESULT_OK);
+
+        nusd_colorspace_t retrieved_color_space;
+        EXPECT_EQ(nusd_attribute_get_color_space(stage, "/World.displayColor", &retrieved_color_space), NUSD_RESULT_OK);
+        EXPECT_STREQ(retrieved_color_space, color_space);
+    }
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, color_space_null_parameters) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-color_space_null", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Mesh"), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_COLOR3F), NUSD_RESULT_OK);
+
+    // Test null parameters for set_color_space
+    EXPECT_EQ(nusd_attribute_set_color_space(nullptr, "/World.displayColor", "sRGB"), NUSD_RESULT_NULL_PARAMETER);
+    EXPECT_EQ(nusd_attribute_set_color_space(stage, nullptr, "sRGB"), NUSD_RESULT_NULL_PARAMETER);
+    EXPECT_EQ(nusd_attribute_set_color_space(stage, "/World.displayColor", nullptr), NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null parameters for get_color_space
+    nusd_colorspace_t color_space;
+    EXPECT_EQ(nusd_attribute_get_color_space(nullptr, "/World.displayColor", &color_space), NUSD_RESULT_NULL_PARAMETER);
+    EXPECT_EQ(nusd_attribute_get_color_space(stage, nullptr, &color_space), NUSD_RESULT_NULL_PARAMETER);
+    EXPECT_EQ(nusd_attribute_get_color_space(stage, "/World.displayColor", nullptr), NUSD_RESULT_NULL_PARAMETER);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, color_space_invalid_attribute_path) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-color_space_invalid", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Mesh"), NUSD_RESULT_OK);
+
+    // Test invalid attribute path for set_color_space
+    EXPECT_EQ(nusd_attribute_set_color_space(stage, "/World.nonexistent", "sRGB"), NUSD_RESULT_INVALID_ATTRIBUTE_PATH);
+    EXPECT_EQ(nusd_attribute_set_color_space(stage, "/NonExistent.displayColor", "sRGB"), NUSD_RESULT_INVALID_ATTRIBUTE_PATH);
+
+    // Test invalid attribute path for get_color_space
+    nusd_colorspace_t color_space;
+    EXPECT_EQ(nusd_attribute_get_color_space(stage, "/World.nonexistent", &color_space), NUSD_RESULT_INVALID_ATTRIBUTE_PATH);
+    EXPECT_EQ(nusd_attribute_get_color_space(stage, "/NonExistent.displayColor", &color_space), NUSD_RESULT_INVALID_ATTRIBUTE_PATH);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, color_space_empty_string) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-color_space_empty", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Mesh"), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_COLOR3F), NUSD_RESULT_OK);
+
+    // Set empty color space
+    EXPECT_EQ(nusd_attribute_set_color_space(stage, "/World.displayColor", ""), NUSD_RESULT_OK);
+
+    // Get color space - should return empty string
+    nusd_colorspace_t retrieved_color_space;
+    EXPECT_EQ(nusd_attribute_get_color_space(stage, "/World.displayColor", &retrieved_color_space), NUSD_RESULT_OK);
+    EXPECT_STREQ(retrieved_color_space, "");
+
+    nusd_stage_destroy(stage);
+}

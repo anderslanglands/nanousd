@@ -32,6 +32,7 @@ enum nusd_result_e {
 typedef int nusd_result_t;
 
 typedef char const* nusd_type_t;
+typedef char const* nusd_colorspace_t;
 typedef void* nusd_stage_t;
 typedef struct nusd_asset_path_s* nusd_asset_path_t;
 
@@ -148,6 +149,27 @@ extern nusd_type_t NUSD_TYPE_VECTOR3H;
 extern nusd_type_t NUSD_TYPE_VECTOR3HARRAY;
 
 extern nusd_type_t NUSD_TYPE_RELATIONSHIP;
+
+extern nusd_type_t NUSD_COLORSPACE_LINEAR_AP1;
+extern nusd_type_t NUSD_COLORSPACE_LINEAR_AP0;
+extern nusd_type_t NUSD_COLORSPACE_LINEAR_REC709;
+extern nusd_type_t NUSD_COLORSPACE_LINEAR_P3D65;
+extern nusd_type_t NUSD_COLORSPACE_LINEAR_REC2020;
+extern nusd_type_t NUSD_COLORSPACE_LINEAR_ADOBERGB;
+extern nusd_type_t NUSD_COLORSPACE_LINEAR_CIEXYZD65;
+extern nusd_type_t NUSD_COLORSPACE_LINEAR_DISPLAYP3;
+extern nusd_type_t NUSD_COLORSPACE_SRGB_REC709;
+extern nusd_type_t NUSD_COLORSPACE_G22_REC709;
+extern nusd_type_t NUSD_COLORSPACE_G18_REC709;
+extern nusd_type_t NUSD_COLORSPACE_SRGB_AP1;
+extern nusd_type_t NUSD_COLORSPACE_G22_AP1;
+extern nusd_type_t NUSD_COLORSPACE_G22_ADOBERGB;
+extern nusd_type_t NUSD_COLORSPACE_IDENTITY;
+extern nusd_type_t NUSD_COLORSPACE_DATA;
+extern nusd_type_t NUSD_COLORSPACE_RAW;
+extern nusd_type_t NUSD_COLORSPACE_SRGB;
+extern nusd_type_t NUSD_COLORSPACE_UNKNOWN;
+extern nusd_type_t NUSD_COLORSPACE_CIEXYZ;
 
 #ifdef __cplusplus
 }

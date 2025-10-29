@@ -141,6 +141,7 @@ _lib.nusd_prim_iterator_next.argtypes = [_lib.nusd_prim_iterator_t, POINTER(c_ch
 _lib.nusd_attribute_get_token.argtypes = [_lib.nusd_stage_t, _lib.String, c_double, POINTER(c_char_p)]
 _lib.nusd_token_array_iterator_next.argtypes = [_lib.nusd_token_array_iterator_t, POINTER(c_char_p)]
 _lib.nusd_asset_path_array_iterator_next.argtypes = [_lib.nusd_asset_path_array_iterator_t, POINTER(c_char_p)]
+_lib.nusd_attribute_get_color_space.argtypes = [_lib.nusd_stage_t, _lib.String, POINTER(c_char_p)]
 
 
 class PrimIterator:
@@ -2196,3 +2197,66 @@ class Stage:
             raise SetPropertyError(f'failed to connect "{source_output_path}" to "{destination_input_path}"')
         elif result != _lib.NUSD_RESULT_OK:
             raise SetPropertyError(f'failed to connect shaders: {result}')
+
+    def attribute_set_color_space(self, attribute_path: str, color_space: str):
+        """Set the color space metadata for an attribute.
+
+        Args:
+            attribute_path: Full USD path to the attribute (e.g., "/World/Mesh.displayColor")
+            color_space: Color space string to set (e.g., "sRGB", "linear", "rec709", "acescg")
+
+        Raises:
+            SetPropertyError: If the attribute path is invalid or the color space cannot be set
+            ValueError: If attribute_path or color_space is None
+
+        Note:
+            Color space metadata is used by renderers to correctly interpret color data.
+            Common color spaces include "sRGB", "linear", "rec709", "acescg".
+        """
+        if attribute_path is None:
+            raise ValueError("attribute_path cannot be None")
+        if color_space is None:
+            raise ValueError("color_space cannot be None")
+
+        result = _lib.nusd_attribute_set_color_space(
+            self._stage,
+            attribute_path.encode("ascii"),
+            color_space,
+        )
+        if result == _lib.NUSD_RESULT_INVALID_ATTRIBUTE_PATH:
+            raise SetPropertyError(f'cannot find attribute "{attribute_path}"')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(f'failed to set color space for "{attribute_path}": {result}')
+
+    def attribute_get_color_space(self, attribute_path: str) -> str:
+        """Get the color space metadata for an attribute.
+
+        Args:
+            attribute_path: Full USD path to the attribute (e.g., "/World/Mesh.displayColor")
+
+        Returns:
+            Color space string, or empty string if no color space metadata is set
+
+        Raises:
+            GetPropertyError: If the attribute path is invalid or the color space cannot be retrieved
+            ValueError: If attribute_path is None
+
+        Note:
+            The returned string is valid until the stage is destroyed or modified.
+            Returns an empty string if no color space metadata is set.
+        """
+        if attribute_path is None:
+            raise ValueError("attribute_path cannot be None")
+
+        color_space = c_char_p()
+        result = _lib.nusd_attribute_get_color_space(
+            self._stage,
+            attribute_path.encode("ascii"),
+            byref(color_space)
+        )
+        if result == _lib.NUSD_RESULT_INVALID_ATTRIBUTE_PATH:
+            raise GetPropertyError(f'cannot find attribute "{attribute_path}"')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise GetPropertyError(f'failed to get color space for "{attribute_path}": {result}')
+
+        return color_space.value.decode("utf-8") if color_space.value else ""

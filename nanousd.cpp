@@ -17,6 +17,8 @@
 #include <pxr/base/tf/refPtr.h>
 #include <pxr/base/vt/value.h>
 #include <pxr/base/vt/array.h>
+
+#include <pxr/base/gf/colorSpace.h>
 #include <pxr/base/gf/matrix2d.h>
 #include <pxr/base/gf/matrix3d.h>
 #include <pxr/base/gf/matrix4d.h>
@@ -266,6 +268,11 @@ char const* NUSD_TYPE_VECTOR3HARRAY;
 
 char const* NUSD_TYPE_RELATIONSHIP = "rel";
 
+char const* NUSD_COLORSPACE_SRGB;
+char const* NUSD_COLORSPACE_LINEAR_AP1;
+char const* NUSD_COLORSPACE_LINEAR_AP0;
+char const* NUSD_COLORSPACE_SRGB_AP1;
+
 using TokenTypeNameMap = std::unordered_map<char const*, PXR_NS::SdfValueTypeName>;
 TokenTypeNameMap TOKEN_TO_TYPENAME;
 
@@ -488,6 +495,11 @@ static void initialize_tokens() {
         TOKEN_TO_TYPENAME[NUSD_TYPE_VECTOR3H] = SdfValueTypeNames->Vector3h;
         NUSD_TYPE_VECTOR3HARRAY = SdfValueTypeNames->Vector3hArray.GetAsToken().GetText();
         TOKEN_TO_TYPENAME[NUSD_TYPE_VECTOR3HARRAY] = SdfValueTypeNames->Vector3hArray;
+
+        NUSD_COLORSPACE_SRGB = "sRGB";
+        NUSD_COLORSPACE_LINEAR_AP1 = GfColorSpaceNames->LinearAP1.GetText();
+        NUSD_COLORSPACE_LINEAR_AP0 = GfColorSpaceNames->LinearAP0.GetText();
+        NUSD_COLORSPACE_SRGB_AP1 = GfColorSpaceNames->SRGBAP1.GetText();
 
         TOKENS_INITIALIZED = true;
     }
@@ -2954,6 +2966,38 @@ nusd_result_t nusd_attribute_set_asset_array(nusd_stage_t stage, char const* att
     }
 
     attr.Set(arr, time_code);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_color_space(nusd_stage_t stage, char const* attribute_path, nusd_colorspace_t color_space) {
+    if (stage == nullptr || attribute_path== nullptr || color_space == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    attr.SetColorSpace(TfToken(color_space));
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_get_color_space(nusd_stage_t stage, char const* attribute_path, nusd_colorspace_t* color_space) {
+    if (stage == nullptr || attribute_path== nullptr || color_space == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    *color_space = attr.GetColorSpace().GetText();
+
     return NUSD_RESULT_OK;
 }
 
