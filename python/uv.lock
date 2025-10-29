@@ -215,11 +215,11 @@ wheels = [
 
 [[package]]
 name = "docutils"
-version = "0.17.1"
+version = "0.20.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/4c/17/559b4d020f4b46e0287a2eddf2d8ebf76318fd3bd495f1625414b052fdc9/docutils-0.17.1.tar.gz", hash = "sha256:686577d2e4c32380bb50cbb22f575ed742d58168cee37e99117a854bcd88f125", size = 2016138 }
+sdist = { url = "https://files.pythonhosted.org/packages/1f/53/a5da4f2c5739cf66290fac1431ee52aff6851c7c8ffd8264f13affd7bcdd/docutils-0.20.1.tar.gz", hash = "sha256:f08a4e276c3a1583a86dce3e34aba3fe04d02bba2dd51ed16106244e8a923e3b", size = 2058365 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4c/5e/6003a0d1f37725ec2ebd4046b657abb9372202655f96e76795dca8c0063c/docutils-0.17.1-py2.py3-none-any.whl", hash = "sha256:cf316c8370a737a022b72b56874f6602acf974a37a9fba42ec2876387549fc61", size = 575533 },
+    { url = "https://files.pythonhosted.org/packages/26/87/f238c0670b94533ac0353a4e2a1a771a0cc73277b88bff23d3ae35a256c1/docutils-0.20.1-py3-none-any.whl", hash = "sha256:96f387a2c5562db4476f09f13bbab2192e764cac08ebbf3a34a95d9b1e4a59d6", size = 572666 },
 ]
 
 [[package]]
@@ -236,19 +236,18 @@ wheels = [
 
 [[package]]
 name = "exhale"
-version = "0.3.0"
+version = "0.3.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
     { name = "breathe" },
-    { name = "docutils" },
     { name = "lxml" },
     { name = "six" },
     { name = "sphinx" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0a/ff/f6163355a9f76651b11a36d687ac18c2b262e2efe13fbebb9802831399c1/exhale-0.3.0.tar.gz", hash = "sha256:9b3cdabfd681463cde16fc085f26f2fe809d62da77f2925bbbdd35e48b2edba9", size = 100579 }
+sdist = { url = "https://files.pythonhosted.org/packages/2f/2b/c5c665e743415c894d49c60e7b1338fb86d05c9ec8909a38e700e55626f0/exhale-0.3.7.tar.gz", hash = "sha256:752a96d0a59456511d933311d4a81f642cd668296eacd2561905727d5ed6b0d8", size = 104635 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c2/af/0e756c19dcd5557a023ffb9dd1022b41294576fa8702a7655e2e6bc1c511/exhale-0.3.0-py3-none-any.whl", hash = "sha256:6665a69749faefff717b3f1fe42b346e3eee510a3137ed01a3bddce8b264068b", size = 104247 },
+    { url = "https://files.pythonhosted.org/packages/ea/78/9a8a174011682d71cb4922f4014ebbeb9d3067922678e7059351fd9207cf/exhale-0.3.7-py3-none-any.whl", hash = "sha256:698fe5612bdfb4955ce780ea2441d085fe30c6174b12ef29839dd232c7363504", size = 108136 },
 ]
 
 [[package]]
@@ -562,6 +561,7 @@ dependencies = [
     { name = "exhale" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "sphinx" },
 ]
 
 [package.optional-dependencies]
@@ -575,10 +575,11 @@ dev = [
 requires-dist = [
     { name = "black", marker = "extra == 'dev'" },
     { name = "ctypesgen" },
-    { name = "exhale", specifier = "==0.3.0" },
+    { name = "exhale", specifier = ">=0.3.0" },
     { name = "mypy", marker = "extra == 'dev'" },
     { name = "numpy", specifier = ">=2.2.6" },
     { name = "pytest", marker = "extra == 'dev'" },
+    { name = "sphinx", specifier = "==7.1.2" },
 ]
 provides-extras = ["dev"]
 
@@ -847,7 +848,7 @@ wheels = [
 
 [[package]]
 name = "sphinx"
-version = "4.5.0"
+version = "7.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "alabaster" },
@@ -867,9 +868,9 @@ dependencies = [
     { name = "sphinxcontrib-qthelp" },
     { name = "sphinxcontrib-serializinghtml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d5/b9/b831ea20dde3c3b726e41403eaee92cc448083cef310790c31c6ccfb22e3/Sphinx-4.5.0.tar.gz", hash = "sha256:7bf8ca9637a4ee15af412d1a1d9689fec70523a68ca9bb9127c2f3eeb344e2e6", size = 6698212 }
+sdist = { url = "https://files.pythonhosted.org/packages/dc/01/688bdf9282241dca09fe6e3a1110eda399fa9b10d0672db609e37c2e7a39/sphinx-7.1.2.tar.gz", hash = "sha256:780f4d32f1d7d1126576e0e5ecc19dc32ab76cd24e950228dcf7b1f6d3d9e22f", size = 6828258 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/91/96/9cbbc7103fb482d5809fe4976ecb9b627058210d02817fcbfeebeaa8f762/Sphinx-4.5.0-py3-none-any.whl", hash = "sha256:ebf612653238bcc8f4359627a9b7ce44ede6fdd75d9d30f68255c7383d3a6226", size = 3099508 },
+    { url = "https://files.pythonhosted.org/packages/48/17/325cf6a257d84751a48ae90752b3d8fe0be8f9535b6253add61c49d0d9bc/sphinx-7.1.2-py3-none-any.whl", hash = "sha256:d170a81825b2fcacb6dfd5a0d7f578a053e45d3f2b153fecc948c37344eb4cbe", size = 3169543 },
 ]
 
 [[package]]

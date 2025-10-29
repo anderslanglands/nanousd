@@ -31,7 +31,30 @@ release = '0.1.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "breathe",
+    "exhale",
 ]
+
+breathe_projects = {
+    "nanousd": "./_build/doxygen/xml"
+}
+breathe_default_project = "nanousd"
+
+# Setup the exhale extension
+exhale_args = {
+    # These arguments are required
+    "containmentFolder":     "./api",
+    "rootFileName":          "library_root.rst",
+    "doxygenStripFromPath":  "..",
+    # Heavily encouraged optional argument (see docs)
+    "rootFileTitle":         "Library API",
+    # Suggested optional arguments
+    "createTreeView":        True,
+    # TIP: if using the sphinx-bootstrap-theme, you need
+    "treeViewIsBootstrap": True,
+    "exhaleExecutesDoxygen": False,
+    "exhaleDoxygenStdin":    "INPUT = ../include"
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
