@@ -70,34 +70,40 @@ void print_property(nusd_stage_t stage, char const* property_path, nusd_type_t p
         nusd_attribute_get_token(stage, property_path, NUSD_TIMECODE_DEFAULT, &value);
         printf("    %s %s = \"%s\"\n", property_type, name, value);
     } else if (property_type == NUSD_TYPE_TOKENARRAY) {
-        nusd_token_array_t value;
+        nusd_token_array_iterator_t value;
         int result = nusd_attribute_get_token_array(stage, property_path, NUSD_TIMECODE_DEFAULT, &value);
-        size_t size = nusd_token_array_size(value);
+        size_t size = nusd_token_array_iterator_size(value);
         printf("    token[%d] %s = [", int(size), name);
         bool first = true;
         if (size <= 4) {
-            for (size_t i = 0; i < size; ++i) {
+            char const* tok;
+            while (nusd_token_array_iterator_next(value, &tok)) {
                 if (!first) {
                     printf(", ");
                 } else {
                     first = false;
                 }
-                printf("\"%s\"", nusd_token_array_index(value, i));
+                printf("\"%s\"", tok);
             }
         } else {
-            for (size_t i = 0; i < 4; ++i) {
+            char const* tok;
+            int i = 0;
+            while (nusd_token_array_iterator_next(value, &tok)) {
                 if (!first) {
                     printf(", ");
                 } else {
                     first = false;
                 }
-                printf("\"%s\"", nusd_token_array_index(value, i));
+
+                if (i++ < 4) {
+                    printf("\"%s\"", tok);
+                }
             }
 
-            printf(", ... \"%s\"", nusd_token_array_index(value, size - 1));
+            printf(", ... \"%s\"", tok);
         }
         printf("]\n");
-        nusd_token_array_destroy(value);
+        nusd_token_array_iterator_destroy(value);
     } else if (property_type == NUSD_TYPE_FLOAT) {
         float value;
         nusd_attribute_get_float(stage, property_path, NUSD_TIMECODE_DEFAULT, &value);
