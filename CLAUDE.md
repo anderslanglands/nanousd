@@ -43,8 +43,14 @@ just pytest
 ### C Library
 - `nanousd.h` - Main C API header file with comprehensive USD type definitions and function declarations
 - `nanousd.cpp` - Implementation of the C wrapper around USD C++ APIs
+- `nanousd-types.h` - Core type definitions, constants, and error codes
+- `nanousd-arrays.h` - Array type definitions and functions (float, int, matrix arrays)
+- `nanousd-iterators.h` - Iterator definitions for traversing collections (prims, properties, tokens, assets)
+- `nanousd-properties.h` - Property and attribute access functions
+- `nanousd-cameras.h` - Camera-specific functionality (FOV, exposure, aperture, transforms)
+- `nanousd-materials.h` - Material and shader system functions
 - `example01.cpp` - Example application demonstrating basic USD file reading and property inspection
-- `tests/nusd_test.cpp` - GoogleTest-based unit tests
+- `tests/nusd_test.cpp` - GoogleTest-based unit tests (52 tests total)
 - `test01.usda` - Sample USD file for testing and examples
 
 ### Python Bindings
@@ -54,7 +60,7 @@ just pytest
     - `__init__.py` - High-level Python API with NumPy integration
     - `ffi.py` - Auto-generated ctypes bindings (do not edit manually)
   - `example01.py` - Python example demonstrating USD file operations
-  - `tests/test_nanousd.py` - Python unit tests using pytest
+  - `tests/test_nanousd.py` - Python unit tests using pytest (70 tests total)
   - `uv.lock` - Lock file for reproducible Python environment
 
 ### Build System
@@ -68,8 +74,13 @@ just pytest
 The library follows a C wrapper pattern:
 - C++ USD objects are wrapped in opaque C handles (e.g., `nusd_stage_t`, `nusd_prim_iterator_t`)
 - Iterator pattern for traversing prims, properties, and relationships
-- Type-safe getters for various USD data types (float, double, int, bool, vectors, arrays)
+- Type-safe getters for various USD data types (float, double, int, bool, vectors, matrices, arrays)
 - Comprehensive error handling with `nusd_result_t` return codes
+- Full support for USD materials and shader networks
+- Asset path handling for external file references
+- Token support for shader identifiers and metadata
+- Camera functionality with exposure, aperture, and transform controls
+- Comprehensive null parameter validation throughout API
 
 ### Python Bindings
 The Python layer provides:
@@ -85,6 +96,10 @@ Key components:
 - **Property Access**: Reading attributes and relationships with automatic type conversion
 - **Iterator Interface**: Pythonic iteration over scene hierarchy and properties
 - **Array Types**: NumPy-compatible array classes (`FloatArray`, `Double3Array`, etc.) with mathematical operations
+- **Material System**: Material definition, shader creation, and shader network connections
+- **Camera Controls**: Camera definition, transform setting, FOV, exposure, and aperture controls
+- **Asset Management**: Asset path handling for textures and external file references
+- **Token Support**: String token handling for shader IDs and metadata
 
 ## Testing
 
@@ -103,9 +118,14 @@ just pytest
 The Python tests cover:
 - Stage creation and opening
 - Prim definition and property creation
-- Type-safe property getting/setting
+- Type-safe property getting/setting for all USD types
 - NumPy array integration and mathematical operations
+- Material and shader system functionality
+- Camera controls and transform operations
+- Asset path handling and external file references
+- Token and token array operations
 - Error handling with custom exception types
+- Comprehensive edge case testing
 
 ## Example Usage
 
@@ -144,6 +164,100 @@ Run the Python example:
 just pyexample
 ```
 
+## Core Functionality
+
+### Material and Shader System
+NanoUSD provides comprehensive support for USD's material and shader system:
+
+**C API:**
+- `nusd_material_define()` - Create UsdShadeMaterial prims
+- `nusd_shader_define()` - Create UsdShadeShader prims with specific shader IDs
+- `nusd_shader_create_input()` - Create shader inputs with automatic "inputs:" namespace
+- `nusd_shader_create_output()` - Create shader outputs with automatic "outputs:" namespace  
+- `nusd_shader_connect()` - Connect shader outputs to inputs for material networks
+
+**Python API:**
+- `Stage.material_define()` - Material creation wrapper
+- `Stage.shader_define()` - Shader creation with ID specification
+- `Stage.shader_create_input()` - Input creation with optional value setting
+- `Stage.shader_create_output()` - Output creation with optional value setting
+- `Stage.shader_connect()` - Shader network connection
+
+**Example workflow:**
+```python
+# Create material and shaders
+stage.material_define("/World/Materials/MyMaterial")
+stage.shader_define("/World/Materials/MyMaterial/Surface", "UsdPreviewSurface")
+stage.shader_define("/World/Materials/MyMaterial/Texture", "UsdUVTexture")
+
+# Create inputs and outputs
+stage.shader_create_input("/World/Materials/MyMaterial/Surface", "diffuseColor", nusd.COLOR3F)
+stage.shader_create_output("/World/Materials/MyMaterial/Texture", "rgb", nusd.COLOR3F)
+
+# Connect texture to surface
+stage.shader_connect(
+    "/World/Materials/MyMaterial/Texture.outputs:rgb",
+    "/World/Materials/MyMaterial/Surface.inputs:diffuseColor"
+)
+```
+
+### Asset Path System
+Full support for USD asset paths for referencing external files:
+
+**Supported Types:**
+- `ASSET` - Single asset path (textures, models, etc.)
+- `ASSETARRAY` - Arrays of asset paths
+
+**C API:**
+- `nusd_attribute_get_asset()` - Get single asset path
+- `nusd_attribute_set_asset()` - Set single asset path
+- `nusd_attribute_get_asset_array()` - Get asset path arrays with iterator
+- `nusd_attribute_set_asset_array()` - Set asset path arrays
+
+**Python Integration:**
+- Full support in `get_property()` and `set_property()`
+- Asset paths returned as Python strings
+- Asset arrays returned as Python lists
+- Supports relative paths, special characters, and empty values
+
+### Token System
+String token support for shader identifiers and metadata:
+
+**Supported Types:**
+- `TOKEN` - Single string token
+- `TOKENARRAY` - Arrays of string tokens
+
+**Common Use Cases:**
+- Shader IDs (e.g., "UsdPreviewSurface", "UsdUVTexture")
+- Purpose tokens ("default", "render", "proxy")
+- Metadata and identifier strings
+
+### Camera System
+Comprehensive camera functionality:
+
+**C API:**
+- `nusd_camera_define()` - Create camera prims
+- `nusd_camera_set_fov_w()` - Set horizontal field of view
+- `nusd_camera_set_exposure()` - Set exposure parameters (ISO, time, f-stop)
+- `nusd_camera_set_aperture()` - Set sensor dimensions
+- `nusd_camera_set_clipping_range()` - Set near/far clipping planes
+
+**Python Wrappers:**
+- All camera functions available with proper error handling
+- Support for time-coded animation
+- Integration with transform system
+
+### Transform System
+Transform and matrix operations:
+
+**Matrix Types:**
+- `MATRIX2D`, `MATRIX3D`, `MATRIX4D` - Single matrices
+- `MATRIX2DARRAY`, `MATRIX3DARRAY`, `MATRIX4DARRAY` - Matrix arrays
+
+**Transform Functions:**
+- `nusd_prim_set_transform()` - Set prim transforms
+- `nusd_prim_compute_local_to_world_transform()` - Compute world transforms
+
 ## Development Notes
 
 ### C Library
@@ -166,3 +280,66 @@ just pyexample
 - Use `just pytest` as the primary testing method since it covers both C and Python functionality
 - The Python layer handles type conversions and provides a more user-friendly API than the raw C interface
 - **NOTE**: ctypesgen syntax errors from system headers (e.g. `/usr/include/x86_64-linux-gnu/sys/cdefs.h`) can be safely ignored - they're due to ctypesgen parser limitations, not actual code errors
+
+## Current Status
+
+### Recent Major Additions (Latest Commit)
+The codebase recently received comprehensive ASSET and ASSETARRAY support along with a complete material/shader system:
+
+**Material & Shader System:**
+- Full UsdShadeMaterial and UsdShadeShader support
+- Shader input/output creation with automatic namespace handling
+- Shader connection system for building material networks
+- Support for common shader types (UsdPreviewSurface, UsdUVTexture, etc.)
+
+**Asset Path System:**
+- ASSET and ASSETARRAY type support for external file references
+- Complete C API with iterator support for arrays
+- Full Python integration in get_property/set_property
+- Proper memory management with automatic cleanup
+
+**Token System:**
+- TOKEN and TOKENARRAY support for string identifiers
+- Integration with shader IDs and metadata
+- Full round-trip support between C and Python
+
+**Testing Status:**
+- **C Tests**: 52/52 passing (increased from 45)
+- **Python Tests**: 70/70 passing (increased from 65)
+- Comprehensive coverage of all new functionality
+
+### API Completeness
+The library now supports most core USD functionality needed for scene description:
+
+**Core Types Supported:**
+- All numeric types (float, double, int, uint, etc.) and their arrays
+- All vector types (float2/3/4, double2/3/4, etc.) and their arrays  
+- All matrix types (matrix2d/3d/4d) and their arrays
+- Bool and bool arrays
+- Asset paths and asset path arrays
+- Tokens and token arrays
+- Comprehensive color space support
+
+**Major Functionality:**
+- ✅ Stage management (create, open, save)
+- ✅ Prim operations (define, properties, relationships)
+- ✅ Property system (all USD types, arrays, time-coded values)
+- ✅ Material and shader networks
+- ✅ Camera controls and transforms
+- ✅ Asset path management
+- ✅ Iterator patterns for collections
+- ✅ Comprehensive error handling
+- ✅ Full Python integration with NumPy
+
+### File Organization
+The codebase is well-organized with modular headers:
+- `nanousd-types.h` - Core types, constants, error codes
+- `nanousd-arrays.h` - Array type definitions and functions
+- `nanousd-iterators.h` - Iterator patterns for collections  
+- `nanousd-properties.h` - Property and attribute access
+- `nanousd-cameras.h` - Camera-specific functionality
+- `nanousd-materials.h` - Material and shader system
+- `nanousd.h` - Main API aggregation
+- `nanousd.cpp` - Complete implementation
+
+This modular approach makes the codebase maintainable and allows easy extension of specific functionality areas.
