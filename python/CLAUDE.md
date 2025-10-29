@@ -8,15 +8,22 @@ The Python wrapper provides a high-level, Pythonic interface to the NanoUSD C AP
 
 ## Architecture
 
-### Two-Layer Design
+### Modular Design
+
+The Python wrapper is organized into specialized modules for maintainability and clear separation of concerns:
 
 1. **Low-Level Layer (`ffi.py`)**: Auto-generated ctypes bindings
-2. **High-Level Layer (`__init__.py`)**: Pythonic wrapper classes and functions
+2. **High-Level Layer**: Modular Python API with specialized submodules
 
 ```
 Python User Code
        ↓
-High-Level Python API (__init__.py)
+High-Level Python API (nanousd module)
+├── __init__.py         - Main Stage class, core functionality, ctypes fixes
+├── tokens.py           - USD type constants (FLOAT, COLOR3F, etc.)
+├── array.py            - NumPy-compatible array wrapper classes
+├── _get_property.py    - Property retrieval logic with type handling
+└── _set_property.py    - Property setting logic with type validation
        ↓
 Auto-Generated ctypes Bindings (ffi.py)
        ↓
@@ -24,6 +31,24 @@ NanoUSD C Library (libnanousd.so)
        ↓
 Pixar USD C++ Library
 ```
+
+### Module Organization
+
+**Core Files:**
+- **`__init__.py`**: Main entry point containing Stage class, iterators, exceptions, and ctypes argument fixes
+- **`ffi.py`**: Auto-generated ctypes bindings (never edit manually)
+
+**Specialized Modules:**
+- **`tokens.py`**: USD type constants exposed as module-level variables
+- **`array.py`**: NumPy-compatible array wrapper classes with operator support
+- **`_get_property.py`**: Property retrieval with automatic type detection and conversion
+- **`_set_property.py`**: Property setting with type validation and conversion
+
+This modular approach provides:
+- **Clear separation of concerns**: Each module has a specific responsibility
+- **Maintainability**: Logic is organized by function rather than packed into one large file  
+- **Reusability**: Submodules can be imported independently if needed
+- **Testability**: Each module can be tested in isolation
 
 ## Code Generation
 
@@ -61,7 +86,7 @@ just bind
 
 ## High-Level Python API
 
-### Stage Class
+### Stage Class (`__init__.py`)
 
 The `Stage` class is the main entry point and wraps `nusd_stage_t`:
 
@@ -79,10 +104,89 @@ class Stage:
         # Calls nusd_stage_create_in_memory()
 ```
 
-### Method Patterns
+The Stage class delegates complex property operations to specialized modules:
+- **Property Getting**: `get_property()` → `_get_property.py`
+- **Property Setting**: `set_property()` → `_set_property.py`
+- **Type Constants**: Imported from `tokens.py`
+- **Array Results**: Returned as instances from `array.py`
 
-#### 1. Direct C Function Wrappers
-Simple one-to-one mapping to C functions:
+### Type Constants Module (`tokens.py`)
+
+All USD type constants are centralized in a dedicated module:
+
+```python
+# tokens.py
+from . import ffi as _lib
+
+ASSET = _lib.NUSD_TYPE_ASSET
+BOOL = _lib.NUSD_TYPE_BOOL
+COLOR3F = _lib.NUSD_TYPE_COLOR3F
+FLOAT = _lib.NUSD_TYPE_FLOAT
+FLOAT3 = _lib.NUSD_TYPE_FLOAT3
+MATRIX4D = _lib.NUSD_TYPE_MATRIX4D
+# ... all other USD types
+```
+
+This approach provides:
+- **Centralized type management**: All constants in one place
+- **Clean imports**: `from nanousd import FLOAT, COLOR3F`
+- **Easy maintenance**: Changes only need to be made in one file
+
+### Array Module (`array.py`)
+
+NumPy-compatible array wrapper classes with a common base:
+
+```python
+class ArrayBase(NDArrayOperatorsMixin):
+    def __array__(self, dtype=None):
+        return np.asarray(self._view, dtype=dtype)
+    
+    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
+        # Handle elementwise operations like arr * 2
+    
+    def __array_function__(self, func, types, args, kwargs):
+        # Delegate NumPy function calls like np.mean(self)
+
+class FloatArray(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_float_array_size(array)
+        data = _lib.nusd_float_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size,))
+```
+
+### Property Module Patterns
+
+#### 1. Property Getting (`_get_property.py`)
+Centralized type detection and conversion:
+
+```python
+def _get_property(stage, property_path: str, time_code: float = 0.0):
+    # 1. Get property type
+    property_type = _lib.nusd_type_t()
+    result = _lib.nusd_property_get_type(stage._stage, property_path, byref(property_type))
+    
+    # 2. Branch based on type
+    if property_type == _lib.NUSD_TYPE_FLOAT:
+        # Handle float...
+    elif property_type == _lib.NUSD_TYPE_FLOATARRAY:
+        # Return FloatArray wrapper
+    # ... etc for all types
+```
+
+#### 2. Property Setting (`_set_property.py`)  
+Centralized type validation and conversion:
+
+```python
+def _set_property(stage, property_path: str, property_type, value: Any, time_code: float = 0.0):
+    if property_type == FLOAT:
+        if not isinstance(value, float):
+            raise SetPropertyError(f"incompatible types...")
+        result = _lib.nusd_attribute_set_float(stage._stage, property_path, c_float(value), time_code)
+```
+
+#### 3. Direct C Function Wrappers
+Simple one-to-one mapping to C functions (in `Stage` class):
 
 ```python
 def define_prim(self, prim_path: str, prim_type: str):
@@ -91,24 +195,7 @@ def define_prim(self, prim_path: str, prim_type: str):
         raise DefinePrimError(f'failed to define prim <{prim_path}> of type "{prim_type}": {result}')
 ```
 
-#### 2. Type-Polymorphic Methods
-Single Python method handling multiple USD types:
-
-```python
-def get_property(self, property_path: str, time_code: float = 0.0):
-    # 1. Get property type
-    property_type = _lib.nusd_type_t()
-    result = _lib.nusd_property_get_type(self._stage, property_path, byref(property_type))
-    
-    # 2. Branch based on type
-    if property_type == _lib.NUSD_TYPE_FLOAT:
-        # Handle float...
-    elif property_type == _lib.NUSD_TYPE_ASSET:
-        # Handle asset...
-    # ... etc for all types
-```
-
-#### 3. Optional Parameter Methods
+#### 4. Optional Parameter Methods
 Methods with optional value setting:
 
 ```python
@@ -123,108 +210,159 @@ def shader_create_input(self, shader_path: str, input_name: str, input_type: str
         self.set_property(f"{shader_path}.inputs:{input_name}", input_type, value, time_code)
 ```
 
-## Type System
+### ctypes Argument Fixes (`__init__.py`)
 
-### USD Type Constants
-
-Constants from C API are exposed at module level:
+The main module contains ctypes argument type fixes for functions where ctypesgen generates incorrect signatures:
 
 ```python
-# In __init__.py
+# Fix up ctypesgen's sometimes wonky typing
+_lib.nusd_prim_iterator_next.argtypes = [_lib.nusd_prim_iterator_t, POINTER(c_char_p)]
+_lib.nusd_attribute_get_token.argtypes = [_lib.nusd_stage_t, _lib.String, c_double, POINTER(c_char_p)]
+_lib.nusd_attribute_get_color_space.argtypes = [_lib.nusd_stage_t, _lib.String, POINTER(c_char_p)]
+```
+
+## Modular Type System
+
+### Type Constants (`tokens.py`)
+
+All USD type constants are now centralized and cleanly exposed:
+
+```python
+# Import pattern - all types available at module level
+from nanousd import FLOAT, COLOR3F, ASSET, BOOL, MATRIX4D
+
+# Internal organization in tokens.py
 FLOAT = _lib.NUSD_TYPE_FLOAT
 COLOR3F = _lib.NUSD_TYPE_COLOR3F
 ASSET = _lib.NUSD_TYPE_ASSET
-# ... etc
+# ... all other USD types
 ```
 
-### Type Mapping Patterns
+### Type Mapping Patterns (`_get_property.py` & `_set_property.py`)
 
-#### Scalar Types
+The property modules handle all type conversions between USD/C and Python:
+
+#### Scalar Types (`_get_property.py`)
 ```python
 # C: nusd_attribute_get_float(stage, path, time, &value)
-# Python: Returns value.value (unwrapped from ctypes)
+# Python: Returns unwrapped value
 if property_type == _lib.NUSD_TYPE_FLOAT:
     value = c_float(0.0)
-    result = _lib.nusd_attribute_get_float(self._stage, property_path, time_code, byref(value))
+    result = _lib.nusd_attribute_get_float(stage._stage, property_path, time_code, byref(value))
+    if result != _lib.NUSD_RESULT_OK:
+        raise GetPropertyError(f'failed to get value for "{property_path}": {result}')
     return value.value  # Extract from ctypes wrapper
 ```
 
-#### Array Types
+#### Array Types (`_get_property.py`)
 ```python
 # C: nusd_attribute_get_float_array(stage, path, time, &array_handle)
-# Python: Returns custom array wrapper class
+# Python: Returns NumPy-compatible array wrapper from array.py
 if property_type == _lib.NUSD_TYPE_FLOATARRAY:
     value = _lib.nusd_float_array_t()
-    result = _lib.nusd_attribute_get_float_array(self._stage, property_path, time_code, byref(value))
-    return FloatArray(value)  # Wrap in NumPy-compatible class
+    result = _lib.nusd_attribute_get_float_array(stage._stage, property_path, time_code, byref(value))
+    if result != _lib.NUSD_RESULT_OK:
+        raise GetPropertyError(f'failed to get value for "{property_path}": {result}')
+    return FloatArray(value)  # Return array wrapper class
+```
+
+#### Property Setting with Validation (`_set_property.py`)
+```python
+# Type validation and conversion for setting properties
+if property_type == FLOAT:
+    if not isinstance(value, (int, float)):
+        raise SetPropertyError(f"incompatible types for property <{property_path}>...")
+    result = _lib.nusd_attribute_set_float(stage._stage, property_path, c_float(value), time_code)
+elif property_type == FLOATARRAY:
+    if not isinstance(value, np.ndarray) or value.dtype != np.float32:
+        raise SetPropertyError(f"incompatible types for property <{property_path}>...")
+    result = _lib.nusd_attribute_set_float_array(
+        stage._stage, property_path, 
+        value.ctypes.data_as(POINTER(c_float)), 
+        c_size_t(value.shape[0]), time_code
+    )
 ```
 
 #### Vector Types
 ```python
 # C: nusd_attribute_get_float3(stage, path, time, array_ptr)
 # Python: Returns NumPy array
-if property_type == _lib.NUSD_TYPE_FLOAT3:
+if property_type in [_lib.NUSD_TYPE_FLOAT3, _lib.NUSD_TYPE_COLOR3F]:
     value = (c_float * 3)()
-    result = _lib.nusd_attribute_get_float3(self._stage, property_path, time_code, value)
+    result = _lib.nusd_attribute_get_float3(stage._stage, property_path, time_code, value)
+    if result != _lib.NUSD_RESULT_OK:
+        raise GetPropertyError(f'failed to get value for "{property_path}": {result}')
     return np.array(value)  # Convert to NumPy
 ```
 
-#### String Types
+#### String and Iterator Types
 ```python
-# C: nusd_attribute_get_token(stage, path, time, &char_ptr)
-# Python: Returns decoded string
+# TOKEN: Simple string extraction
 if property_type == _lib.NUSD_TYPE_TOKEN:
     value = c_char_p()
-    result = _lib.nusd_attribute_get_token(self._stage, property_path, time_code, byref(value))
-    return value.value.decode("utf-8")
-```
+    result = _lib.nusd_attribute_get_token(stage._stage, property_path, time_code, byref(value))
+    return value.value.decode("utf-8") if value.value else ""
 
-#### Iterator Types
-```python
-# C: Iterator pattern with next() and destroy()
-# Python: Convert to Python list
+# TOKENARRAY: Iterator pattern converted to Python list
 if property_type == _lib.NUSD_TYPE_TOKENARRAY:
     value = _lib.nusd_token_array_iterator_t()
-    result = _lib.nusd_attribute_get_token_array(self._stage, property_path, time_code, byref(value))
+    result = _lib.nusd_attribute_get_token_array(stage._stage, property_path, time_code, byref(value))
     
-    result = []
+    tokens = []
     tok = c_char_p()
     while _lib.nusd_token_array_iterator_next(value, byref(tok)):
-        result.append(tok.value.decode("utf-8"))
+        tokens.append(tok.value.decode("utf-8"))
     
-    _lib.nusd_token_array_iterator_destroy(value)  # Cleanup
-    return result
+    _lib.nusd_token_array_iterator_destroy(value)  # Always cleanup
+    return tokens
 ```
 
-## Array Classes
+## Array Classes (`array.py`)
 
-### NumPy Integration
+### NumPy Integration with Common Base
 
-Custom array classes provide NumPy compatibility:
+All array classes inherit from a common `ArrayBase` that provides full NumPy compatibility:
 
 ```python
-class FloatArray(NDArrayOperatorsMixin):
-    def __init__(self, array_handle):
-        self._array = array_handle
+class ArrayBase(NDArrayOperatorsMixin):
+    def __array__(self, dtype=None):
+        return np.asarray(self._view, dtype=dtype)
     
-    def __array__(self):
-        # Enable NumPy compatibility
-        size = _lib.nusd_float_array_size(self._array)
-        data_ptr = _lib.nusd_float_array_data(self._array)
-        return np.ctypeslib.as_array(data_ptr, shape=(size,))
+    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
+        # Handle elementwise operations like arr * 2 or np.add(arr1, arr2)
+        if method != "__call__":
+            return NotImplemented
+        
+        # Convert ArrayBase inputs to raw arrays
+        new_inputs = [x._view if isinstance(x, ArrayBase) else x for x in inputs]
+        return getattr(ufunc, method)(*new_inputs, **kwargs)
+    
+    def __array_function__(self, func, types, args, kwargs):
+        # Delegate NumPy function calls like np.mean(self)
+        if not all(issubclass(t, (ArrayBase, np.ndarray)) for t in types):
+            return NotImplemented
+        new_args = [a._view if isinstance(a, ArrayBase) else a for a in args]
+        return func(*new_args, **kwargs)
+
+class FloatArray(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_float_array_size(array)
+        data = _lib.nusd_float_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size,))  # NumPy view
     
     def __del__(self):
-        # Automatic cleanup
-        _lib.nusd_float_array_destroy(self._array)
+        _lib.nusd_float_array_destroy(self._array)  # Automatic cleanup
 ```
 
 ### Array Class Patterns
 
-All array classes follow the same pattern:
-1. Wrap C array handle in constructor
-2. Implement `__array__()` for NumPy compatibility
-3. Implement `__del__()` for automatic cleanup
-4. Inherit from `NDArrayOperatorsMixin` for mathematical operations
+All array classes in `array.py` follow the same pattern:
+1. **Inherit from `ArrayBase`**: Gets full NumPy operator support
+2. **Wrap C array handle**: Store the C array handle for cleanup
+3. **Create NumPy view**: Use `np.ctypeslib.as_array()` to create `_view`
+4. **Automatic cleanup**: `__del__()` destroys the C array when Python object is garbage collected
+5. **Shape handling**: Vectors have shape `(size, N)`, scalars have shape `(size,)`, matrices have shape `(size, N, N)`
 
 ## Memory Management
 
@@ -342,48 +480,113 @@ def test_float_array():
 
 ## Development Workflow
 
-### Making Changes
+### Making Changes to the Modular System
 
 1. **Modify C Headers**: Update function signatures or add new functions
 2. **Regenerate Bindings**: Run `just bind` to update `ffi.py`
-3. **Update Python Wrapper**: Add/modify high-level methods in `__init__.py`
-4. **Write Tests**: Add comprehensive tests in `test_nanousd.py`
-5. **Verify**: Run `just pytest` to ensure everything works
+3. **Update Appropriate Module**: Add/modify functionality in the correct module:
+   - **Core methods**: Add to `Stage` class in `__init__.py`
+   - **Type constants**: Add to `tokens.py`
+   - **Array classes**: Add to `array.py`
+   - **Property getting**: Add type handling to `_get_property.py`
+   - **Property setting**: Add type validation to `_set_property.py`
+4. **Fix ctypes Issues**: Add argument type fixes to `__init__.py` if needed
+5. **Write Tests**: Add comprehensive tests (may need new test file)
+6. **Verify**: Run `just pytest` to ensure everything works
+
+### Module-Specific Guidelines
+
+#### Adding Type Constants (`tokens.py`)
+```python
+# Simply add new constants following the pattern
+NEW_TYPE = _lib.NUSD_TYPE_NEW_TYPE
+NEW_TYPE_ARRAY = _lib.NUSD_TYPE_NEW_TYPE_ARRAY
+```
+
+#### Adding Array Classes (`array.py`)
+```python
+class NewTypeArray(ArrayBase):
+    def __init__(self, array: c_void_p):
+        size = _lib.nusd_new_type_array_size(array)
+        data = _lib.nusd_new_type_array_data(array)
+        self._array = array
+        self._view = np.ctypeslib.as_array(data, (size, N))  # Adjust shape
+    
+    def __del__(self):
+        _lib.nusd_new_type_array_destroy(self._array)
+```
+
+#### Adding Property Support (`_get_property.py` & `_set_property.py`)
+Add type handling to both modules following existing patterns.
+
+#### Adding Core Methods (`__init__.py`)
+Add new Stage methods with proper error handling and documentation.
 
 ### Common Gotchas
 
-1. **Encoding**: C strings need `.decode("utf-8")` in Python
-2. **Memory**: Array handles must be destroyed in `__del__()`
-3. **Types**: Ensure ctypes type matching between C and Python
-4. **Namespaces**: Shader inputs/outputs automatically get "inputs:"/"outputs:" prefixes
+1. **Import Order**: `tokens.py` and `array.py` are imported with `*` in `__init__.py`
+2. **Encoding**: C strings need `.decode("utf-8")` in Python
+3. **Memory**: Array handles must be destroyed in `__del__()`
+4. **Types**: Ensure ctypes type matching between C and Python
+5. **ctypes Fixes**: Add to `__init__.py` if ctypesgen generates wrong signatures
+6. **Module Dependencies**: `_get_property.py` and `_set_property.py` import from `array.py` and `tokens.py`
 
 ### Best Practices
 
-1. **Consistent Error Handling**: Always check `result != NUSD_RESULT_OK`
-2. **Type Safety**: Validate input types before calling C functions
-3. **Documentation**: Include docstrings with parameter types and examples
-4. **Testing**: Test both success and failure cases comprehensively
-5. **Memory Safety**: Ensure all C resources are properly cleaned up
+1. **Modular Organization**: Put new functionality in the appropriate module
+2. **Consistent Error Handling**: Always check `result != NUSD_RESULT_OK`
+3. **Type Safety**: Validate input types before calling C functions in `_set_property.py`
+4. **Documentation**: Include docstrings with parameter types and examples
+5. **Testing**: Test both success and failure cases comprehensively
+6. **Memory Safety**: Ensure all C resources are properly cleaned up
+7. **Import Hygiene**: Use relative imports within the package
 
 ## Extension Points
 
-### Adding New Types
+### Adding New Types (Modular Approach)
 
 To add support for a new USD type:
 
 1. **C API**: Add getter/setter functions in appropriate header
 2. **Regenerate**: Run `just bind` to get new ctypes bindings
-3. **Python Integration**: Add type handling to `get_property`/`set_property`
-4. **Testing**: Add comprehensive tests for the new type
+3. **Type Constants**: Add to `tokens.py`
+4. **Array Classes**: Add to `array.py` if it's an array type
+5. **Property Integration**: Add type handling to `_get_property.py` and `_set_property.py`
+6. **Testing**: Add comprehensive tests for the new type
 
-### Adding New Functionality
+### Adding New Functionality (Modular Approach)
 
 To add new high-level functionality:
 
 1. **C Functions**: Implement in C API with proper error handling
-2. **Python Wrapper**: Create high-level method in `Stage` class
+2. **Python Wrapper**: Create high-level method in `Stage` class in `__init__.py`
 3. **Error Handling**: Map C errors to appropriate Python exceptions
-4. **Documentation**: Add examples and usage patterns
-5. **Testing**: Create comprehensive test coverage
+4. **ctypes Fixes**: Add argument type fixes to `__init__.py` if needed
+5. **Documentation**: Add examples and usage patterns
+6. **Testing**: Create comprehensive test coverage
 
-This architecture provides a solid foundation for extending NanoUSD's Python capabilities while maintaining type safety and performance.
+## Benefits of Modular Architecture
+
+The refactored modular structure provides significant benefits:
+
+### Maintainability
+- **Clear separation of concerns**: Each module has a specific, well-defined purpose
+- **Easier debugging**: Issues can be isolated to specific modules
+- **Simpler code reviews**: Changes are localized to relevant modules
+
+### Scalability
+- **Independent development**: Different team members can work on different modules
+- **Targeted testing**: Modules can be tested in isolation
+- **Focused imports**: Only import what you need
+
+### Code Quality
+- **Reduced complexity**: Large monolithic file broken into manageable pieces
+- **Better organization**: Related functionality grouped together
+- **Easier refactoring**: Changes are contained within module boundaries
+
+### Development Efficiency
+- **Faster iteration**: Smaller files load and compile faster
+- **Clearer responsibilities**: Developers know exactly where to add new functionality
+- **Better IDE support**: Smaller files work better with code intelligence features
+
+This modular architecture provides a solid, scalable foundation for extending NanoUSD's Python capabilities while maintaining type safety, performance, and code quality.
