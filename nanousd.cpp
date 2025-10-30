@@ -175,6 +175,12 @@ char const* NUSD_COLORSPACE_LINEAR_AP1;
 char const* NUSD_COLORSPACE_LINEAR_AP0;
 char const* NUSD_COLORSPACE_SRGB_AP1;
 
+char const* NUSD_INTERPOLATION_CONSTANT;
+char const* NUSD_INTERPOLATION_UNIFORM;
+char const* NUSD_INTERPOLATION_VERTEX;
+char const* NUSD_INTERPOLATION_VARYING;
+char const* NUSD_INTERPOLATION_FACEVARYING;
+
 using TokenTypeNameMap =
     std::unordered_map<char const*, PXR_NS::SdfValueTypeName>;
 TokenTypeNameMap TOKEN_TO_TYPENAME;
@@ -489,6 +495,12 @@ static void initialize_tokens() {
         NUSD_COLORSPACE_LINEAR_AP1 = GfColorSpaceNames->LinearAP1.GetText();
         NUSD_COLORSPACE_LINEAR_AP0 = GfColorSpaceNames->LinearAP0.GetText();
         NUSD_COLORSPACE_SRGB_AP1 = GfColorSpaceNames->SRGBAP1.GetText();
+
+        NUSD_INTERPOLATION_CONSTANT = UsdGeomTokens->constant.GetText();
+        NUSD_INTERPOLATION_UNIFORM = UsdGeomTokens->uniform.GetText();
+        NUSD_INTERPOLATION_VERTEX = UsdGeomTokens->vertex.GetText();
+        NUSD_INTERPOLATION_VARYING = UsdGeomTokens->varying.GetText();
+        NUSD_INTERPOLATION_FACEVARYING = UsdGeomTokens->faceVarying.GetText();
 
         TOKENS_INITIALIZED = true;
     }

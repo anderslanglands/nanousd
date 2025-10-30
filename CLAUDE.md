@@ -41,26 +41,31 @@ just pytest
 ## Project Structure
 
 ### C Library
-- `nanousd.h` - Main C API header file with comprehensive USD type definitions and function declarations
+- `nanousd.h` - Main C API header that aggregates all modular headers
 - `nanousd.cpp` - Implementation of the C wrapper around USD C++ APIs
 - `nanousd-types.h` - Core type definitions, constants, and error codes
-- `nanousd-arrays.h` - Array type definitions and functions (float, int, matrix arrays)
-- `nanousd-iterators.h` - Iterator definitions for traversing collections (prims, properties, tokens, assets)
-- `nanousd-properties.h` - Property and attribute access functions
-- `nanousd-cameras.h` - Camera-specific functionality (FOV, exposure, aperture, transforms)
-- `nanousd-materials.h` - Material and shader system functions
+- `nanousd-array.h` - Array type definitions and functions (float, int, matrix, bool, uint arrays)
+- `nanousd-iterator.h` - Iterator definitions for traversing collections (prims, properties, tokens, assets)
+- `nanousd-property.h` - Property and attribute access functions with comprehensive USD type support
+- `nanousd-camera.h` - Camera-specific functionality (FOV, exposure, aperture, clipping, transforms)
+- `nanousd-material.h` - Material and shader system functions for building shader networks
 - `example01.cpp` - Example application demonstrating basic USD file reading and property inspection
-- `tests/nusd_test.cpp` - GoogleTest-based unit tests (52 tests total)
+- `tests/nusd_test.cpp` - GoogleTest-based unit tests (57 tests total)
 - `test01.usda` - Sample USD file for testing and examples
 
 ### Python Bindings
 - `python/` - Python package directory
   - `pyproject.toml` - Python package configuration with uv management
   - `nanousd/` - Python package module
-    - `__init__.py` - High-level Python API with NumPy integration
+    - `__init__.py` - Main module aggregating all submodules
     - `ffi.py` - Auto-generated ctypes bindings (do not edit manually)
+    - `tokens.py` - USD type constants and enumerations
+    - `array.py` - NumPy-compatible array wrapper classes
+    - `_get_property.py` - Property retrieval logic with type detection
+    - `_set_property.py` - Property setting logic with validation
   - `example01.py` - Python example demonstrating USD file operations
-  - `tests/test_nanousd.py` - Python unit tests using pytest (70 tests total)
+  - `tests/test_nanousd.py` - Main Python unit tests using pytest
+  - `tests/test_color_space.py` - Color space functionality tests
   - `uv.lock` - Lock file for reproducible Python environment
 
 ### Build System
@@ -304,9 +309,9 @@ The codebase recently received comprehensive ASSET and ASSETARRAY support along 
 - Full round-trip support between C and Python
 
 **Testing Status:**
-- **C Tests**: 52/52 passing (increased from 45)
-- **Python Tests**: 70/70 passing (increased from 65)
-- Comprehensive coverage of all new functionality
+- **C Tests**: 57/57 passing (includes color space functions)
+- **Python Tests**: 78/78 passing (includes modular test files)
+- Comprehensive coverage of all new functionality including color space metadata
 
 ### API Completeness
 The library now supports most core USD functionality needed for scene description:
@@ -332,14 +337,29 @@ The library now supports most core USD functionality needed for scene descriptio
 - ✅ Full Python integration with NumPy
 
 ### File Organization
-The codebase is well-organized with modular headers:
-- `nanousd-types.h` - Core types, constants, error codes
-- `nanousd-arrays.h` - Array type definitions and functions
-- `nanousd-iterators.h` - Iterator patterns for collections  
-- `nanousd-properties.h` - Property and attribute access
-- `nanousd-cameras.h` - Camera-specific functionality
-- `nanousd-materials.h` - Material and shader system
-- `nanousd.h` - Main API aggregation
-- `nanousd.cpp` - Complete implementation
+The codebase is well-organized with modular headers that provide clear functional separation:
 
-This modular approach makes the codebase maintainable and allows easy extension of specific functionality areas.
+**Core Headers:**
+- `nanousd.h` - Main API aggregation header that includes all modular headers
+- `nanousd-types.h` - Core type definitions, constants, error codes, and stage functions
+
+**Functional Domain Headers:**
+- `nanousd-array.h` - Array type definitions and functions (bool, float, double, int, uint, matrix arrays)
+- `nanousd-iterator.h` - Iterator patterns for traversing collections (prims, properties, tokens, assets)
+- `nanousd-property.h` - Property and attribute access with comprehensive USD type support including color space metadata
+- `nanousd-camera.h` - Camera-specific functionality (FOV, exposure, aperture, clipping, transforms)
+- `nanousd-material.h` - Material and shader system functions for building shader networks
+
+**Implementation:**
+- `nanousd.cpp` - Complete implementation of all C API functions
+
+**Function Groups:**
+The API is organized into logical function groups using Doxygen `@defgroup`:
+- **Stage Functions** - Stage creation, opening, saving, and management
+- **Prim Functions** - Prim definition, validation, and hierarchy operations
+- **Property Functions** - Attribute and relationship access with type-safe getters/setters
+- **Camera Functions** - Camera definition and parameter control
+- **Material Functions** - Material and shader network creation
+- **Iterators** - Collection traversal patterns
+
+This modular approach makes the codebase maintainable, allows easy extension of specific functionality areas, and provides clear API organization for both C and Python consumers.

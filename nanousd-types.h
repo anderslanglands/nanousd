@@ -171,6 +171,12 @@ extern nusd_type_t NUSD_COLORSPACE_SRGB;
 extern nusd_type_t NUSD_COLORSPACE_UNKNOWN;
 extern nusd_type_t NUSD_COLORSPACE_CIEXYZ;
 
+extern nusd_type_t NUSD_INTERPOLATION_CONSTANT;
+extern nusd_type_t NUSD_INTERPOLATION_UNIFORM;
+extern nusd_type_t NUSD_INTERPOLATION_VERTEX;
+extern nusd_type_t NUSD_INTERPOLATION_VARYING;
+extern nusd_type_t NUSD_INTERPOLATION_FACEVARYING;
+
 #ifdef __cplusplus
 }
 #endif

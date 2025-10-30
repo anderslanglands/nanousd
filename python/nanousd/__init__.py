@@ -258,6 +258,53 @@ class Stage:
                 f"{prim}.{property_name}", property_type, value, time_code
             )
 
+    def prim_create_primvar(
+        self,
+        prim_path: str,
+        primvar_name: str,
+        primvar_type: str,
+        primvar_interpolation: str,
+        value=None,
+        time_code: float = 0.0,
+    ):
+        """Create a new primvar (primitive variable) on a prim for geometry attribute data.
+        
+        Args:
+            prim_path: USD path to an existing prim (e.g., "/World/Mesh")
+            primvar_name: Name of the primvar to create (e.g., "displayColor", "st", "normals")
+            primvar_type: USD type for the primvar data (e.g., FLOAT3, FLOAT2, COLOR3F)
+            primvar_interpolation: Interpolation mode for the primvar (use INTERPOLATION_* constants)
+            value: Optional value to set on the created primvar
+            time_code: The time at which to set the value (default: 0.0)
+            
+        Raises:
+            CreatePropertyError: If the primvar cannot be created
+            SetPropertyError: If value is provided but cannot be set
+            
+        Note:
+            Primvars store per-vertex, per-face, or per-primitive data such as colors, texture coordinates, and normals.
+            The interpolation mode determines how the data is distributed across the geometry:
+            - INTERPOLATION_CONSTANT: One value for the entire primitive
+            - INTERPOLATION_UNIFORM: One value per face/primitive  
+            - INTERPOLATION_VARYING: One value per vertex (same as vertex for most cases)
+            - INTERPOLATION_VERTEX: One value per vertex
+            - INTERPOLATION_FACEVARYING: One value per face-vertex (allows discontinuities)
+            
+            The created primvar can be accessed via the "primvars:" namespace 
+            (e.g., "/World/Mesh.primvars:displayColor").
+        """
+        result = _lib.nusd_prim_create_primvar(
+            self._stage, prim_path, primvar_name, primvar_type, primvar_interpolation
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise CreatePropertyError(
+                f'failed to create primvar "{primvar_name}" on prim <{prim_path}>: {result}'
+            )
+
+        if value is not None:
+            primvar_path = f"{prim_path}.primvars:{primvar_name}"
+            self.set_property(primvar_path, primvar_type, value, time_code)
+
     def camera_define(self, camera_path: str):
         """Define a new USD camera prim at the specified path.
 

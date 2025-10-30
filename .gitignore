@@ -8,3 +8,4 @@ python/docs/_build
 python/docs/_static
 python/docs/_templates
 python/docs/api
+python/*.egg-info

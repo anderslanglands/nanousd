@@ -1114,7 +1114,7 @@ TEST(nusd, shader_create_input) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
     
     // Create a diffuseColor input of type COLOR3F
-    result = nusd_shader_create_input(stage, "/World/Materials/Mat/Surface", "diffuseColor", NUSD_TYPE_COLOR3F);
+    result = nusd_shader_create_input(stage, "/World/Materials/Mat/Surface", "diffuseColor", NUSD_TYPE_FLOAT3);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     
     // Create a roughness input of type FLOAT
@@ -1142,7 +1142,7 @@ TEST(nusd, shader_create_output) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
     
     // Create an rgb output of type COLOR3F
-    result = nusd_shader_create_output(stage, "/World/Materials/Mat/Texture", "rgb", NUSD_TYPE_COLOR3F);
+    result = nusd_shader_create_output(stage, "/World/Materials/Mat/Texture", "rgb", NUSD_TYPE_FLOAT3);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     
     nusd_stage_destroy(stage);
@@ -1164,10 +1164,10 @@ TEST(nusd, shader_connect) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
     
     // Create inputs and outputs
-    result = nusd_shader_create_input(stage, "/World/Materials/Mat/Surface", "diffuseColor", NUSD_TYPE_COLOR3F);
+    result = nusd_shader_create_input(stage, "/World/Materials/Mat/Surface", "diffuseColor", NUSD_TYPE_FLOAT3);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     
-    result = nusd_shader_create_output(stage, "/World/Materials/Mat/Texture", "rgb", NUSD_TYPE_COLOR3F);
+    result = nusd_shader_create_output(stage, "/World/Materials/Mat/Texture", "rgb", NUSD_TYPE_FLOAT3);
     EXPECT_EQ(result, NUSD_RESULT_OK);
     
     // Connect the texture output to the surface input
@@ -1253,7 +1253,7 @@ TEST(nusd, color_space_set_get_basic) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Mesh"), NUSD_RESULT_OK);
-    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_COLOR3F), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_FLOAT3), NUSD_RESULT_OK);
 
     // Set color space
     EXPECT_EQ(nusd_attribute_set_color_space(stage, "/World.displayColor", "sRGB"), NUSD_RESULT_OK);
@@ -1272,7 +1272,7 @@ TEST(nusd, color_space_different_values) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Mesh"), NUSD_RESULT_OK);
-    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_COLOR3F), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_FLOAT3), NUSD_RESULT_OK);
 
     const char* test_color_spaces[] = {"linear", "rec709", "acescg", "prophoto"};
     
@@ -1293,7 +1293,7 @@ TEST(nusd, color_space_null_parameters) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Mesh"), NUSD_RESULT_OK);
-    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_COLOR3F), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_FLOAT3), NUSD_RESULT_OK);
 
     // Test null parameters for set_color_space
     EXPECT_EQ(nusd_attribute_set_color_space(nullptr, "/World.displayColor", "sRGB"), NUSD_RESULT_NULL_PARAMETER);
@@ -1334,7 +1334,7 @@ TEST(nusd, color_space_empty_string) {
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Mesh"), NUSD_RESULT_OK);
-    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_COLOR3F), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_prim_create_property(stage, "/World", "displayColor", NUSD_TYPE_FLOAT3), NUSD_RESULT_OK);
 
     // Set empty color space
     EXPECT_EQ(nusd_attribute_set_color_space(stage, "/World.displayColor", ""), NUSD_RESULT_OK);
@@ -1343,6 +1343,152 @@ TEST(nusd, color_space_empty_string) {
     nusd_colorspace_t retrieved_color_space;
     EXPECT_EQ(nusd_attribute_get_color_space(stage, "/World.displayColor", &retrieved_color_space), NUSD_RESULT_OK);
     EXPECT_STREQ(retrieved_color_space, "");
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_create_primvar_basic) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-primvar", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Create a mesh prim to add primvars to
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World/Mesh", "Mesh"), NUSD_RESULT_OK);
+
+    // Create a basic primvar
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "testFloat3", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_OK);
+
+    // Set a value on the created primvar
+    float color[3] = {1.0f, 0.5f, 0.0f};
+    EXPECT_EQ(nusd_attribute_set_float3(stage, "/World/Mesh.primvars:testFloat3", color, NUSD_TIMECODE_DEFAULT), NUSD_RESULT_OK);
+
+    // Verify we can read the value back
+    float retrieved_color[3];
+    EXPECT_EQ(nusd_attribute_get_float3(stage, "/World/Mesh.primvars:testFloat3", NUSD_TIMECODE_DEFAULT, retrieved_color), NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(retrieved_color[0], 1.0f);
+    EXPECT_FLOAT_EQ(retrieved_color[1], 0.5f);
+    EXPECT_FLOAT_EQ(retrieved_color[2], 0.0f);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_create_primvar_different_types) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-primvar-types", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Create a mesh prim
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World/Mesh", "Mesh"), NUSD_RESULT_OK);
+
+    // Test COLOR3F primvar
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "testFloat3", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_OK);
+    float color[3] = {1.0f, 0.5f, 0.0f};
+    EXPECT_EQ(nusd_attribute_set_float3(stage, "/World/Mesh.primvars:testFloat3", color, NUSD_TIMECODE_DEFAULT), NUSD_RESULT_OK);
+    float retrieved_color[3];
+    EXPECT_EQ(nusd_attribute_get_float3(stage, "/World/Mesh.primvars:testFloat3", NUSD_TIMECODE_DEFAULT, retrieved_color), NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(retrieved_color[0], 1.0f);
+
+    // Test FLOAT2 primvar for UV coordinates
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "testfloat2", NUSD_TYPE_FLOAT2, NUSD_INTERPOLATION_FACEVARYING), NUSD_RESULT_OK);
+    float uv[2] = {0.5f, 0.75f};
+    EXPECT_EQ(nusd_attribute_set_float2(stage, "/World/Mesh.primvars:testfloat2", uv, NUSD_TIMECODE_DEFAULT), NUSD_RESULT_OK);
+    float retrieved_uv[2];
+    EXPECT_EQ(nusd_attribute_get_float2(stage, "/World/Mesh.primvars:testfloat2", NUSD_TIMECODE_DEFAULT, retrieved_uv), NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(retrieved_uv[0], 0.5f);
+    EXPECT_FLOAT_EQ(retrieved_uv[1], 0.75f);
+
+    // Test VECTOR3F primvar for normals
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "testNormals", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_OK);
+    float normal[3] = {0.0f, 1.0f, 0.0f};
+    EXPECT_EQ(nusd_attribute_set_float3(stage, "/World/Mesh.primvars:testNormals", normal, NUSD_TIMECODE_DEFAULT), NUSD_RESULT_OK);
+    float retrieved_normal[3];
+    EXPECT_EQ(nusd_attribute_get_float3(stage, "/World/Mesh.primvars:testNormals", NUSD_TIMECODE_DEFAULT, retrieved_normal), NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(retrieved_normal[1], 1.0f);
+
+    // Test FLOAT primvar for opacity
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "opacity", NUSD_TYPE_FLOAT, NUSD_INTERPOLATION_CONSTANT), NUSD_RESULT_OK);
+    float opacity = 0.8f;
+    EXPECT_EQ(nusd_attribute_set_float(stage, "/World/Mesh.primvars:opacity", opacity, NUSD_TIMECODE_DEFAULT), NUSD_RESULT_OK);
+    float retrieved_opacity;
+    EXPECT_EQ(nusd_attribute_get_float(stage, "/World/Mesh.primvars:opacity", NUSD_TIMECODE_DEFAULT, &retrieved_opacity), NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(retrieved_opacity, 0.8f);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_create_primvar_different_interpolations) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-primvar-interp", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Create a mesh prim
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World/Mesh", "Mesh"), NUSD_RESULT_OK);
+
+    // Test all interpolation modes with COLOR3F
+    float test_color[3] = {1.0f, 0.0f, 0.0f};
+    float retrieved_color[3];
+
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "constant_color", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_CONSTANT), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_attribute_set_float3(stage, "/World/Mesh.primvars:constant_color", test_color, NUSD_TIMECODE_DEFAULT), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_attribute_get_float3(stage, "/World/Mesh.primvars:constant_color", NUSD_TIMECODE_DEFAULT, retrieved_color), NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(retrieved_color[0], 1.0f);
+
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "uniform_color", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_UNIFORM), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_attribute_set_float3(stage, "/World/Mesh.primvars:uniform_color", test_color, NUSD_TIMECODE_DEFAULT), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_attribute_get_float3(stage, "/World/Mesh.primvars:uniform_color", NUSD_TIMECODE_DEFAULT, retrieved_color), NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(retrieved_color[0], 1.0f);
+
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "varying_color", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VARYING), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_attribute_set_float3(stage, "/World/Mesh.primvars:varying_color", test_color, NUSD_TIMECODE_DEFAULT), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_attribute_get_float3(stage, "/World/Mesh.primvars:varying_color", NUSD_TIMECODE_DEFAULT, retrieved_color), NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(retrieved_color[0], 1.0f);
+
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "vertex_color", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_attribute_set_float3(stage, "/World/Mesh.primvars:vertex_color", test_color, NUSD_TIMECODE_DEFAULT), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_attribute_get_float3(stage, "/World/Mesh.primvars:vertex_color", NUSD_TIMECODE_DEFAULT, retrieved_color), NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(retrieved_color[0], 1.0f);
+
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "facevarying_color", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_FACEVARYING), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_attribute_set_float3(stage, "/World/Mesh.primvars:facevarying_color", test_color, NUSD_TIMECODE_DEFAULT), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_attribute_get_float3(stage, "/World/Mesh.primvars:facevarying_color", NUSD_TIMECODE_DEFAULT, retrieved_color), NUSD_RESULT_OK);
+    EXPECT_FLOAT_EQ(retrieved_color[0], 1.0f);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_create_primvar_null_parameters) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-primvar-null", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World/Mesh", "Mesh"), NUSD_RESULT_OK);
+
+    // Test null parameters
+    EXPECT_EQ(nusd_prim_create_primvar(nullptr, "/World/Mesh", "displayColor", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_NULL_PARAMETER);
+    EXPECT_EQ(nusd_prim_create_primvar(stage, nullptr, "displayColor", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_NULL_PARAMETER);
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", nullptr, NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_NULL_PARAMETER);
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "displayColor", nullptr, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_NULL_PARAMETER);
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "displayColor", NUSD_TYPE_FLOAT3, nullptr), NUSD_RESULT_NULL_PARAMETER);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_create_primvar_invalid_prim_path) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-primvar-invalid", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    // Try to create primvar on non-existent prim
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/NonExistent", "displayColor", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_INVALID_PRIM_PATH);
+    
+    // Try with completely invalid path
+    EXPECT_EQ(nusd_prim_create_primvar(stage, "/InvalidPath", "displayColor", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_INVALID_PRIM_PATH);
 
     nusd_stage_destroy(stage);
 }
