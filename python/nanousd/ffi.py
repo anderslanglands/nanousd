@@ -1,7 +1,7 @@
 r"""Wrapper for nanousd-array.h
 
 Generated with:
-/home/anders/code/nanousd/.venv/bin/ctypesgen -Lbuild -L../build -lnanousd -o python/nanousd/ffi.py /home/anders/code/nanousd/libnanousd/nanousd-array.h /home/anders/code/nanousd/libnanousd/nanousd-camera.h /home/anders/code/nanousd/libnanousd/nanousd-iterator.h /home/anders/code/nanousd/libnanousd/nanousd-material.h /home/anders/code/nanousd/libnanousd/nanousd-mesh.h /home/anders/code/nanousd/libnanousd/nanousd-property.h /home/anders/code/nanousd/libnanousd/nanousd-types.h /home/anders/code/nanousd/libnanousd/nanousd.h
+/home/anders/code/nanousd/.venv/bin/ctypesgen -Lbuild -L../build -lnanousd -o python/nanousd/ffi.py /home/anders/code/nanousd/libnanousd/nanousd-array.h /home/anders/code/nanousd/libnanousd/nanousd-camera.h /home/anders/code/nanousd/libnanousd/nanousd-iterator.h /home/anders/code/nanousd/libnanousd/nanousd-light.h /home/anders/code/nanousd/libnanousd/nanousd-material.h /home/anders/code/nanousd/libnanousd/nanousd-mesh.h /home/anders/code/nanousd/libnanousd/nanousd-property.h /home/anders/code/nanousd/libnanousd/nanousd-types.h /home/anders/code/nanousd/libnanousd/nanousd.h
 
 Do not modify this file.
 """
@@ -2422,6 +2422,12 @@ if _libs["nanousd"].has("nusd_asset_path_array_iterator_destroy", "cdecl"):
     nusd_asset_path_array_iterator_destroy = _libs["nanousd"].get("nusd_asset_path_array_iterator_destroy", "cdecl")
     nusd_asset_path_array_iterator_destroy.argtypes = [nusd_asset_path_array_iterator_t]
     nusd_asset_path_array_iterator_destroy.restype = nusd_result_t
+
+# /home/anders/code/nanousd/libnanousd/nanousd-light.h: 43
+if _libs["nanousd"].has("nusd_rect_light_define", "cdecl"):
+    nusd_rect_light_define = _libs["nanousd"].get("nusd_rect_light_define", "cdecl")
+    nusd_rect_light_define.argtypes = [nusd_stage_t, String, c_float, c_float, c_float, POINTER(c_float)]
+    nusd_rect_light_define.restype = nusd_result_t
 
 # /home/anders/code/nanousd/libnanousd/nanousd-material.h: 35
 if _libs["nanousd"].has("nusd_material_define", "cdecl"):

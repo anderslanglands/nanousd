@@ -15,6 +15,7 @@ add_library(nanousd SHARED
     nanousd-array.cpp
     nanousd-prim.cpp
     nanousd-mesh.cpp
+    nanousd-light.cpp
 )
 target_link_libraries(nanousd PUBLIC ${PXR_LIBRARIES})
 target_include_directories(nanousd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
