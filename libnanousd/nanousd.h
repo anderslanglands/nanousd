@@ -7,6 +7,7 @@
 
 #include "nanousd-array.h"
 #include "nanousd-iterator.h"
+#include "nanousd-mesh.h"
 #include "nanousd-property.h"
 #include "nanousd-types.h"
 
@@ -351,39 +352,56 @@ nusd_prim_compute_local_to_world_transform(nusd_stage_t stage,
                                            double time_code,
                                            double* transform);
 
-/// Creates a new primvar (primitive variable) on a prim for geometry attribute data.
+/// Creates a new primvar (primitive variable) on a prim for geometry attribute
+/// data.
 ///
 /// @param stage Valid stage handle.
 /// @param prim_path USD path to an existing prim (e.g., "/World/Mesh").
-/// @param primvar_name Name of the primvar to create (e.g., "displayColor", "st", "normals").
-/// @param primvar_type USD type for the primvar data (e.g., NUSD_TYPE_COLOR3F, NUSD_TYPE_FLOAT2, NUSD_TYPE_VECTOR3F).
-/// @param primvar_interpolation Interpolation mode for the primvar (use NUSD_INTERPOLATION_* constants).
+/// @param primvar_name Name of the primvar to create (e.g., "displayColor",
+/// "st", "normals").
+/// @param primvar_type USD type for the primvar data (e.g., NUSD_TYPE_COLOR3F,
+/// NUSD_TYPE_FLOAT2, NUSD_TYPE_VECTOR3F).
+/// @param primvar_interpolation Interpolation mode for the primvar (use
+/// NUSD_INTERPOLATION_* constants).
 ///
 /// @return NUSD_RESULT_OK on success
 /// @return NUSD_RESULT_NULL_PARAMETER if any parameter is null
-/// @return NUSD_RESULT_INVALID_PRIM_PATH if no prim exists at the specified path
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if no prim exists at the specified
+/// path
 /// @return NUSD_RESULT_CREATE_ATTRIBUTE_FAILED if the primvar cannot be created
 ///
 /// @note stage must not be null.
 /// @note prim_path must not be null and should point to an existing prim.
-/// @note primvar_name must not be null and should follow USD primvar naming conventions.
-/// @note primvar_type must be a valid USD attribute type compatible with the intended data.
-/// @note primvar_interpolation must not be null and should be one of the predefined constants.
-/// @note Primvars store per-vertex, per-face, or per-primitive data such as colors, texture coordinates, and normals.
-/// @note The interpolation mode determines how the data is distributed across the geometry:
+/// @note primvar_name must not be null and should follow USD primvar naming
+/// conventions.
+/// @note primvar_type must be a valid USD attribute type compatible with the
+/// intended data.
+/// @note primvar_interpolation must not be null and should be one of the
+/// predefined constants.
+/// @note Primvars store per-vertex, per-face, or per-primitive data such as
+/// colors, texture coordinates, and normals.
+/// @note The interpolation mode determines how the data is distributed across
+/// the geometry:
 ///       - NUSD_INTERPOLATION_CONSTANT: One value for the entire primitive
 ///       - NUSD_INTERPOLATION_UNIFORM: One value per face/primitive
-///       - NUSD_INTERPOLATION_VARYING: One value per vertex (same as vertex for most cases)
+///       - NUSD_INTERPOLATION_VARYING: One value per vertex (same as vertex for
+///       most cases)
 ///       - NUSD_INTERPOLATION_VERTEX: One value per vertex
-///       - NUSD_INTERPOLATION_FACEVARYING: One value per face-vertex (allows discontinuities)
-/// @note Common primvar types include NUSD_TYPE_COLOR3F for colors, NUSD_TYPE_FLOAT2 for UV coordinates, and NUSD_TYPE_VECTOR3F for normals.
-/// @note The created primvar can be populated with data using standard attribute setting functions.
+///       - NUSD_INTERPOLATION_FACEVARYING: One value per face-vertex (allows
+///       discontinuities)
+/// @note Common primvar types include NUSD_TYPE_COLOR3F for colors,
+/// NUSD_TYPE_FLOAT2 for UV coordinates, and NUSD_TYPE_VECTOR3F for normals.
+/// @note The created primvar can be populated with data using standard
+/// attribute setting functions.
 NANOUSD_API
 nusd_result_t nusd_prim_create_primvar(nusd_stage_t stage,
                                        char const* prim_path,
                                        char const* primvar_name,
                                        nusd_type_t primvar_type,
                                        char const* primvar_interpolation);
+
+NANOUSD_API
+nusd_result_t nusd_prim_set_extent(nusd_stage_t stage, char const* prim_path, float* extent);
 
 /// @}
 

@@ -7,6 +7,7 @@
 
 #include <pxr/usd/usdGeom/mesh.h>
 #include <pxr/usd/usdGeom/primvarsAPI.h>
+#include <pxr/usd/usdGeom/boundable.h>
 
 using namespace PXR_NS;
 
@@ -42,4 +43,26 @@ nusd_result_t nusd_prim_create_primvar(nusd_stage_t stage,
 
     return NUSD_RESULT_OK;
 }
+
+
+nusd_result_t nusd_prim_set_extent(nusd_stage_t stage, char const* prim_path, float* extent) {
+    if (stage == nullptr || prim_path == nullptr || extent == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdGeomBoundable boundable = UsdGeomBoundable(_stage->GetPrimAtPath(SdfPath(prim_path)));
+
+    if (!boundable) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+
+    GfVec3f* _extent = reinterpret_cast<GfVec3f*>(extent);
+    VtVec3fArray value(_extent, _extent+2);
+    boundable.GetExtentAttr().Set(value);
+
+    return NUSD_RESULT_OK;
+}
+
 }

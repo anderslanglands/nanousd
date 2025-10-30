@@ -181,6 +181,8 @@ char const* NUSD_INTERPOLATION_VERTEX;
 char const* NUSD_INTERPOLATION_VARYING;
 char const* NUSD_INTERPOLATION_FACEVARYING;
 
+double NUSD_TIMECODE_DEFAULT = NAN;
+
 using TokenTypeNameMap =
     std::unordered_map<char const*, PXR_NS::SdfValueTypeName>;
 TokenTypeNameMap TOKEN_TO_TYPENAME;

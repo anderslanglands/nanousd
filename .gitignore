@@ -4,6 +4,7 @@ build
 **/*.pyc
 **/__pycache__
 **/.pytest_cache
+**/.py-build-cmake_cache
 python/docs/_build
 python/docs/_static
 python/docs/_templates

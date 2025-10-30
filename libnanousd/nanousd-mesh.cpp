@@ -40,6 +40,12 @@ nusd_result_t nusd_mesh_define(nusd_stage_t stage,
 
     VtIntArray _face_vertex_indices(face_vertex_indices, face_vertex_indices+num_face_vertex_indices);
     mesh.GetFaceVertexIndicesAttr().Set(_face_vertex_indices);
+
+    VtVec3fArray extent;
+    mesh.ComputeExtent(points, &extent);
+    mesh.GetExtentAttr().Set(extent);
+
+    return NUSD_RESULT_OK;
 }
 
 
@@ -59,8 +65,8 @@ nusd_result_t nusd_mesh_set_normals(nusd_stage_t stage,
     }
 
     GfVec3f* _normals = reinterpret_cast<GfVec3f*>(normals);
-    VtVec3fArray points(_normals, _normals+num_normals);
-    mesh.GetNormalsAttr().Set(normals);
+    VtVec3fArray normal_array(_normals, _normals+num_normals);
+    mesh.GetNormalsAttr().Set(normal_array);
     mesh.SetNormalsInterpolation(TfToken(interpolation));
 
     return NUSD_RESULT_OK;

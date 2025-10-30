@@ -7,7 +7,6 @@
 
 #define NANOUSD_API
 
-#define NUSD_TIMECODE_DEFAULT 0.0
 
 #ifdef __cplusplus
 extern "C" {
@@ -176,6 +175,8 @@ extern nusd_type_t NUSD_INTERPOLATION_UNIFORM;
 extern nusd_type_t NUSD_INTERPOLATION_VERTEX;
 extern nusd_type_t NUSD_INTERPOLATION_VARYING;
 extern nusd_type_t NUSD_INTERPOLATION_FACEVARYING;
+
+extern double NUSD_TIMECODE_DEFAULT;
 
 #ifdef __cplusplus
 }

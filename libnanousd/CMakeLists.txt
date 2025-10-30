@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.15)
 project(nanousd VERSION 0.1.0)
 
-option(ENABLE_DOCS "Enable buliding the API docs using Doxygen and Sphinx" ON)
+option(ENABLE_DOCS "Enable buliding the API docs using Doxygen and Sphinx" OFF)
 option(ENABLE_TESTS "Enable the ctest-based tests" ON)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(pxr REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -12,9 +14,15 @@ add_library(nanousd SHARED
     nanousd-property.cpp
     nanousd-array.cpp
     nanousd-prim.cpp
+    nanousd-mesh.cpp
 )
 target_link_libraries(nanousd PUBLIC ${PXR_LIBRARIES})
 target_include_directories(nanousd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+install(TARGETS nanousd
+        LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd"
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd"
+        RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd")
 
 add_executable(example01 example01.cpp)
 target_link_libraries(example01 PUBLIC nanousd)
@@ -39,7 +47,7 @@ if(ENABLE_DOCS)
 
     # Generate the Doxyfile
     find_package(Doxygen)
-    set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/python/docs/Doxyfile.in)
+    set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/../python/docs/Doxyfile.in)
     set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/python/docs/Doxyfile)
     configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
 

@@ -510,8 +510,8 @@ def test_camera_set_clipping_range():
     # Should be a numpy array with [near, far]
     assert isinstance(clipping_range, np.ndarray)
     assert len(clipping_range) == 2
-    assert clipping_range[0] == near
-    assert clipping_range[1] == far
+    assert abs(clipping_range[0] - near) < 1e-6
+    assert abs(clipping_range[1] - far) < 1e-6
 
 
 def test_prim_compute_local_to_world_transform():
@@ -592,8 +592,8 @@ def test_camera_set_aperture_with_time_code():
     # Verify the aperture was set at the correct time
     # Note: We can't easily test time-specific values without more complex USD setup,
     # but we can verify that the function call succeeds and the values are set
-    horizontal_aperture = stage.get_property("/World/Camera.horizontalAperture")
-    vertical_aperture = stage.get_property("/World/Camera.verticalAperture")
+    horizontal_aperture = stage.get_property("/World/Camera.horizontalAperture", time_code)
+    vertical_aperture = stage.get_property("/World/Camera.verticalAperture", time_code)
     
     assert abs(horizontal_aperture - width) < 1e-4
     assert abs(vertical_aperture - height) < 1e-4
@@ -709,7 +709,7 @@ def test_material_shader_workflow():
 
 def test_shader_create_input_with_value():
     """Test shader input creation with optional value parameter"""
-    stage = nusd.Stage.create_in_memory("test_shader_input_value")
+    stage = nusd.Stage.create_new("test_shader_input_value.usda")
     
     # Define a shader first
     stage.shader_define("/World/Materials/Mat/Surface", "UsdPreviewSurface")
@@ -718,6 +718,8 @@ def test_shader_create_input_with_value():
     stage.shader_create_input("/World/Materials/Mat/Surface", "diffuseColor", nusd.COLOR3F, [1.0, 0.5, 0.0])
     stage.shader_create_input("/World/Materials/Mat/Surface", "roughness", nusd.FLOAT, 0.8)
     stage.shader_create_input("/World/Materials/Mat/Surface", "metallic", nusd.FLOAT, 0.0)
+
+    stage.save()
     
     # Verify the values were set correctly
     diffuse_color = stage.get_property("/World/Materials/Mat/Surface.inputs:diffuseColor")

@@ -22,7 +22,7 @@ class SetPropertyError(RuntimeError):
 
 
 def _set_property(
-    stage, property_path: str, property_type, value: Any, time_code: float = 0.0
+    stage, property_path: str, property_type, value: Any, time_code: float = TIMECODE_DEFAULT
 ):
     if property_type == FLOAT:
         if not isinstance(value, float):

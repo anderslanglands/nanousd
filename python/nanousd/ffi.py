@@ -1,7 +1,7 @@
 r"""Wrapper for nanousd-array.h
 
 Generated with:
-/home/anders/code/nanousd/python/.venv/bin/ctypesgen -L../build -lnanousd -o nanousd/ffi.py /home/anders/code/nanousd/python/../nanousd-array.h /home/anders/code/nanousd/python/../nanousd-camera.h /home/anders/code/nanousd/python/../nanousd-iterator.h /home/anders/code/nanousd/python/../nanousd-material.h /home/anders/code/nanousd/python/../nanousd-mesh.h /home/anders/code/nanousd/python/../nanousd-property.h /home/anders/code/nanousd/python/../nanousd-types.h /home/anders/code/nanousd/python/../nanousd.h
+/home/anders/code/nanousd/.venv/bin/ctypesgen -Lbuild -L../build -lnanousd -o python/nanousd/ffi.py /home/anders/code/nanousd/libnanousd/nanousd-array.h /home/anders/code/nanousd/libnanousd/nanousd-camera.h /home/anders/code/nanousd/libnanousd/nanousd-iterator.h /home/anders/code/nanousd/libnanousd/nanousd-material.h /home/anders/code/nanousd/libnanousd/nanousd-mesh.h /home/anders/code/nanousd/libnanousd/nanousd-property.h /home/anders/code/nanousd/libnanousd/nanousd-types.h /home/anders/code/nanousd/libnanousd/nanousd.h
 
 Do not modify this file.
 """
@@ -440,7 +440,7 @@ def ord_if_char(value):
 # End preamble
 
 _libs = {}
-_libdirs = ['../build']
+_libdirs = ['build', '../build']
 
 # Begin loader
 
@@ -857,7 +857,7 @@ del loaderclass
 
 # End loader
 
-add_library_search_dirs(['../build'])
+add_library_search_dirs(['build', '../build'])
 
 # Begin libraries
 _libs["nanousd"] = load_library("nanousd")
@@ -871,735 +871,735 @@ __uint64_t = c_ulong# /usr/include/x86_64-linux-gnu/bits/types.h: 45
 
 uint64_t = __uint64_t# /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h: 27
 
-enum_nusd_result_e = c_int# /home/anders/code/nanousd/nanousd-types.h: 16
+enum_nusd_result_e = c_int# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_OK = 0# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_OK = 0# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_INVALID_ATTRIBUTE_PATH = (NUSD_RESULT_OK + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_INVALID_ATTRIBUTE_PATH = (NUSD_RESULT_OK + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_INVALID_RELATIONSHIP_PATH = (NUSD_RESULT_INVALID_ATTRIBUTE_PATH + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_INVALID_RELATIONSHIP_PATH = (NUSD_RESULT_INVALID_ATTRIBUTE_PATH + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_INVALID_PRIM_PATH = (NUSD_RESULT_INVALID_RELATIONSHIP_PATH + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_INVALID_PRIM_PATH = (NUSD_RESULT_INVALID_RELATIONSHIP_PATH + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_WRONG_TYPE = (NUSD_RESULT_INVALID_PRIM_PATH + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_WRONG_TYPE = (NUSD_RESULT_INVALID_PRIM_PATH + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_CREATE_STAGE_FAILED = (NUSD_RESULT_WRONG_TYPE + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_CREATE_STAGE_FAILED = (NUSD_RESULT_WRONG_TYPE + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_OPEN_STAGE_FAILED = (NUSD_RESULT_CREATE_STAGE_FAILED + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_OPEN_STAGE_FAILED = (NUSD_RESULT_CREATE_STAGE_FAILED + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_DEFINE_PRIM_FAILED = (NUSD_RESULT_OPEN_STAGE_FAILED + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_DEFINE_PRIM_FAILED = (NUSD_RESULT_OPEN_STAGE_FAILED + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_INVALID_PROPERTY_PATH = (NUSD_RESULT_DEFINE_PRIM_FAILED + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_INVALID_PROPERTY_PATH = (NUSD_RESULT_DEFINE_PRIM_FAILED + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_INVALID_PROPERTY_TYPE = (NUSD_RESULT_INVALID_PROPERTY_PATH + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_INVALID_PROPERTY_TYPE = (NUSD_RESULT_INVALID_PROPERTY_PATH + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_CREATE_RELATIONSHIP_FAILED = (NUSD_RESULT_INVALID_PROPERTY_TYPE + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_CREATE_RELATIONSHIP_FAILED = (NUSD_RESULT_INVALID_PROPERTY_TYPE + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_CREATE_ATTRIBUTE_FAILED = (NUSD_RESULT_CREATE_RELATIONSHIP_FAILED + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_CREATE_ATTRIBUTE_FAILED = (NUSD_RESULT_CREATE_RELATIONSHIP_FAILED + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_NULL_PARAMETER = (NUSD_RESULT_CREATE_ATTRIBUTE_FAILED + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_NULL_PARAMETER = (NUSD_RESULT_CREATE_ATTRIBUTE_FAILED + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-NUSD_RESULT_CONNECTION_FAILED = (NUSD_RESULT_NULL_PARAMETER + 1)# /home/anders/code/nanousd/nanousd-types.h: 16
+NUSD_RESULT_CONNECTION_FAILED = (NUSD_RESULT_NULL_PARAMETER + 1)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 15
 
-nusd_result_t = c_int# /home/anders/code/nanousd/nanousd-types.h: 32
+nusd_result_t = c_int# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 31
 
-nusd_type_t = String# /home/anders/code/nanousd/nanousd-types.h: 34
+nusd_type_t = String# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 33
 
-nusd_colorspace_t = String# /home/anders/code/nanousd/nanousd-types.h: 35
+nusd_colorspace_t = String# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 34
 
-nusd_stage_t = POINTER(None)# /home/anders/code/nanousd/nanousd-types.h: 36
+nusd_stage_t = POINTER(None)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 35
 
-# /home/anders/code/nanousd/nanousd-types.h: 37
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 36
 class struct_nusd_asset_path_s(Structure):
     pass
 
-nusd_asset_path_t = POINTER(struct_nusd_asset_path_s)# /home/anders/code/nanousd/nanousd-types.h: 37
+nusd_asset_path_t = POINTER(struct_nusd_asset_path_s)# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 36
 
-# /home/anders/code/nanousd/nanousd-types.h: 39
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 38
 try:
     NUSD_TYPE_ASSET = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_ASSET")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 40
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 39
 try:
     NUSD_TYPE_ASSETARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_ASSETARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 41
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 40
 try:
     NUSD_TYPE_BOOL = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_BOOL")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 42
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 41
 try:
     NUSD_TYPE_BOOLARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_BOOLARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 43
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 42
 try:
     NUSD_TYPE_COLOR3D = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR3D")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 44
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 43
 try:
     NUSD_TYPE_COLOR3DARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR3DARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 45
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 44
 try:
     NUSD_TYPE_COLOR3F = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR3F")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 46
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 45
 try:
     NUSD_TYPE_COLOR3FARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR3FARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 47
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 46
 try:
     NUSD_TYPE_COLOR3H = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR3H")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 48
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 47
 try:
     NUSD_TYPE_COLOR3HARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR3HARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 49
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 48
 try:
     NUSD_TYPE_COLOR4D = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR4D")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 50
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 49
 try:
     NUSD_TYPE_COLOR4DARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR4DARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 51
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 50
 try:
     NUSD_TYPE_COLOR4F = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR4F")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 52
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 51
 try:
     NUSD_TYPE_COLOR4FARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR4FARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 53
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 52
 try:
     NUSD_TYPE_COLOR4H = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR4H")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 54
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 53
 try:
     NUSD_TYPE_COLOR4HARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_COLOR4HARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 55
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 54
 try:
     NUSD_TYPE_DOUBLE = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_DOUBLE")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 56
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 55
 try:
     NUSD_TYPE_DOUBLE2 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_DOUBLE2")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 57
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 56
 try:
     NUSD_TYPE_DOUBLE2ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_DOUBLE2ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 58
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 57
 try:
     NUSD_TYPE_DOUBLE3 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_DOUBLE3")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 59
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 58
 try:
     NUSD_TYPE_DOUBLE3ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_DOUBLE3ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 60
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 59
 try:
     NUSD_TYPE_DOUBLE4 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_DOUBLE4")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 61
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 60
 try:
     NUSD_TYPE_DOUBLE4ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_DOUBLE4ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 62
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 61
 try:
     NUSD_TYPE_DOUBLEARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_DOUBLEARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 63
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 62
 try:
     NUSD_TYPE_FIND = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_FIND")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 64
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 63
 try:
     NUSD_TYPE_FLOAT = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_FLOAT")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 65
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 64
 try:
     NUSD_TYPE_FLOAT2 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_FLOAT2")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 66
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 65
 try:
     NUSD_TYPE_FLOAT2ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_FLOAT2ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 67
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 66
 try:
     NUSD_TYPE_FLOAT3 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_FLOAT3")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 68
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 67
 try:
     NUSD_TYPE_FLOAT3ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_FLOAT3ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 69
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 68
 try:
     NUSD_TYPE_FLOAT4 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_FLOAT4")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 70
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 69
 try:
     NUSD_TYPE_FLOAT4ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_FLOAT4ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 71
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 70
 try:
     NUSD_TYPE_FLOATARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_FLOATARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 72
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 71
 try:
     NUSD_TYPE_FRAME4D = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_FRAME4D")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 73
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 72
 try:
     NUSD_TYPE_FRAME4DARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_FRAME4DARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 74
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 73
 try:
     NUSD_TYPE_GROUP = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_GROUP")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 75
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 74
 try:
     NUSD_TYPE_HALF = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_HALF")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 76
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 75
 try:
     NUSD_TYPE_HALF2 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_HALF2")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 77
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 76
 try:
     NUSD_TYPE_HALF2ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_HALF2ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 78
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 77
 try:
     NUSD_TYPE_HALF3 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_HALF3")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 79
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 78
 try:
     NUSD_TYPE_HALF3ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_HALF3ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 80
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 79
 try:
     NUSD_TYPE_HALF4 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_HALF4")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 81
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 80
 try:
     NUSD_TYPE_HALF4ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_HALF4ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 82
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 81
 try:
     NUSD_TYPE_HALFARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_HALFARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 83
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 82
 try:
     NUSD_TYPE_INT = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_INT")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 84
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 83
 try:
     NUSD_TYPE_INT2 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_INT2")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 85
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 84
 try:
     NUSD_TYPE_INT2ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_INT2ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 86
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 85
 try:
     NUSD_TYPE_INT3 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_INT3")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 87
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 86
 try:
     NUSD_TYPE_INT3ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_INT3ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 88
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 87
 try:
     NUSD_TYPE_INT4 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_INT4")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 89
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 88
 try:
     NUSD_TYPE_INT4ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_INT4ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 90
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 89
 try:
     NUSD_TYPE_INT64 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_INT64")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 91
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 90
 try:
     NUSD_TYPE_INT64ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_INT64ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 92
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 91
 try:
     NUSD_TYPE_INTARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_INTARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 93
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 92
 try:
     NUSD_TYPE_MATRIX2D = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_MATRIX2D")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 94
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 93
 try:
     NUSD_TYPE_MATRIX2DARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_MATRIX2DARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 95
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 94
 try:
     NUSD_TYPE_MATRIX3D = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_MATRIX3D")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 96
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 95
 try:
     NUSD_TYPE_MATRIX3DARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_MATRIX3DARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 97
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 96
 try:
     NUSD_TYPE_MATRIX4D = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_MATRIX4D")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 98
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 97
 try:
     NUSD_TYPE_MATRIX4DARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_MATRIX4DARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 99
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 98
 try:
     NUSD_TYPE_NORMAL3D = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_NORMAL3D")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 100
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 99
 try:
     NUSD_TYPE_NORMAL3DARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_NORMAL3DARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 101
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 100
 try:
     NUSD_TYPE_NORMAL3F = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_NORMAL3F")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 102
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 101
 try:
     NUSD_TYPE_NORMAL3FARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_NORMAL3FARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 103
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 102
 try:
     NUSD_TYPE_NORMAL3H = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_NORMAL3H")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 104
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 103
 try:
     NUSD_TYPE_NORMAL3HARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_NORMAL3HARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 105
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 104
 try:
     NUSD_TYPE_OPAQUE = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_OPAQUE")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 106
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 105
 try:
     NUSD_TYPE_PATHEXPRESSION = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_PATHEXPRESSION")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 107
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 106
 try:
     NUSD_TYPE_PATHEXPRESSIONARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_PATHEXPRESSIONARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 108
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 107
 try:
     NUSD_TYPE_POINT3D = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_POINT3D")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 109
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 108
 try:
     NUSD_TYPE_POINT3DARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_POINT3DARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 110
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 109
 try:
     NUSD_TYPE_POINT3F = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_POINT3F")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 111
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 110
 try:
     NUSD_TYPE_POINT3FARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_POINT3FARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 112
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 111
 try:
     NUSD_TYPE_POINT3H = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_POINT3H")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 113
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 112
 try:
     NUSD_TYPE_POINT3HARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_POINT3HARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 114
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 113
 try:
     NUSD_TYPE_QUATD = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_QUATD")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 115
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 114
 try:
     NUSD_TYPE_QUATDARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_QUATDARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 116
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 115
 try:
     NUSD_TYPE_QUATF = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_QUATF")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 117
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 116
 try:
     NUSD_TYPE_QUATFARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_QUATFARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 118
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 117
 try:
     NUSD_TYPE_QUATH = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_QUATH")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 119
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 118
 try:
     NUSD_TYPE_QUATHARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_QUATHARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 120
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 119
 try:
     NUSD_TYPE_STRING = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_STRING")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 121
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 120
 try:
     NUSD_TYPE_STRINGARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_STRINGARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 122
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 121
 try:
     NUSD_TYPE_TEXCOORD2D = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD2D")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 123
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 122
 try:
     NUSD_TYPE_TEXCOORD2DARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD2DARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 124
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 123
 try:
     NUSD_TYPE_TEXCOORD2F = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD2F")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 125
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 124
 try:
     NUSD_TYPE_TEXCOORD2FARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD2FARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 126
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 125
 try:
     NUSD_TYPE_TEXCOORD2H = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD2H")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 127
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 126
 try:
     NUSD_TYPE_TEXCOORD2HARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD2HARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 128
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 127
 try:
     NUSD_TYPE_TEXCOORD3D = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD3D")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 129
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 128
 try:
     NUSD_TYPE_TEXCOORD3DARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD3DARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 130
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 129
 try:
     NUSD_TYPE_TEXCOORD3F = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD3F")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 131
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 130
 try:
     NUSD_TYPE_TEXCOORD3FARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD3FARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 132
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 131
 try:
     NUSD_TYPE_TEXCOORD3H = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD3H")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 133
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 132
 try:
     NUSD_TYPE_TEXCOORD3HARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TEXCOORD3HARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 134
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 133
 try:
     NUSD_TYPE_TIMECODE = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TIMECODE")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 135
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 134
 try:
     NUSD_TYPE_TIMECODEARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TIMECODEARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 136
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 135
 try:
     NUSD_TYPE_TOKEN = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TOKEN")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 137
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 136
 try:
     NUSD_TYPE_TOKENARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_TOKENARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 138
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 137
 try:
     NUSD_TYPE_UCHAR = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_UCHAR")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 139
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 138
 try:
     NUSD_TYPE_UCHARARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_UCHARARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 140
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 139
 try:
     NUSD_TYPE_UINT = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_UINT")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 141
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 140
 try:
     NUSD_TYPE_UINT64 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_UINT64")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 142
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 141
 try:
     NUSD_TYPE_UINT64ARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_UINT64ARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 143
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 142
 try:
     NUSD_TYPE_UINTARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_UINTARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 144
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 143
 try:
     NUSD_TYPE_VECTOR3D = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_VECTOR3D")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 145
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 144
 try:
     NUSD_TYPE_VECTOR3DARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_VECTOR3DARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 146
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 145
 try:
     NUSD_TYPE_VECTOR3F = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_VECTOR3F")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 147
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 146
 try:
     NUSD_TYPE_VECTOR3FARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_VECTOR3FARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 148
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 147
 try:
     NUSD_TYPE_VECTOR3H = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_VECTOR3H")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 149
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 148
 try:
     NUSD_TYPE_VECTOR3HARRAY = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_VECTOR3HARRAY")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 151
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 150
 try:
     NUSD_TYPE_RELATIONSHIP = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_TYPE_RELATIONSHIP")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 153
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 152
 try:
     NUSD_COLORSPACE_LINEAR_AP1 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_COLORSPACE_LINEAR_AP1")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 154
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 153
 try:
     NUSD_COLORSPACE_LINEAR_AP0 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_COLORSPACE_LINEAR_AP0")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 155
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 154
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_LINEAR_REC709 = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_LINEAR_REC709")
@@ -1607,7 +1607,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 156
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 155
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_LINEAR_P3D65 = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_LINEAR_P3D65")
@@ -1615,7 +1615,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 157
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 156
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_LINEAR_REC2020 = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_LINEAR_REC2020")
@@ -1623,7 +1623,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 158
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 157
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_LINEAR_ADOBERGB = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_LINEAR_ADOBERGB")
@@ -1631,7 +1631,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 159
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 158
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_LINEAR_CIEXYZD65 = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_LINEAR_CIEXYZD65")
@@ -1639,7 +1639,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 160
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 159
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_LINEAR_DISPLAYP3 = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_LINEAR_DISPLAYP3")
@@ -1647,7 +1647,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 161
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 160
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_SRGB_REC709 = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_SRGB_REC709")
@@ -1655,7 +1655,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 162
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 161
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_G22_REC709 = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_G22_REC709")
@@ -1663,7 +1663,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 163
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 162
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_G18_REC709 = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_G18_REC709")
@@ -1671,13 +1671,13 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 164
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 163
 try:
     NUSD_COLORSPACE_SRGB_AP1 = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_COLORSPACE_SRGB_AP1")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 165
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 164
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_G22_AP1 = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_G22_AP1")
@@ -1685,7 +1685,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 166
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 165
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_G22_ADOBERGB = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_G22_ADOBERGB")
@@ -1693,7 +1693,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 167
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 166
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_IDENTITY = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_IDENTITY")
@@ -1701,7 +1701,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 168
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 167
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_DATA = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_DATA")
@@ -1709,7 +1709,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 169
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 168
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_RAW = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_RAW")
@@ -1717,13 +1717,13 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 170
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 169
 try:
     NUSD_COLORSPACE_SRGB = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_COLORSPACE_SRGB")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 171
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 170
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_UNKNOWN = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_UNKNOWN")
@@ -1731,7 +1731,7 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 172
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 171
 for _lib in _libs.values():
     try:
         NUSD_COLORSPACE_CIEXYZ = (nusd_type_t).in_dll(_lib, "NUSD_COLORSPACE_CIEXYZ")
@@ -1739,1441 +1739,1459 @@ for _lib in _libs.values():
     except:
         pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 174
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 173
 try:
     NUSD_INTERPOLATION_CONSTANT = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_INTERPOLATION_CONSTANT")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 175
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 174
 try:
     NUSD_INTERPOLATION_UNIFORM = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_INTERPOLATION_UNIFORM")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 176
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 175
 try:
     NUSD_INTERPOLATION_VERTEX = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_INTERPOLATION_VERTEX")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 177
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 176
 try:
     NUSD_INTERPOLATION_VARYING = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_INTERPOLATION_VARYING")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-types.h: 178
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 177
 try:
     NUSD_INTERPOLATION_FACEVARYING = (nusd_type_t).in_dll(_libs["nanousd"], "NUSD_INTERPOLATION_FACEVARYING")
 except:
     pass
 
-# /home/anders/code/nanousd/nanousd-array.h: 10
+# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 179
+try:
+    NUSD_TIMECODE_DEFAULT = (c_double).in_dll(_libs["nanousd"], "NUSD_TIMECODE_DEFAULT")
+except:
+    pass
+
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 10
 class struct_nusd_bool_array_s(Structure):
     pass
 
-nusd_bool_array_t = POINTER(struct_nusd_bool_array_s)# /home/anders/code/nanousd/nanousd-array.h: 10
+nusd_bool_array_t = POINTER(struct_nusd_bool_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 10
 
-# /home/anders/code/nanousd/nanousd-array.h: 12
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 12
 class struct_nusd_float_array_s(Structure):
     pass
 
-nusd_float_array_t = POINTER(struct_nusd_float_array_s)# /home/anders/code/nanousd/nanousd-array.h: 12
+nusd_float_array_t = POINTER(struct_nusd_float_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 12
 
-# /home/anders/code/nanousd/nanousd-array.h: 13
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 13
 class struct_nusd_float2_array_s(Structure):
     pass
 
-nusd_float2_array_t = POINTER(struct_nusd_float2_array_s)# /home/anders/code/nanousd/nanousd-array.h: 13
+nusd_float2_array_t = POINTER(struct_nusd_float2_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 13
 
-# /home/anders/code/nanousd/nanousd-array.h: 14
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 14
 class struct_nusd_float3_array_s(Structure):
     pass
 
-nusd_float3_array_t = POINTER(struct_nusd_float3_array_s)# /home/anders/code/nanousd/nanousd-array.h: 14
+nusd_float3_array_t = POINTER(struct_nusd_float3_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 14
 
-# /home/anders/code/nanousd/nanousd-array.h: 15
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 15
 class struct_nusd_float4_array_s(Structure):
     pass
 
-nusd_float4_array_t = POINTER(struct_nusd_float4_array_s)# /home/anders/code/nanousd/nanousd-array.h: 15
+nusd_float4_array_t = POINTER(struct_nusd_float4_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 15
 
-# /home/anders/code/nanousd/nanousd-array.h: 17
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 17
 class struct_nusd_double_array_s(Structure):
     pass
 
-nusd_double_array_t = POINTER(struct_nusd_double_array_s)# /home/anders/code/nanousd/nanousd-array.h: 17
+nusd_double_array_t = POINTER(struct_nusd_double_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 17
 
-# /home/anders/code/nanousd/nanousd-array.h: 18
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 18
 class struct_nusd_double2_array_s(Structure):
     pass
 
-nusd_double2_array_t = POINTER(struct_nusd_double2_array_s)# /home/anders/code/nanousd/nanousd-array.h: 18
+nusd_double2_array_t = POINTER(struct_nusd_double2_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 18
 
-# /home/anders/code/nanousd/nanousd-array.h: 19
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 19
 class struct_nusd_double3_array_s(Structure):
     pass
 
-nusd_double3_array_t = POINTER(struct_nusd_double3_array_s)# /home/anders/code/nanousd/nanousd-array.h: 19
+nusd_double3_array_t = POINTER(struct_nusd_double3_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 19
 
-# /home/anders/code/nanousd/nanousd-array.h: 20
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 20
 class struct_nusd_double4_array_s(Structure):
     pass
 
-nusd_double4_array_t = POINTER(struct_nusd_double4_array_s)# /home/anders/code/nanousd/nanousd-array.h: 20
+nusd_double4_array_t = POINTER(struct_nusd_double4_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 20
 
-# /home/anders/code/nanousd/nanousd-array.h: 22
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 22
 class struct_nusd_int_array_s(Structure):
     pass
 
-nusd_int_array_t = POINTER(struct_nusd_int_array_s)# /home/anders/code/nanousd/nanousd-array.h: 22
+nusd_int_array_t = POINTER(struct_nusd_int_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 22
 
-# /home/anders/code/nanousd/nanousd-array.h: 23
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 23
 class struct_nusd_int2_array_s(Structure):
     pass
 
-nusd_int2_array_t = POINTER(struct_nusd_int2_array_s)# /home/anders/code/nanousd/nanousd-array.h: 23
+nusd_int2_array_t = POINTER(struct_nusd_int2_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 23
 
-# /home/anders/code/nanousd/nanousd-array.h: 24
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 24
 class struct_nusd_int3_array_s(Structure):
     pass
 
-nusd_int3_array_t = POINTER(struct_nusd_int3_array_s)# /home/anders/code/nanousd/nanousd-array.h: 24
+nusd_int3_array_t = POINTER(struct_nusd_int3_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 24
 
-# /home/anders/code/nanousd/nanousd-array.h: 25
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 25
 class struct_nusd_int4_array_s(Structure):
     pass
 
-nusd_int4_array_t = POINTER(struct_nusd_int4_array_s)# /home/anders/code/nanousd/nanousd-array.h: 25
+nusd_int4_array_t = POINTER(struct_nusd_int4_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 25
 
-# /home/anders/code/nanousd/nanousd-array.h: 26
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 26
 class struct_nusd_int64_array_s(Structure):
     pass
 
-nusd_int64_array_t = POINTER(struct_nusd_int64_array_s)# /home/anders/code/nanousd/nanousd-array.h: 26
+nusd_int64_array_t = POINTER(struct_nusd_int64_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 26
 
-# /home/anders/code/nanousd/nanousd-array.h: 28
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 28
 class struct_nusd_matrix2d_array_s(Structure):
     pass
 
-nusd_matrix2d_array_t = POINTER(struct_nusd_matrix2d_array_s)# /home/anders/code/nanousd/nanousd-array.h: 28
+nusd_matrix2d_array_t = POINTER(struct_nusd_matrix2d_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 28
 
-# /home/anders/code/nanousd/nanousd-array.h: 29
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 29
 class struct_nusd_matrix3d_array_s(Structure):
     pass
 
-nusd_matrix3d_array_t = POINTER(struct_nusd_matrix3d_array_s)# /home/anders/code/nanousd/nanousd-array.h: 29
+nusd_matrix3d_array_t = POINTER(struct_nusd_matrix3d_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 29
 
-# /home/anders/code/nanousd/nanousd-array.h: 30
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 30
 class struct_nusd_matrix4d_array_s(Structure):
     pass
 
-nusd_matrix4d_array_t = POINTER(struct_nusd_matrix4d_array_s)# /home/anders/code/nanousd/nanousd-array.h: 30
+nusd_matrix4d_array_t = POINTER(struct_nusd_matrix4d_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 30
 
-# /home/anders/code/nanousd/nanousd-array.h: 32
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 32
 class struct_nusd_uint_array_s(Structure):
     pass
 
-nusd_uint_array_t = POINTER(struct_nusd_uint_array_s)# /home/anders/code/nanousd/nanousd-array.h: 32
+nusd_uint_array_t = POINTER(struct_nusd_uint_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 32
 
-# /home/anders/code/nanousd/nanousd-array.h: 33
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 33
 class struct_nusd_uint64_array_s(Structure):
     pass
 
-nusd_uint64_array_t = POINTER(struct_nusd_uint64_array_s)# /home/anders/code/nanousd/nanousd-array.h: 33
+nusd_uint64_array_t = POINTER(struct_nusd_uint64_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 33
 
-# /home/anders/code/nanousd/nanousd-array.h: 34
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 34
 class struct_nusd_uchar_array_s(Structure):
     pass
 
-nusd_uchar_array_t = POINTER(struct_nusd_uchar_array_s)# /home/anders/code/nanousd/nanousd-array.h: 34
+nusd_uchar_array_t = POINTER(struct_nusd_uchar_array_s)# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 34
 
-# /home/anders/code/nanousd/nanousd-array.h: 44
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 44
 if _libs["nanousd"].has("nusd_bool_array_size", "cdecl"):
     nusd_bool_array_size = _libs["nanousd"].get("nusd_bool_array_size", "cdecl")
     nusd_bool_array_size.argtypes = [nusd_bool_array_t]
     nusd_bool_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 56
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 56
 if _libs["nanousd"].has("nusd_bool_array_data", "cdecl"):
     nusd_bool_array_data = _libs["nanousd"].get("nusd_bool_array_data", "cdecl")
     nusd_bool_array_data.argtypes = [nusd_bool_array_t]
     nusd_bool_array_data.restype = POINTER(c_bool)
 
-# /home/anders/code/nanousd/nanousd-array.h: 66
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 66
 if _libs["nanousd"].has("nusd_bool_array_destroy", "cdecl"):
     nusd_bool_array_destroy = _libs["nanousd"].get("nusd_bool_array_destroy", "cdecl")
     nusd_bool_array_destroy.argtypes = [nusd_bool_array_t]
     nusd_bool_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 76
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 76
 if _libs["nanousd"].has("nusd_float_array_size", "cdecl"):
     nusd_float_array_size = _libs["nanousd"].get("nusd_float_array_size", "cdecl")
     nusd_float_array_size.argtypes = [nusd_float_array_t]
     nusd_float_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 89
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 89
 if _libs["nanousd"].has("nusd_float_array_data", "cdecl"):
     nusd_float_array_data = _libs["nanousd"].get("nusd_float_array_data", "cdecl")
     nusd_float_array_data.argtypes = [nusd_float_array_t]
     nusd_float_array_data.restype = POINTER(c_float)
 
-# /home/anders/code/nanousd/nanousd-array.h: 99
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 99
 if _libs["nanousd"].has("nusd_float_array_destroy", "cdecl"):
     nusd_float_array_destroy = _libs["nanousd"].get("nusd_float_array_destroy", "cdecl")
     nusd_float_array_destroy.argtypes = [nusd_float_array_t]
     nusd_float_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 109
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 109
 if _libs["nanousd"].has("nusd_float2_array_size", "cdecl"):
     nusd_float2_array_size = _libs["nanousd"].get("nusd_float2_array_size", "cdecl")
     nusd_float2_array_size.argtypes = [nusd_float2_array_t]
     nusd_float2_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 121
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 121
 if _libs["nanousd"].has("nusd_float2_array_data", "cdecl"):
     nusd_float2_array_data = _libs["nanousd"].get("nusd_float2_array_data", "cdecl")
     nusd_float2_array_data.argtypes = [nusd_float2_array_t]
     nusd_float2_array_data.restype = POINTER(c_float)
 
-# /home/anders/code/nanousd/nanousd-array.h: 132
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 132
 if _libs["nanousd"].has("nusd_float2_array_destroy", "cdecl"):
     nusd_float2_array_destroy = _libs["nanousd"].get("nusd_float2_array_destroy", "cdecl")
     nusd_float2_array_destroy.argtypes = [nusd_float2_array_t]
     nusd_float2_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 142
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 142
 if _libs["nanousd"].has("nusd_float3_array_size", "cdecl"):
     nusd_float3_array_size = _libs["nanousd"].get("nusd_float3_array_size", "cdecl")
     nusd_float3_array_size.argtypes = [nusd_float3_array_t]
     nusd_float3_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 154
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 154
 if _libs["nanousd"].has("nusd_float3_array_data", "cdecl"):
     nusd_float3_array_data = _libs["nanousd"].get("nusd_float3_array_data", "cdecl")
     nusd_float3_array_data.argtypes = [nusd_float3_array_t]
     nusd_float3_array_data.restype = POINTER(c_float)
 
-# /home/anders/code/nanousd/nanousd-array.h: 165
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 165
 if _libs["nanousd"].has("nusd_float3_array_destroy", "cdecl"):
     nusd_float3_array_destroy = _libs["nanousd"].get("nusd_float3_array_destroy", "cdecl")
     nusd_float3_array_destroy.argtypes = [nusd_float3_array_t]
     nusd_float3_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 175
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 175
 if _libs["nanousd"].has("nusd_float4_array_size", "cdecl"):
     nusd_float4_array_size = _libs["nanousd"].get("nusd_float4_array_size", "cdecl")
     nusd_float4_array_size.argtypes = [nusd_float4_array_t]
     nusd_float4_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 187
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 187
 if _libs["nanousd"].has("nusd_float4_array_data", "cdecl"):
     nusd_float4_array_data = _libs["nanousd"].get("nusd_float4_array_data", "cdecl")
     nusd_float4_array_data.argtypes = [nusd_float4_array_t]
     nusd_float4_array_data.restype = POINTER(c_float)
 
-# /home/anders/code/nanousd/nanousd-array.h: 198
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 198
 if _libs["nanousd"].has("nusd_float4_array_destroy", "cdecl"):
     nusd_float4_array_destroy = _libs["nanousd"].get("nusd_float4_array_destroy", "cdecl")
     nusd_float4_array_destroy.argtypes = [nusd_float4_array_t]
     nusd_float4_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 208
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 208
 if _libs["nanousd"].has("nusd_double_array_size", "cdecl"):
     nusd_double_array_size = _libs["nanousd"].get("nusd_double_array_size", "cdecl")
     nusd_double_array_size.argtypes = [nusd_double_array_t]
     nusd_double_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 221
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 221
 if _libs["nanousd"].has("nusd_double_array_data", "cdecl"):
     nusd_double_array_data = _libs["nanousd"].get("nusd_double_array_data", "cdecl")
     nusd_double_array_data.argtypes = [nusd_double_array_t]
     nusd_double_array_data.restype = POINTER(c_double)
 
-# /home/anders/code/nanousd/nanousd-array.h: 232
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 232
 if _libs["nanousd"].has("nusd_double_array_destroy", "cdecl"):
     nusd_double_array_destroy = _libs["nanousd"].get("nusd_double_array_destroy", "cdecl")
     nusd_double_array_destroy.argtypes = [nusd_double_array_t]
     nusd_double_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 242
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 242
 if _libs["nanousd"].has("nusd_double2_array_size", "cdecl"):
     nusd_double2_array_size = _libs["nanousd"].get("nusd_double2_array_size", "cdecl")
     nusd_double2_array_size.argtypes = [nusd_double2_array_t]
     nusd_double2_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 254
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 254
 if _libs["nanousd"].has("nusd_double2_array_data", "cdecl"):
     nusd_double2_array_data = _libs["nanousd"].get("nusd_double2_array_data", "cdecl")
     nusd_double2_array_data.argtypes = [nusd_double2_array_t]
     nusd_double2_array_data.restype = POINTER(c_double)
 
-# /home/anders/code/nanousd/nanousd-array.h: 265
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 265
 if _libs["nanousd"].has("nusd_double2_array_destroy", "cdecl"):
     nusd_double2_array_destroy = _libs["nanousd"].get("nusd_double2_array_destroy", "cdecl")
     nusd_double2_array_destroy.argtypes = [nusd_double2_array_t]
     nusd_double2_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 275
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 275
 if _libs["nanousd"].has("nusd_double3_array_size", "cdecl"):
     nusd_double3_array_size = _libs["nanousd"].get("nusd_double3_array_size", "cdecl")
     nusd_double3_array_size.argtypes = [nusd_double3_array_t]
     nusd_double3_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 287
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 287
 if _libs["nanousd"].has("nusd_double3_array_data", "cdecl"):
     nusd_double3_array_data = _libs["nanousd"].get("nusd_double3_array_data", "cdecl")
     nusd_double3_array_data.argtypes = [nusd_double3_array_t]
     nusd_double3_array_data.restype = POINTER(c_double)
 
-# /home/anders/code/nanousd/nanousd-array.h: 298
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 298
 if _libs["nanousd"].has("nusd_double3_array_destroy", "cdecl"):
     nusd_double3_array_destroy = _libs["nanousd"].get("nusd_double3_array_destroy", "cdecl")
     nusd_double3_array_destroy.argtypes = [nusd_double3_array_t]
     nusd_double3_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 308
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 308
 if _libs["nanousd"].has("nusd_double4_array_size", "cdecl"):
     nusd_double4_array_size = _libs["nanousd"].get("nusd_double4_array_size", "cdecl")
     nusd_double4_array_size.argtypes = [nusd_double4_array_t]
     nusd_double4_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 320
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 320
 if _libs["nanousd"].has("nusd_double4_array_data", "cdecl"):
     nusd_double4_array_data = _libs["nanousd"].get("nusd_double4_array_data", "cdecl")
     nusd_double4_array_data.argtypes = [nusd_double4_array_t]
     nusd_double4_array_data.restype = POINTER(c_double)
 
-# /home/anders/code/nanousd/nanousd-array.h: 331
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 331
 if _libs["nanousd"].has("nusd_double4_array_destroy", "cdecl"):
     nusd_double4_array_destroy = _libs["nanousd"].get("nusd_double4_array_destroy", "cdecl")
     nusd_double4_array_destroy.argtypes = [nusd_double4_array_t]
     nusd_double4_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 341
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 341
 if _libs["nanousd"].has("nusd_int_array_size", "cdecl"):
     nusd_int_array_size = _libs["nanousd"].get("nusd_int_array_size", "cdecl")
     nusd_int_array_size.argtypes = [nusd_int_array_t]
     nusd_int_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 353
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 353
 if _libs["nanousd"].has("nusd_int_array_data", "cdecl"):
     nusd_int_array_data = _libs["nanousd"].get("nusd_int_array_data", "cdecl")
     nusd_int_array_data.argtypes = [nusd_int_array_t]
     nusd_int_array_data.restype = POINTER(c_int)
 
-# /home/anders/code/nanousd/nanousd-array.h: 363
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 363
 if _libs["nanousd"].has("nusd_int_array_destroy", "cdecl"):
     nusd_int_array_destroy = _libs["nanousd"].get("nusd_int_array_destroy", "cdecl")
     nusd_int_array_destroy.argtypes = [nusd_int_array_t]
     nusd_int_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 373
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 373
 if _libs["nanousd"].has("nusd_int2_array_size", "cdecl"):
     nusd_int2_array_size = _libs["nanousd"].get("nusd_int2_array_size", "cdecl")
     nusd_int2_array_size.argtypes = [nusd_int2_array_t]
     nusd_int2_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 385
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 385
 if _libs["nanousd"].has("nusd_int2_array_data", "cdecl"):
     nusd_int2_array_data = _libs["nanousd"].get("nusd_int2_array_data", "cdecl")
     nusd_int2_array_data.argtypes = [nusd_int2_array_t]
     nusd_int2_array_data.restype = POINTER(c_int)
 
-# /home/anders/code/nanousd/nanousd-array.h: 395
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 395
 if _libs["nanousd"].has("nusd_int2_array_destroy", "cdecl"):
     nusd_int2_array_destroy = _libs["nanousd"].get("nusd_int2_array_destroy", "cdecl")
     nusd_int2_array_destroy.argtypes = [nusd_int2_array_t]
     nusd_int2_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 405
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 405
 if _libs["nanousd"].has("nusd_int3_array_size", "cdecl"):
     nusd_int3_array_size = _libs["nanousd"].get("nusd_int3_array_size", "cdecl")
     nusd_int3_array_size.argtypes = [nusd_int3_array_t]
     nusd_int3_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 417
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 417
 if _libs["nanousd"].has("nusd_int3_array_data", "cdecl"):
     nusd_int3_array_data = _libs["nanousd"].get("nusd_int3_array_data", "cdecl")
     nusd_int3_array_data.argtypes = [nusd_int3_array_t]
     nusd_int3_array_data.restype = POINTER(c_int)
 
-# /home/anders/code/nanousd/nanousd-array.h: 427
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 427
 if _libs["nanousd"].has("nusd_int3_array_destroy", "cdecl"):
     nusd_int3_array_destroy = _libs["nanousd"].get("nusd_int3_array_destroy", "cdecl")
     nusd_int3_array_destroy.argtypes = [nusd_int3_array_t]
     nusd_int3_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 437
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 437
 if _libs["nanousd"].has("nusd_int4_array_size", "cdecl"):
     nusd_int4_array_size = _libs["nanousd"].get("nusd_int4_array_size", "cdecl")
     nusd_int4_array_size.argtypes = [nusd_int4_array_t]
     nusd_int4_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 449
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 449
 if _libs["nanousd"].has("nusd_int4_array_data", "cdecl"):
     nusd_int4_array_data = _libs["nanousd"].get("nusd_int4_array_data", "cdecl")
     nusd_int4_array_data.argtypes = [nusd_int4_array_t]
     nusd_int4_array_data.restype = POINTER(c_int)
 
-# /home/anders/code/nanousd/nanousd-array.h: 459
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 459
 if _libs["nanousd"].has("nusd_int4_array_destroy", "cdecl"):
     nusd_int4_array_destroy = _libs["nanousd"].get("nusd_int4_array_destroy", "cdecl")
     nusd_int4_array_destroy.argtypes = [nusd_int4_array_t]
     nusd_int4_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 469
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 469
 if _libs["nanousd"].has("nusd_int64_array_size", "cdecl"):
     nusd_int64_array_size = _libs["nanousd"].get("nusd_int64_array_size", "cdecl")
     nusd_int64_array_size.argtypes = [nusd_int64_array_t]
     nusd_int64_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 482
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 482
 if _libs["nanousd"].has("nusd_int64_array_data", "cdecl"):
     nusd_int64_array_data = _libs["nanousd"].get("nusd_int64_array_data", "cdecl")
     nusd_int64_array_data.argtypes = [nusd_int64_array_t]
     nusd_int64_array_data.restype = POINTER(c_int64)
 
-# /home/anders/code/nanousd/nanousd-array.h: 492
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 492
 if _libs["nanousd"].has("nusd_int64_array_destroy", "cdecl"):
     nusd_int64_array_destroy = _libs["nanousd"].get("nusd_int64_array_destroy", "cdecl")
     nusd_int64_array_destroy.argtypes = [nusd_int64_array_t]
     nusd_int64_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 502
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 502
 if _libs["nanousd"].has("nusd_matrix2d_array_size", "cdecl"):
     nusd_matrix2d_array_size = _libs["nanousd"].get("nusd_matrix2d_array_size", "cdecl")
     nusd_matrix2d_array_size.argtypes = [nusd_matrix2d_array_t]
     nusd_matrix2d_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 516
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 516
 if _libs["nanousd"].has("nusd_matrix2d_array_data", "cdecl"):
     nusd_matrix2d_array_data = _libs["nanousd"].get("nusd_matrix2d_array_data", "cdecl")
     nusd_matrix2d_array_data.argtypes = [nusd_matrix2d_array_t]
     nusd_matrix2d_array_data.restype = POINTER(c_double)
 
-# /home/anders/code/nanousd/nanousd-array.h: 527
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 527
 if _libs["nanousd"].has("nusd_matrix2d_array_destroy", "cdecl"):
     nusd_matrix2d_array_destroy = _libs["nanousd"].get("nusd_matrix2d_array_destroy", "cdecl")
     nusd_matrix2d_array_destroy.argtypes = [nusd_matrix2d_array_t]
     nusd_matrix2d_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 537
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 537
 if _libs["nanousd"].has("nusd_matrix3d_array_size", "cdecl"):
     nusd_matrix3d_array_size = _libs["nanousd"].get("nusd_matrix3d_array_size", "cdecl")
     nusd_matrix3d_array_size.argtypes = [nusd_matrix3d_array_t]
     nusd_matrix3d_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 551
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 551
 if _libs["nanousd"].has("nusd_matrix3d_array_data", "cdecl"):
     nusd_matrix3d_array_data = _libs["nanousd"].get("nusd_matrix3d_array_data", "cdecl")
     nusd_matrix3d_array_data.argtypes = [nusd_matrix3d_array_t]
     nusd_matrix3d_array_data.restype = POINTER(c_double)
 
-# /home/anders/code/nanousd/nanousd-array.h: 562
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 562
 if _libs["nanousd"].has("nusd_matrix3d_array_destroy", "cdecl"):
     nusd_matrix3d_array_destroy = _libs["nanousd"].get("nusd_matrix3d_array_destroy", "cdecl")
     nusd_matrix3d_array_destroy.argtypes = [nusd_matrix3d_array_t]
     nusd_matrix3d_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 572
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 572
 if _libs["nanousd"].has("nusd_matrix4d_array_size", "cdecl"):
     nusd_matrix4d_array_size = _libs["nanousd"].get("nusd_matrix4d_array_size", "cdecl")
     nusd_matrix4d_array_size.argtypes = [nusd_matrix4d_array_t]
     nusd_matrix4d_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 586
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 586
 if _libs["nanousd"].has("nusd_matrix4d_array_data", "cdecl"):
     nusd_matrix4d_array_data = _libs["nanousd"].get("nusd_matrix4d_array_data", "cdecl")
     nusd_matrix4d_array_data.argtypes = [nusd_matrix4d_array_t]
     nusd_matrix4d_array_data.restype = POINTER(c_double)
 
-# /home/anders/code/nanousd/nanousd-array.h: 597
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 597
 if _libs["nanousd"].has("nusd_matrix4d_array_destroy", "cdecl"):
     nusd_matrix4d_array_destroy = _libs["nanousd"].get("nusd_matrix4d_array_destroy", "cdecl")
     nusd_matrix4d_array_destroy.argtypes = [nusd_matrix4d_array_t]
     nusd_matrix4d_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 607
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 607
 if _libs["nanousd"].has("nusd_uchar_array_size", "cdecl"):
     nusd_uchar_array_size = _libs["nanousd"].get("nusd_uchar_array_size", "cdecl")
     nusd_uchar_array_size.argtypes = [nusd_uchar_array_t]
     nusd_uchar_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 618
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 618
 if _libs["nanousd"].has("nusd_uchar_array_data", "cdecl"):
     nusd_uchar_array_data = _libs["nanousd"].get("nusd_uchar_array_data", "cdecl")
     nusd_uchar_array_data.argtypes = [nusd_uchar_array_t]
     nusd_uchar_array_data.restype = POINTER(c_ubyte)
 
-# /home/anders/code/nanousd/nanousd-array.h: 628
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 628
 if _libs["nanousd"].has("nusd_uchar_array_destroy", "cdecl"):
     nusd_uchar_array_destroy = _libs["nanousd"].get("nusd_uchar_array_destroy", "cdecl")
     nusd_uchar_array_destroy.argtypes = [nusd_uchar_array_t]
     nusd_uchar_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 638
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 638
 if _libs["nanousd"].has("nusd_uint_array_size", "cdecl"):
     nusd_uint_array_size = _libs["nanousd"].get("nusd_uint_array_size", "cdecl")
     nusd_uint_array_size.argtypes = [nusd_uint_array_t]
     nusd_uint_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 649
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 649
 if _libs["nanousd"].has("nusd_uint_array_data", "cdecl"):
     nusd_uint_array_data = _libs["nanousd"].get("nusd_uint_array_data", "cdecl")
     nusd_uint_array_data.argtypes = [nusd_uint_array_t]
     nusd_uint_array_data.restype = POINTER(c_uint)
 
-# /home/anders/code/nanousd/nanousd-array.h: 659
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 659
 if _libs["nanousd"].has("nusd_uint_array_destroy", "cdecl"):
     nusd_uint_array_destroy = _libs["nanousd"].get("nusd_uint_array_destroy", "cdecl")
     nusd_uint_array_destroy.argtypes = [nusd_uint_array_t]
     nusd_uint_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-array.h: 669
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 669
 if _libs["nanousd"].has("nusd_uint64_array_size", "cdecl"):
     nusd_uint64_array_size = _libs["nanousd"].get("nusd_uint64_array_size", "cdecl")
     nusd_uint64_array_size.argtypes = [nusd_uint64_array_t]
     nusd_uint64_array_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-array.h: 680
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 680
 if _libs["nanousd"].has("nusd_uint64_array_data", "cdecl"):
     nusd_uint64_array_data = _libs["nanousd"].get("nusd_uint64_array_data", "cdecl")
     nusd_uint64_array_data.argtypes = [nusd_uint64_array_t]
     nusd_uint64_array_data.restype = POINTER(uint64_t)
 
-# /home/anders/code/nanousd/nanousd-array.h: 691
+# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 691
 if _libs["nanousd"].has("nusd_uint64_array_destroy", "cdecl"):
     nusd_uint64_array_destroy = _libs["nanousd"].get("nusd_uint64_array_destroy", "cdecl")
     nusd_uint64_array_destroy.argtypes = [nusd_uint64_array_t]
     nusd_uint64_array_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-camera.h: 33
+# /home/anders/code/nanousd/libnanousd/nanousd-camera.h: 33
 if _libs["nanousd"].has("nusd_camera_define", "cdecl"):
     nusd_camera_define = _libs["nanousd"].get("nusd_camera_define", "cdecl")
     nusd_camera_define.argtypes = [nusd_stage_t, String]
     nusd_camera_define.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-camera.h: 60
+# /home/anders/code/nanousd/libnanousd/nanousd-camera.h: 60
 if _libs["nanousd"].has("nusd_camera_set_fov_w", "cdecl"):
     nusd_camera_set_fov_w = _libs["nanousd"].get("nusd_camera_set_fov_w", "cdecl")
     nusd_camera_set_fov_w.argtypes = [nusd_stage_t, String, c_float, c_double]
     nusd_camera_set_fov_w.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-camera.h: 101
+# /home/anders/code/nanousd/libnanousd/nanousd-camera.h: 101
 if _libs["nanousd"].has("nusd_camera_set_exposure", "cdecl"):
     nusd_camera_set_exposure = _libs["nanousd"].get("nusd_camera_set_exposure", "cdecl")
     nusd_camera_set_exposure.argtypes = [nusd_stage_t, String, c_float, c_float, c_float, c_float, c_float, c_double]
     nusd_camera_set_exposure.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-camera.h: 141
+# /home/anders/code/nanousd/libnanousd/nanousd-camera.h: 141
 if _libs["nanousd"].has("nusd_camera_set_clipping_range", "cdecl"):
     nusd_camera_set_clipping_range = _libs["nanousd"].get("nusd_camera_set_clipping_range", "cdecl")
     nusd_camera_set_clipping_range.argtypes = [nusd_stage_t, String, c_float, c_float, c_double]
     nusd_camera_set_clipping_range.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-camera.h: 180
+# /home/anders/code/nanousd/libnanousd/nanousd-camera.h: 180
 if _libs["nanousd"].has("nusd_camera_set_aperture", "cdecl"):
     nusd_camera_set_aperture = _libs["nanousd"].get("nusd_camera_set_aperture", "cdecl")
     nusd_camera_set_aperture.argtypes = [nusd_stage_t, String, c_float, c_float, c_double]
     nusd_camera_set_aperture.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 17
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 17
 class struct_nusd_prim_iterator_s(Structure):
     pass
 
-nusd_prim_iterator_t = POINTER(struct_nusd_prim_iterator_s)# /home/anders/code/nanousd/nanousd-iterator.h: 17
+nusd_prim_iterator_t = POINTER(struct_nusd_prim_iterator_s)# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 17
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 18
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 18
 class struct_nusd_property_iterator_s(Structure):
     pass
 
-nusd_property_iterator_t = POINTER(struct_nusd_property_iterator_s)# /home/anders/code/nanousd/nanousd-iterator.h: 18
+nusd_property_iterator_t = POINTER(struct_nusd_property_iterator_s)# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 18
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 19
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 19
 class struct_nusd_attribute_iterator_s(Structure):
     pass
 
-nusd_attribute_iterator_t = POINTER(struct_nusd_attribute_iterator_s)# /home/anders/code/nanousd/nanousd-iterator.h: 19
+nusd_attribute_iterator_t = POINTER(struct_nusd_attribute_iterator_s)# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 19
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 20
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 20
 class struct_nusd_relationship_iterator_s(Structure):
     pass
 
-nusd_relationship_iterator_t = POINTER(struct_nusd_relationship_iterator_s)# /home/anders/code/nanousd/nanousd-iterator.h: 20
+nusd_relationship_iterator_t = POINTER(struct_nusd_relationship_iterator_s)# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 20
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 21
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 21
 class struct_nusd_relationship_targets_iterator_s(Structure):
     pass
 
-nusd_relationship_targets_iterator_t = POINTER(struct_nusd_relationship_targets_iterator_s)# /home/anders/code/nanousd/nanousd-iterator.h: 21
+nusd_relationship_targets_iterator_t = POINTER(struct_nusd_relationship_targets_iterator_s)# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 21
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 23
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 23
 class struct_nusd_token_array_iterator_s(Structure):
     pass
 
-nusd_token_array_iterator_t = POINTER(struct_nusd_token_array_iterator_s)# /home/anders/code/nanousd/nanousd-iterator.h: 23
+nusd_token_array_iterator_t = POINTER(struct_nusd_token_array_iterator_s)# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 23
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 24
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 24
 class struct_nusd_asset_path_array_iterator_s(Structure):
     pass
 
-nusd_asset_path_array_iterator_t = POINTER(struct_nusd_asset_path_array_iterator_s)# /home/anders/code/nanousd/nanousd-iterator.h: 24
+nusd_asset_path_array_iterator_t = POINTER(struct_nusd_asset_path_array_iterator_s)# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 24
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 41
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 41
 if _libs["nanousd"].has("nusd_prim_iterator_next", "cdecl"):
     nusd_prim_iterator_next = _libs["nanousd"].get("nusd_prim_iterator_next", "cdecl")
     nusd_prim_iterator_next.argtypes = [nusd_prim_iterator_t, POINTER(POINTER(c_char))]
     nusd_prim_iterator_next.restype = c_bool
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 55
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 55
 if _libs["nanousd"].has("nusd_prim_iterator_destroy", "cdecl"):
     nusd_prim_iterator_destroy = _libs["nanousd"].get("nusd_prim_iterator_destroy", "cdecl")
     nusd_prim_iterator_destroy.argtypes = [nusd_prim_iterator_t]
     nusd_prim_iterator_destroy.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 77
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 77
 if _libs["nanousd"].has("nusd_property_iterator_next", "cdecl"):
     nusd_property_iterator_next = _libs["nanousd"].get("nusd_property_iterator_next", "cdecl")
     nusd_property_iterator_next.argtypes = [nusd_property_iterator_t, POINTER(POINTER(c_char)), POINTER(nusd_type_t)]
     nusd_property_iterator_next.restype = c_bool
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 93
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 93
 if _libs["nanousd"].has("nusd_property_iterator_destroy", "cdecl"):
     nusd_property_iterator_destroy = _libs["nanousd"].get("nusd_property_iterator_destroy", "cdecl")
     nusd_property_iterator_destroy.argtypes = [nusd_property_iterator_t]
     nusd_property_iterator_destroy.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 109
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 109
 if _libs["nanousd"].has("nusd_attribute_iterator_next", "cdecl"):
     nusd_attribute_iterator_next = _libs["nanousd"].get("nusd_attribute_iterator_next", "cdecl")
     nusd_attribute_iterator_next.argtypes = [nusd_attribute_iterator_t, POINTER(POINTER(c_char))]
     nusd_attribute_iterator_next.restype = c_bool
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 125
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 125
 if _libs["nanousd"].has("nusd_attribute_iterator_destroy", "cdecl"):
     nusd_attribute_iterator_destroy = _libs["nanousd"].get("nusd_attribute_iterator_destroy", "cdecl")
     nusd_attribute_iterator_destroy.argtypes = [nusd_attribute_iterator_t]
     nusd_attribute_iterator_destroy.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 142
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 142
 if _libs["nanousd"].has("nusd_relationship_iterator_next", "cdecl"):
     nusd_relationship_iterator_next = _libs["nanousd"].get("nusd_relationship_iterator_next", "cdecl")
     nusd_relationship_iterator_next.argtypes = [nusd_relationship_iterator_t, POINTER(POINTER(c_char))]
     nusd_relationship_iterator_next.restype = c_bool
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 158
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 158
 if _libs["nanousd"].has("nusd_relationship_iterator_destroy", "cdecl"):
     nusd_relationship_iterator_destroy = _libs["nanousd"].get("nusd_relationship_iterator_destroy", "cdecl")
     nusd_relationship_iterator_destroy.argtypes = [nusd_relationship_iterator_t]
     nusd_relationship_iterator_destroy.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 175
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 175
 if _libs["nanousd"].has("nusd_relationship_targets_iterator_next", "cdecl"):
     nusd_relationship_targets_iterator_next = _libs["nanousd"].get("nusd_relationship_targets_iterator_next", "cdecl")
     nusd_relationship_targets_iterator_next.argtypes = [nusd_relationship_targets_iterator_t, POINTER(POINTER(c_char))]
     nusd_relationship_targets_iterator_next.restype = c_bool
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 190
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 190
 if _libs["nanousd"].has("nusd_relationship_targets_iterator_destroy", "cdecl"):
     nusd_relationship_targets_iterator_destroy = _libs["nanousd"].get("nusd_relationship_targets_iterator_destroy", "cdecl")
     nusd_relationship_targets_iterator_destroy.argtypes = [nusd_relationship_targets_iterator_t]
     nusd_relationship_targets_iterator_destroy.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 206
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 206
 if _libs["nanousd"].has("nusd_token_array_iterator_next", "cdecl"):
     nusd_token_array_iterator_next = _libs["nanousd"].get("nusd_token_array_iterator_next", "cdecl")
     nusd_token_array_iterator_next.argtypes = [nusd_token_array_iterator_t, POINTER(POINTER(c_char))]
     nusd_token_array_iterator_next.restype = c_bool
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 219
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 219
 if _libs["nanousd"].has("nusd_token_array_iterator_size", "cdecl"):
     nusd_token_array_iterator_size = _libs["nanousd"].get("nusd_token_array_iterator_size", "cdecl")
     nusd_token_array_iterator_size.argtypes = [nusd_token_array_iterator_t]
     nusd_token_array_iterator_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 234
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 234
 if _libs["nanousd"].has("nusd_token_array_iterator_destroy", "cdecl"):
     nusd_token_array_iterator_destroy = _libs["nanousd"].get("nusd_token_array_iterator_destroy", "cdecl")
     nusd_token_array_iterator_destroy.argtypes = [nusd_token_array_iterator_t]
     nusd_token_array_iterator_destroy.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 249
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 249
 if _libs["nanousd"].has("nusd_asset_path_array_iterator_next", "cdecl"):
     nusd_asset_path_array_iterator_next = _libs["nanousd"].get("nusd_asset_path_array_iterator_next", "cdecl")
     nusd_asset_path_array_iterator_next.argtypes = [nusd_asset_path_array_iterator_t, POINTER(POINTER(c_char))]
     nusd_asset_path_array_iterator_next.restype = c_bool
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 263
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 263
 if _libs["nanousd"].has("nusd_asset_path_array_iterator_size", "cdecl"):
     nusd_asset_path_array_iterator_size = _libs["nanousd"].get("nusd_asset_path_array_iterator_size", "cdecl")
     nusd_asset_path_array_iterator_size.argtypes = [nusd_asset_path_array_iterator_t]
     nusd_asset_path_array_iterator_size.restype = c_size_t
 
-# /home/anders/code/nanousd/nanousd-iterator.h: 277
+# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 277
 if _libs["nanousd"].has("nusd_asset_path_array_iterator_destroy", "cdecl"):
     nusd_asset_path_array_iterator_destroy = _libs["nanousd"].get("nusd_asset_path_array_iterator_destroy", "cdecl")
     nusd_asset_path_array_iterator_destroy.argtypes = [nusd_asset_path_array_iterator_t]
     nusd_asset_path_array_iterator_destroy.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-material.h: 35
+# /home/anders/code/nanousd/libnanousd/nanousd-material.h: 35
 if _libs["nanousd"].has("nusd_material_define", "cdecl"):
     nusd_material_define = _libs["nanousd"].get("nusd_material_define", "cdecl")
     nusd_material_define.argtypes = [nusd_stage_t, String]
     nusd_material_define.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-material.h: 60
+# /home/anders/code/nanousd/libnanousd/nanousd-material.h: 60
 if _libs["nanousd"].has("nusd_shader_define", "cdecl"):
     nusd_shader_define = _libs["nanousd"].get("nusd_shader_define", "cdecl")
     nusd_shader_define.argtypes = [nusd_stage_t, String, String]
     nusd_shader_define.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-material.h: 93
+# /home/anders/code/nanousd/libnanousd/nanousd-material.h: 93
 if _libs["nanousd"].has("nusd_shader_create_input", "cdecl"):
     nusd_shader_create_input = _libs["nanousd"].get("nusd_shader_create_input", "cdecl")
     nusd_shader_create_input.argtypes = [nusd_stage_t, String, String, nusd_type_t]
     nusd_shader_create_input.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-material.h: 127
+# /home/anders/code/nanousd/libnanousd/nanousd-material.h: 127
 if _libs["nanousd"].has("nusd_shader_create_output", "cdecl"):
     nusd_shader_create_output = _libs["nanousd"].get("nusd_shader_create_output", "cdecl")
     nusd_shader_create_output.argtypes = [nusd_stage_t, String, String, nusd_type_t]
     nusd_shader_create_output.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-material.h: 160
+# /home/anders/code/nanousd/libnanousd/nanousd-material.h: 160
 if _libs["nanousd"].has("nusd_shader_connect", "cdecl"):
     nusd_shader_connect = _libs["nanousd"].get("nusd_shader_connect", "cdecl")
     nusd_shader_connect.argtypes = [nusd_stage_t, String, String]
     nusd_shader_connect.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 35
+# /home/anders/code/nanousd/libnanousd/nanousd-mesh.h: 49
+if _libs["nanousd"].has("nusd_mesh_define", "cdecl"):
+    nusd_mesh_define = _libs["nanousd"].get("nusd_mesh_define", "cdecl")
+    nusd_mesh_define.argtypes = [nusd_stage_t, String, POINTER(c_int), c_size_t, POINTER(c_int), c_size_t, POINTER(c_float), c_size_t]
+    nusd_mesh_define.restype = nusd_result_t
+
+# /home/anders/code/nanousd/libnanousd/nanousd-mesh.h: 83
+if _libs["nanousd"].has("nusd_mesh_set_normals", "cdecl"):
+    nusd_mesh_set_normals = _libs["nanousd"].get("nusd_mesh_set_normals", "cdecl")
+    nusd_mesh_set_normals.argtypes = [nusd_stage_t, String, POINTER(c_float), c_size_t, String]
+    nusd_mesh_set_normals.restype = nusd_result_t
+
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 35
 if _libs["nanousd"].has("nusd_property_get_type", "cdecl"):
     nusd_property_get_type = _libs["nanousd"].get("nusd_property_get_type", "cdecl")
     nusd_property_get_type.argtypes = [nusd_stage_t, String, POINTER(nusd_type_t)]
     nusd_property_get_type.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 60
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 60
 if _libs["nanousd"].has("nusd_attribute_get_token", "cdecl"):
     nusd_attribute_get_token = _libs["nanousd"].get("nusd_attribute_get_token", "cdecl")
     nusd_attribute_get_token.argtypes = [nusd_stage_t, String, c_double, POINTER(POINTER(c_char))]
     nusd_attribute_get_token.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 88
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 88
 if _libs["nanousd"].has("nusd_attribute_get_token_array", "cdecl"):
     nusd_attribute_get_token_array = _libs["nanousd"].get("nusd_attribute_get_token_array", "cdecl")
     nusd_attribute_get_token_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_token_array_iterator_t)]
     nusd_attribute_get_token_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 115
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 115
 if _libs["nanousd"].has("nusd_attribute_get_float", "cdecl"):
     nusd_attribute_get_float = _libs["nanousd"].get("nusd_attribute_get_float", "cdecl")
     nusd_attribute_get_float.argtypes = [nusd_stage_t, String, c_double, POINTER(c_float)]
     nusd_attribute_get_float.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 143
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 143
 if _libs["nanousd"].has("nusd_attribute_get_float_array", "cdecl"):
     nusd_attribute_get_float_array = _libs["nanousd"].get("nusd_attribute_get_float_array", "cdecl")
     nusd_attribute_get_float_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_float_array_t)]
     nusd_attribute_get_float_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 170
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 170
 if _libs["nanousd"].has("nusd_attribute_get_float2", "cdecl"):
     nusd_attribute_get_float2 = _libs["nanousd"].get("nusd_attribute_get_float2", "cdecl")
     nusd_attribute_get_float2.argtypes = [nusd_stage_t, String, c_double, POINTER(c_float)]
     nusd_attribute_get_float2.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 199
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 199
 if _libs["nanousd"].has("nusd_attribute_get_float2_array", "cdecl"):
     nusd_attribute_get_float2_array = _libs["nanousd"].get("nusd_attribute_get_float2_array", "cdecl")
     nusd_attribute_get_float2_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_float2_array_t)]
     nusd_attribute_get_float2_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 226
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 226
 if _libs["nanousd"].has("nusd_attribute_get_float3", "cdecl"):
     nusd_attribute_get_float3 = _libs["nanousd"].get("nusd_attribute_get_float3", "cdecl")
     nusd_attribute_get_float3.argtypes = [nusd_stage_t, String, c_double, POINTER(c_float)]
     nusd_attribute_get_float3.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 255
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 255
 if _libs["nanousd"].has("nusd_attribute_get_float3_array", "cdecl"):
     nusd_attribute_get_float3_array = _libs["nanousd"].get("nusd_attribute_get_float3_array", "cdecl")
     nusd_attribute_get_float3_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_float3_array_t)]
     nusd_attribute_get_float3_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 282
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 282
 if _libs["nanousd"].has("nusd_attribute_get_float4", "cdecl"):
     nusd_attribute_get_float4 = _libs["nanousd"].get("nusd_attribute_get_float4", "cdecl")
     nusd_attribute_get_float4.argtypes = [nusd_stage_t, String, c_double, POINTER(c_float)]
     nusd_attribute_get_float4.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 311
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 311
 if _libs["nanousd"].has("nusd_attribute_get_float4_array", "cdecl"):
     nusd_attribute_get_float4_array = _libs["nanousd"].get("nusd_attribute_get_float4_array", "cdecl")
     nusd_attribute_get_float4_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_float4_array_t)]
     nusd_attribute_get_float4_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 335
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 335
 if _libs["nanousd"].has("nusd_attribute_set_float", "cdecl"):
     nusd_attribute_set_float = _libs["nanousd"].get("nusd_attribute_set_float", "cdecl")
     nusd_attribute_set_float.argtypes = [nusd_stage_t, String, c_float, c_double]
     nusd_attribute_set_float.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 362
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 362
 if _libs["nanousd"].has("nusd_attribute_set_float_array", "cdecl"):
     nusd_attribute_set_float_array = _libs["nanousd"].get("nusd_attribute_set_float_array", "cdecl")
     nusd_attribute_set_float_array.argtypes = [nusd_stage_t, String, POINTER(c_float), c_size_t, c_double]
     nusd_attribute_set_float_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 389
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 389
 if _libs["nanousd"].has("nusd_attribute_set_float2", "cdecl"):
     nusd_attribute_set_float2 = _libs["nanousd"].get("nusd_attribute_set_float2", "cdecl")
     nusd_attribute_set_float2.argtypes = [nusd_stage_t, String, POINTER(c_float), c_double]
     nusd_attribute_set_float2.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 416
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 416
 if _libs["nanousd"].has("nusd_attribute_set_float2_array", "cdecl"):
     nusd_attribute_set_float2_array = _libs["nanousd"].get("nusd_attribute_set_float2_array", "cdecl")
     nusd_attribute_set_float2_array.argtypes = [nusd_stage_t, String, POINTER(c_float), c_size_t, c_double]
     nusd_attribute_set_float2_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 443
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 443
 if _libs["nanousd"].has("nusd_attribute_set_float3", "cdecl"):
     nusd_attribute_set_float3 = _libs["nanousd"].get("nusd_attribute_set_float3", "cdecl")
     nusd_attribute_set_float3.argtypes = [nusd_stage_t, String, POINTER(c_float), c_double]
     nusd_attribute_set_float3.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 471
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 471
 if _libs["nanousd"].has("nusd_attribute_set_float3_array", "cdecl"):
     nusd_attribute_set_float3_array = _libs["nanousd"].get("nusd_attribute_set_float3_array", "cdecl")
     nusd_attribute_set_float3_array.argtypes = [nusd_stage_t, String, POINTER(c_float), c_size_t, c_double]
     nusd_attribute_set_float3_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 498
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 498
 if _libs["nanousd"].has("nusd_attribute_set_float4", "cdecl"):
     nusd_attribute_set_float4 = _libs["nanousd"].get("nusd_attribute_set_float4", "cdecl")
     nusd_attribute_set_float4.argtypes = [nusd_stage_t, String, POINTER(c_float), c_double]
     nusd_attribute_set_float4.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 526
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 526
 if _libs["nanousd"].has("nusd_attribute_set_float4_array", "cdecl"):
     nusd_attribute_set_float4_array = _libs["nanousd"].get("nusd_attribute_set_float4_array", "cdecl")
     nusd_attribute_set_float4_array.argtypes = [nusd_stage_t, String, POINTER(c_float), c_size_t, c_double]
     nusd_attribute_set_float4_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 553
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 553
 if _libs["nanousd"].has("nusd_attribute_get_double", "cdecl"):
     nusd_attribute_get_double = _libs["nanousd"].get("nusd_attribute_get_double", "cdecl")
     nusd_attribute_get_double.argtypes = [nusd_stage_t, String, c_double, POINTER(c_double)]
     nusd_attribute_get_double.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 582
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 582
 if _libs["nanousd"].has("nusd_attribute_get_double_array", "cdecl"):
     nusd_attribute_get_double_array = _libs["nanousd"].get("nusd_attribute_get_double_array", "cdecl")
     nusd_attribute_get_double_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_double_array_t)]
     nusd_attribute_get_double_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 609
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 609
 if _libs["nanousd"].has("nusd_attribute_get_double2", "cdecl"):
     nusd_attribute_get_double2 = _libs["nanousd"].get("nusd_attribute_get_double2", "cdecl")
     nusd_attribute_get_double2.argtypes = [nusd_stage_t, String, c_double, POINTER(c_double)]
     nusd_attribute_get_double2.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 638
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 638
 if _libs["nanousd"].has("nusd_attribute_get_double2_array", "cdecl"):
     nusd_attribute_get_double2_array = _libs["nanousd"].get("nusd_attribute_get_double2_array", "cdecl")
     nusd_attribute_get_double2_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_double2_array_t)]
     nusd_attribute_get_double2_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 666
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 666
 if _libs["nanousd"].has("nusd_attribute_get_double3", "cdecl"):
     nusd_attribute_get_double3 = _libs["nanousd"].get("nusd_attribute_get_double3", "cdecl")
     nusd_attribute_get_double3.argtypes = [nusd_stage_t, String, c_double, POINTER(c_double)]
     nusd_attribute_get_double3.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 696
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 696
 if _libs["nanousd"].has("nusd_attribute_get_double3_array", "cdecl"):
     nusd_attribute_get_double3_array = _libs["nanousd"].get("nusd_attribute_get_double3_array", "cdecl")
     nusd_attribute_get_double3_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_double3_array_t)]
     nusd_attribute_get_double3_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 724
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 724
 if _libs["nanousd"].has("nusd_attribute_get_double4", "cdecl"):
     nusd_attribute_get_double4 = _libs["nanousd"].get("nusd_attribute_get_double4", "cdecl")
     nusd_attribute_get_double4.argtypes = [nusd_stage_t, String, c_double, POINTER(c_double)]
     nusd_attribute_get_double4.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 754
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 754
 if _libs["nanousd"].has("nusd_attribute_get_double4_array", "cdecl"):
     nusd_attribute_get_double4_array = _libs["nanousd"].get("nusd_attribute_get_double4_array", "cdecl")
     nusd_attribute_get_double4_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_double4_array_t)]
     nusd_attribute_get_double4_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 781
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 781
 if _libs["nanousd"].has("nusd_attribute_set_double", "cdecl"):
     nusd_attribute_set_double = _libs["nanousd"].get("nusd_attribute_set_double", "cdecl")
     nusd_attribute_set_double.argtypes = [nusd_stage_t, String, c_double, c_double]
     nusd_attribute_set_double.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 810
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 810
 if _libs["nanousd"].has("nusd_attribute_set_double_array", "cdecl"):
     nusd_attribute_set_double_array = _libs["nanousd"].get("nusd_attribute_set_double_array", "cdecl")
     nusd_attribute_set_double_array.argtypes = [nusd_stage_t, String, POINTER(c_double), c_size_t, c_double]
     nusd_attribute_set_double_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 839
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 839
 if _libs["nanousd"].has("nusd_attribute_set_double2", "cdecl"):
     nusd_attribute_set_double2 = _libs["nanousd"].get("nusd_attribute_set_double2", "cdecl")
     nusd_attribute_set_double2.argtypes = [nusd_stage_t, String, POINTER(c_double), c_double]
     nusd_attribute_set_double2.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 868
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 868
 if _libs["nanousd"].has("nusd_attribute_set_double2_array", "cdecl"):
     nusd_attribute_set_double2_array = _libs["nanousd"].get("nusd_attribute_set_double2_array", "cdecl")
     nusd_attribute_set_double2_array.argtypes = [nusd_stage_t, String, POINTER(c_double), c_size_t, c_double]
     nusd_attribute_set_double2_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 897
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 897
 if _libs["nanousd"].has("nusd_attribute_set_double3", "cdecl"):
     nusd_attribute_set_double3 = _libs["nanousd"].get("nusd_attribute_set_double3", "cdecl")
     nusd_attribute_set_double3.argtypes = [nusd_stage_t, String, POINTER(c_double), c_double]
     nusd_attribute_set_double3.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 927
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 927
 if _libs["nanousd"].has("nusd_attribute_set_double3_array", "cdecl"):
     nusd_attribute_set_double3_array = _libs["nanousd"].get("nusd_attribute_set_double3_array", "cdecl")
     nusd_attribute_set_double3_array.argtypes = [nusd_stage_t, String, POINTER(c_double), c_size_t, c_double]
     nusd_attribute_set_double3_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 956
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 956
 if _libs["nanousd"].has("nusd_attribute_set_double4", "cdecl"):
     nusd_attribute_set_double4 = _libs["nanousd"].get("nusd_attribute_set_double4", "cdecl")
     nusd_attribute_set_double4.argtypes = [nusd_stage_t, String, POINTER(c_double), c_double]
     nusd_attribute_set_double4.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 986
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 986
 if _libs["nanousd"].has("nusd_attribute_set_double4_array", "cdecl"):
     nusd_attribute_set_double4_array = _libs["nanousd"].get("nusd_attribute_set_double4_array", "cdecl")
     nusd_attribute_set_double4_array.argtypes = [nusd_stage_t, String, POINTER(c_double), c_size_t, c_double]
     nusd_attribute_set_double4_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1014
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1014
 if _libs["nanousd"].has("nusd_attribute_get_int", "cdecl"):
     nusd_attribute_get_int = _libs["nanousd"].get("nusd_attribute_get_int", "cdecl")
     nusd_attribute_get_int.argtypes = [nusd_stage_t, String, c_double, POINTER(c_int)]
     nusd_attribute_get_int.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1043
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1043
 if _libs["nanousd"].has("nusd_attribute_get_int_array", "cdecl"):
     nusd_attribute_get_int_array = _libs["nanousd"].get("nusd_attribute_get_int_array", "cdecl")
     nusd_attribute_get_int_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_int_array_t)]
     nusd_attribute_get_int_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1070
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1070
 if _libs["nanousd"].has("nusd_attribute_get_int2", "cdecl"):
     nusd_attribute_get_int2 = _libs["nanousd"].get("nusd_attribute_get_int2", "cdecl")
     nusd_attribute_get_int2.argtypes = [nusd_stage_t, String, c_double, POINTER(c_int)]
     nusd_attribute_get_int2.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1099
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1099
 if _libs["nanousd"].has("nusd_attribute_get_int2_array", "cdecl"):
     nusd_attribute_get_int2_array = _libs["nanousd"].get("nusd_attribute_get_int2_array", "cdecl")
     nusd_attribute_get_int2_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_int2_array_t)]
     nusd_attribute_get_int2_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1126
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1126
 if _libs["nanousd"].has("nusd_attribute_get_int3", "cdecl"):
     nusd_attribute_get_int3 = _libs["nanousd"].get("nusd_attribute_get_int3", "cdecl")
     nusd_attribute_get_int3.argtypes = [nusd_stage_t, String, c_double, POINTER(c_int)]
     nusd_attribute_get_int3.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1155
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1155
 if _libs["nanousd"].has("nusd_attribute_get_int3_array", "cdecl"):
     nusd_attribute_get_int3_array = _libs["nanousd"].get("nusd_attribute_get_int3_array", "cdecl")
     nusd_attribute_get_int3_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_int3_array_t)]
     nusd_attribute_get_int3_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1182
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1182
 if _libs["nanousd"].has("nusd_attribute_get_int4", "cdecl"):
     nusd_attribute_get_int4 = _libs["nanousd"].get("nusd_attribute_get_int4", "cdecl")
     nusd_attribute_get_int4.argtypes = [nusd_stage_t, String, c_double, POINTER(c_int)]
     nusd_attribute_get_int4.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1211
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1211
 if _libs["nanousd"].has("nusd_attribute_get_int4_array", "cdecl"):
     nusd_attribute_get_int4_array = _libs["nanousd"].get("nusd_attribute_get_int4_array", "cdecl")
     nusd_attribute_get_int4_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_int4_array_t)]
     nusd_attribute_get_int4_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1238
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1238
 if _libs["nanousd"].has("nusd_attribute_get_int64", "cdecl"):
     nusd_attribute_get_int64 = _libs["nanousd"].get("nusd_attribute_get_int64", "cdecl")
     nusd_attribute_get_int64.argtypes = [nusd_stage_t, String, c_double, POINTER(c_int64)]
     nusd_attribute_get_int64.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1267
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1267
 if _libs["nanousd"].has("nusd_attribute_get_int64_array", "cdecl"):
     nusd_attribute_get_int64_array = _libs["nanousd"].get("nusd_attribute_get_int64_array", "cdecl")
     nusd_attribute_get_int64_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_int64_array_t)]
     nusd_attribute_get_int64_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1294
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1294
 if _libs["nanousd"].has("nusd_attribute_set_int", "cdecl"):
     nusd_attribute_set_int = _libs["nanousd"].get("nusd_attribute_set_int", "cdecl")
     nusd_attribute_set_int.argtypes = [nusd_stage_t, String, c_int, c_double]
     nusd_attribute_set_int.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1323
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1323
 if _libs["nanousd"].has("nusd_attribute_set_int_array", "cdecl"):
     nusd_attribute_set_int_array = _libs["nanousd"].get("nusd_attribute_set_int_array", "cdecl")
     nusd_attribute_set_int_array.argtypes = [nusd_stage_t, String, POINTER(c_int), c_size_t, c_double]
     nusd_attribute_set_int_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1351
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1351
 if _libs["nanousd"].has("nusd_attribute_set_int2", "cdecl"):
     nusd_attribute_set_int2 = _libs["nanousd"].get("nusd_attribute_set_int2", "cdecl")
     nusd_attribute_set_int2.argtypes = [nusd_stage_t, String, POINTER(c_int), c_double]
     nusd_attribute_set_int2.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1380
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1380
 if _libs["nanousd"].has("nusd_attribute_set_int2_array", "cdecl"):
     nusd_attribute_set_int2_array = _libs["nanousd"].get("nusd_attribute_set_int2_array", "cdecl")
     nusd_attribute_set_int2_array.argtypes = [nusd_stage_t, String, POINTER(c_int), c_size_t, c_double]
     nusd_attribute_set_int2_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1408
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1408
 if _libs["nanousd"].has("nusd_attribute_set_int3", "cdecl"):
     nusd_attribute_set_int3 = _libs["nanousd"].get("nusd_attribute_set_int3", "cdecl")
     nusd_attribute_set_int3.argtypes = [nusd_stage_t, String, POINTER(c_int), c_double]
     nusd_attribute_set_int3.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1438
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1438
 if _libs["nanousd"].has("nusd_attribute_set_int3_array", "cdecl"):
     nusd_attribute_set_int3_array = _libs["nanousd"].get("nusd_attribute_set_int3_array", "cdecl")
     nusd_attribute_set_int3_array.argtypes = [nusd_stage_t, String, POINTER(c_int), c_size_t, c_double]
     nusd_attribute_set_int3_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1466
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1466
 if _libs["nanousd"].has("nusd_attribute_set_int4", "cdecl"):
     nusd_attribute_set_int4 = _libs["nanousd"].get("nusd_attribute_set_int4", "cdecl")
     nusd_attribute_set_int4.argtypes = [nusd_stage_t, String, POINTER(c_int), c_double]
     nusd_attribute_set_int4.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1496
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1496
 if _libs["nanousd"].has("nusd_attribute_set_int4_array", "cdecl"):
     nusd_attribute_set_int4_array = _libs["nanousd"].get("nusd_attribute_set_int4_array", "cdecl")
     nusd_attribute_set_int4_array.argtypes = [nusd_stage_t, String, POINTER(c_int), c_size_t, c_double]
     nusd_attribute_set_int4_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1524
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1524
 if _libs["nanousd"].has("nusd_attribute_set_int64", "cdecl"):
     nusd_attribute_set_int64 = _libs["nanousd"].get("nusd_attribute_set_int64", "cdecl")
     nusd_attribute_set_int64.argtypes = [nusd_stage_t, String, c_int64, c_double]
     nusd_attribute_set_int64.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1553
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1553
 if _libs["nanousd"].has("nusd_attribute_set_int64_array", "cdecl"):
     nusd_attribute_set_int64_array = _libs["nanousd"].get("nusd_attribute_set_int64_array", "cdecl")
     nusd_attribute_set_int64_array.argtypes = [nusd_stage_t, String, POINTER(c_int64), c_size_t, c_double]
     nusd_attribute_set_int64_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1581
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1581
 if _libs["nanousd"].has("nusd_attribute_get_bool", "cdecl"):
     nusd_attribute_get_bool = _libs["nanousd"].get("nusd_attribute_get_bool", "cdecl")
     nusd_attribute_get_bool.argtypes = [nusd_stage_t, String, c_double, POINTER(c_bool)]
     nusd_attribute_get_bool.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1610
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1610
 if _libs["nanousd"].has("nusd_attribute_get_bool_array", "cdecl"):
     nusd_attribute_get_bool_array = _libs["nanousd"].get("nusd_attribute_get_bool_array", "cdecl")
     nusd_attribute_get_bool_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_bool_array_t)]
     nusd_attribute_get_bool_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1638
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1638
 if _libs["nanousd"].has("nusd_attribute_get_matrix2d", "cdecl"):
     nusd_attribute_get_matrix2d = _libs["nanousd"].get("nusd_attribute_get_matrix2d", "cdecl")
     nusd_attribute_get_matrix2d.argtypes = [nusd_stage_t, String, c_double, POINTER(c_double)]
     nusd_attribute_get_matrix2d.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1668
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1668
 if _libs["nanousd"].has("nusd_attribute_get_matrix2d_array", "cdecl"):
     nusd_attribute_get_matrix2d_array = _libs["nanousd"].get("nusd_attribute_get_matrix2d_array", "cdecl")
     nusd_attribute_get_matrix2d_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_matrix2d_array_t)]
     nusd_attribute_get_matrix2d_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1696
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1696
 if _libs["nanousd"].has("nusd_attribute_get_matrix3d", "cdecl"):
     nusd_attribute_get_matrix3d = _libs["nanousd"].get("nusd_attribute_get_matrix3d", "cdecl")
     nusd_attribute_get_matrix3d.argtypes = [nusd_stage_t, String, c_double, POINTER(c_double)]
     nusd_attribute_get_matrix3d.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1726
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1726
 if _libs["nanousd"].has("nusd_attribute_get_matrix3d_array", "cdecl"):
     nusd_attribute_get_matrix3d_array = _libs["nanousd"].get("nusd_attribute_get_matrix3d_array", "cdecl")
     nusd_attribute_get_matrix3d_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_matrix3d_array_t)]
     nusd_attribute_get_matrix3d_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1754
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1754
 if _libs["nanousd"].has("nusd_attribute_get_matrix4d", "cdecl"):
     nusd_attribute_get_matrix4d = _libs["nanousd"].get("nusd_attribute_get_matrix4d", "cdecl")
     nusd_attribute_get_matrix4d.argtypes = [nusd_stage_t, String, c_double, POINTER(c_double)]
     nusd_attribute_get_matrix4d.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1784
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1784
 if _libs["nanousd"].has("nusd_attribute_get_matrix4d_array", "cdecl"):
     nusd_attribute_get_matrix4d_array = _libs["nanousd"].get("nusd_attribute_get_matrix4d_array", "cdecl")
     nusd_attribute_get_matrix4d_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_matrix4d_array_t)]
     nusd_attribute_get_matrix4d_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1811
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1811
 if _libs["nanousd"].has("nusd_attribute_set_bool", "cdecl"):
     nusd_attribute_set_bool = _libs["nanousd"].get("nusd_attribute_set_bool", "cdecl")
     nusd_attribute_set_bool.argtypes = [nusd_stage_t, String, c_bool, c_double]
     nusd_attribute_set_bool.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1840
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1840
 if _libs["nanousd"].has("nusd_attribute_set_bool_array", "cdecl"):
     nusd_attribute_set_bool_array = _libs["nanousd"].get("nusd_attribute_set_bool_array", "cdecl")
     nusd_attribute_set_bool_array.argtypes = [nusd_stage_t, String, POINTER(c_bool), c_size_t, c_double]
     nusd_attribute_set_bool_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1870
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1870
 if _libs["nanousd"].has("nusd_attribute_set_matrix2d", "cdecl"):
     nusd_attribute_set_matrix2d = _libs["nanousd"].get("nusd_attribute_set_matrix2d", "cdecl")
     nusd_attribute_set_matrix2d.argtypes = [nusd_stage_t, String, POINTER(c_double), c_double]
     nusd_attribute_set_matrix2d.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1902
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1902
 if _libs["nanousd"].has("nusd_attribute_set_matrix2d_array", "cdecl"):
     nusd_attribute_set_matrix2d_array = _libs["nanousd"].get("nusd_attribute_set_matrix2d_array", "cdecl")
     nusd_attribute_set_matrix2d_array.argtypes = [nusd_stage_t, String, POINTER(c_double), c_size_t, c_double]
     nusd_attribute_set_matrix2d_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1932
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1932
 if _libs["nanousd"].has("nusd_attribute_set_matrix3d", "cdecl"):
     nusd_attribute_set_matrix3d = _libs["nanousd"].get("nusd_attribute_set_matrix3d", "cdecl")
     nusd_attribute_set_matrix3d.argtypes = [nusd_stage_t, String, POINTER(c_double), c_double]
     nusd_attribute_set_matrix3d.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1964
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1964
 if _libs["nanousd"].has("nusd_attribute_set_matrix3d_array", "cdecl"):
     nusd_attribute_set_matrix3d_array = _libs["nanousd"].get("nusd_attribute_set_matrix3d_array", "cdecl")
     nusd_attribute_set_matrix3d_array.argtypes = [nusd_stage_t, String, POINTER(c_double), c_size_t, c_double]
     nusd_attribute_set_matrix3d_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 1994
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 1994
 if _libs["nanousd"].has("nusd_attribute_set_matrix4d", "cdecl"):
     nusd_attribute_set_matrix4d = _libs["nanousd"].get("nusd_attribute_set_matrix4d", "cdecl")
     nusd_attribute_set_matrix4d.argtypes = [nusd_stage_t, String, POINTER(c_double), c_double]
     nusd_attribute_set_matrix4d.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2026
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2026
 if _libs["nanousd"].has("nusd_attribute_set_matrix4d_array", "cdecl"):
     nusd_attribute_set_matrix4d_array = _libs["nanousd"].get("nusd_attribute_set_matrix4d_array", "cdecl")
     nusd_attribute_set_matrix4d_array.argtypes = [nusd_stage_t, String, POINTER(c_double), c_size_t, c_double]
     nusd_attribute_set_matrix4d_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2054
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2054
 if _libs["nanousd"].has("nusd_attribute_get_uint", "cdecl"):
     nusd_attribute_get_uint = _libs["nanousd"].get("nusd_attribute_get_uint", "cdecl")
     nusd_attribute_get_uint.argtypes = [nusd_stage_t, String, c_double, POINTER(c_uint)]
     nusd_attribute_get_uint.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2082
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2082
 if _libs["nanousd"].has("nusd_attribute_get_uint_array", "cdecl"):
     nusd_attribute_get_uint_array = _libs["nanousd"].get("nusd_attribute_get_uint_array", "cdecl")
     nusd_attribute_get_uint_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_uint_array_t)]
     nusd_attribute_get_uint_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2109
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2109
 if _libs["nanousd"].has("nusd_attribute_get_uint64", "cdecl"):
     nusd_attribute_get_uint64 = _libs["nanousd"].get("nusd_attribute_get_uint64", "cdecl")
     nusd_attribute_get_uint64.argtypes = [nusd_stage_t, String, c_double, POINTER(uint64_t)]
     nusd_attribute_get_uint64.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2138
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2138
 if _libs["nanousd"].has("nusd_attribute_get_uint64_array", "cdecl"):
     nusd_attribute_get_uint64_array = _libs["nanousd"].get("nusd_attribute_get_uint64_array", "cdecl")
     nusd_attribute_get_uint64_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_uint64_array_t)]
     nusd_attribute_get_uint64_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2165
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2165
 if _libs["nanousd"].has("nusd_attribute_get_uchar", "cdecl"):
     nusd_attribute_get_uchar = _libs["nanousd"].get("nusd_attribute_get_uchar", "cdecl")
     nusd_attribute_get_uchar.argtypes = [nusd_stage_t, String, c_double, POINTER(c_ubyte)]
     nusd_attribute_get_uchar.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2193
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2193
 if _libs["nanousd"].has("nusd_attribute_get_uchar_array", "cdecl"):
     nusd_attribute_get_uchar_array = _libs["nanousd"].get("nusd_attribute_get_uchar_array", "cdecl")
     nusd_attribute_get_uchar_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_uchar_array_t)]
     nusd_attribute_get_uchar_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2220
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2220
 if _libs["nanousd"].has("nusd_attribute_set_uint", "cdecl"):
     nusd_attribute_set_uint = _libs["nanousd"].get("nusd_attribute_set_uint", "cdecl")
     nusd_attribute_set_uint.argtypes = [nusd_stage_t, String, c_uint, c_double]
     nusd_attribute_set_uint.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2249
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2249
 if _libs["nanousd"].has("nusd_attribute_set_uint_array", "cdecl"):
     nusd_attribute_set_uint_array = _libs["nanousd"].get("nusd_attribute_set_uint_array", "cdecl")
     nusd_attribute_set_uint_array.argtypes = [nusd_stage_t, String, POINTER(c_uint), c_size_t, c_double]
     nusd_attribute_set_uint_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2277
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2277
 if _libs["nanousd"].has("nusd_attribute_set_uint64", "cdecl"):
     nusd_attribute_set_uint64 = _libs["nanousd"].get("nusd_attribute_set_uint64", "cdecl")
     nusd_attribute_set_uint64.argtypes = [nusd_stage_t, String, uint64_t, c_double]
     nusd_attribute_set_uint64.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2306
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2306
 if _libs["nanousd"].has("nusd_attribute_set_uint64_array", "cdecl"):
     nusd_attribute_set_uint64_array = _libs["nanousd"].get("nusd_attribute_set_uint64_array", "cdecl")
     nusd_attribute_set_uint64_array.argtypes = [nusd_stage_t, String, POINTER(uint64_t), c_size_t, c_double]
     nusd_attribute_set_uint64_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2334
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2334
 if _libs["nanousd"].has("nusd_attribute_set_uchar", "cdecl"):
     nusd_attribute_set_uchar = _libs["nanousd"].get("nusd_attribute_set_uchar", "cdecl")
     nusd_attribute_set_uchar.argtypes = [nusd_stage_t, String, c_ubyte, c_double]
     nusd_attribute_set_uchar.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2363
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2363
 if _libs["nanousd"].has("nusd_attribute_set_uchar_array", "cdecl"):
     nusd_attribute_set_uchar_array = _libs["nanousd"].get("nusd_attribute_set_uchar_array", "cdecl")
     nusd_attribute_set_uchar_array.argtypes = [nusd_stage_t, String, POINTER(c_ubyte), c_size_t, c_double]
     nusd_attribute_set_uchar_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2389
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2389
 if _libs["nanousd"].has("nusd_attribute_set_token", "cdecl"):
     nusd_attribute_set_token = _libs["nanousd"].get("nusd_attribute_set_token", "cdecl")
     nusd_attribute_set_token.argtypes = [nusd_stage_t, String, String, c_double]
     nusd_attribute_set_token.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2415
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2415
 if _libs["nanousd"].has("nusd_attribute_set_token_array", "cdecl"):
     nusd_attribute_set_token_array = _libs["nanousd"].get("nusd_attribute_set_token_array", "cdecl")
     nusd_attribute_set_token_array.argtypes = [nusd_stage_t, String, POINTER(POINTER(c_char)), c_size_t, c_double]
     nusd_attribute_set_token_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2441
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2441
 if _libs["nanousd"].has("nusd_relationship_get_targets", "cdecl"):
     nusd_relationship_get_targets = _libs["nanousd"].get("nusd_relationship_get_targets", "cdecl")
     nusd_relationship_get_targets.argtypes = [nusd_stage_t, String, POINTER(nusd_relationship_targets_iterator_t), POINTER(c_size_t)]
     nusd_relationship_get_targets.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2467
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2467
 if _libs["nanousd"].has("nusd_attribute_get_asset", "cdecl"):
     nusd_attribute_get_asset = _libs["nanousd"].get("nusd_attribute_get_asset", "cdecl")
     nusd_attribute_get_asset.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_asset_path_t)]
     nusd_attribute_get_asset.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2494
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2494
 if _libs["nanousd"].has("nusd_attribute_get_asset_array", "cdecl"):
     nusd_attribute_get_asset_array = _libs["nanousd"].get("nusd_attribute_get_asset_array", "cdecl")
     nusd_attribute_get_asset_array.argtypes = [nusd_stage_t, String, c_double, POINTER(nusd_asset_path_array_iterator_t)]
     nusd_attribute_get_asset_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2520
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2520
 if _libs["nanousd"].has("nusd_attribute_set_asset", "cdecl"):
     nusd_attribute_set_asset = _libs["nanousd"].get("nusd_attribute_set_asset", "cdecl")
     nusd_attribute_set_asset.argtypes = [nusd_stage_t, String, String, c_double]
     nusd_attribute_set_asset.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2547
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2547
 if _libs["nanousd"].has("nusd_attribute_set_asset_array", "cdecl"):
     nusd_attribute_set_asset_array = _libs["nanousd"].get("nusd_attribute_set_asset_array", "cdecl")
     nusd_attribute_set_asset_array.argtypes = [nusd_stage_t, String, POINTER(POINTER(c_char)), c_size_t, c_double]
     nusd_attribute_set_asset_array.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2568
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2568
 if _libs["nanousd"].has("nusd_attribute_set_color_space", "cdecl"):
     nusd_attribute_set_color_space = _libs["nanousd"].get("nusd_attribute_set_color_space", "cdecl")
     nusd_attribute_set_color_space.argtypes = [nusd_stage_t, String, nusd_colorspace_t]
     nusd_attribute_set_color_space.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd-property.h: 2586
+# /home/anders/code/nanousd/libnanousd/nanousd-property.h: 2586
 if _libs["nanousd"].has("nusd_attribute_get_color_space", "cdecl"):
     nusd_attribute_get_color_space = _libs["nanousd"].get("nusd_attribute_get_color_space", "cdecl")
     nusd_attribute_get_color_space.argtypes = [nusd_stage_t, String, POINTER(nusd_colorspace_t)]
     nusd_attribute_get_color_space.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 39
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 40
 if _libs["nanousd"].has("nusd_stage_open", "cdecl"):
     nusd_stage_open = _libs["nanousd"].get("nusd_stage_open", "cdecl")
     nusd_stage_open.argtypes = [String, POINTER(nusd_stage_t)]
     nusd_stage_open.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 61
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 62
 if _libs["nanousd"].has("nusd_stage_create_new", "cdecl"):
     nusd_stage_create_new = _libs["nanousd"].get("nusd_stage_create_new", "cdecl")
     nusd_stage_create_new.argtypes = [String, POINTER(nusd_stage_t)]
     nusd_stage_create_new.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 82
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 83
 if _libs["nanousd"].has("nusd_stage_create_in_memory", "cdecl"):
     nusd_stage_create_in_memory = _libs["nanousd"].get("nusd_stage_create_in_memory", "cdecl")
     nusd_stage_create_in_memory.argtypes = [String, POINTER(nusd_stage_t)]
     nusd_stage_create_in_memory.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 98
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 99
 if _libs["nanousd"].has("nusd_stage_save", "cdecl"):
     nusd_stage_save = _libs["nanousd"].get("nusd_stage_save", "cdecl")
     nusd_stage_save.argtypes = [nusd_stage_t]
     nusd_stage_save.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 112
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 113
 if _libs["nanousd"].has("nusd_stage_save_as", "cdecl"):
     nusd_stage_save_as = _libs["nanousd"].get("nusd_stage_save_as", "cdecl")
     nusd_stage_save_as.argtypes = [nusd_stage_t, String]
     nusd_stage_save_as.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 125
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 126
 if _libs["nanousd"].has("nusd_stage_destroy", "cdecl"):
     nusd_stage_destroy = _libs["nanousd"].get("nusd_stage_destroy", "cdecl")
     nusd_stage_destroy.argtypes = [nusd_stage_t]
     nusd_stage_destroy.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 143
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 144
 if _libs["nanousd"].has("nusd_stage_define_prim", "cdecl"):
     nusd_stage_define_prim = _libs["nanousd"].get("nusd_stage_define_prim", "cdecl")
     nusd_stage_define_prim.argtypes = [nusd_stage_t, String, String]
     nusd_stage_define_prim.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 159
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 160
 if _libs["nanousd"].has("nusd_stage_path_is_valid_prim", "cdecl"):
     nusd_stage_path_is_valid_prim = _libs["nanousd"].get("nusd_stage_path_is_valid_prim", "cdecl")
     nusd_stage_path_is_valid_prim.argtypes = [nusd_stage_t, String]
     nusd_stage_path_is_valid_prim.restype = c_bool
 
-# /home/anders/code/nanousd/nanousd.h: 178
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 179
 if _libs["nanousd"].has("nusd_stage_traverse", "cdecl"):
     nusd_stage_traverse = _libs["nanousd"].get("nusd_stage_traverse", "cdecl")
     nusd_stage_traverse.argtypes = [nusd_stage_t, POINTER(nusd_prim_iterator_t)]
     nusd_stage_traverse.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 207
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 208
 if _libs["nanousd"].has("nusd_prim_get_properties", "cdecl"):
     nusd_prim_get_properties = _libs["nanousd"].get("nusd_prim_get_properties", "cdecl")
     nusd_prim_get_properties.argtypes = [nusd_stage_t, String, POINTER(nusd_property_iterator_t)]
     nusd_prim_get_properties.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 228
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 229
 if _libs["nanousd"].has("nusd_prim_get_attributes", "cdecl"):
     nusd_prim_get_attributes = _libs["nanousd"].get("nusd_prim_get_attributes", "cdecl")
     nusd_prim_get_attributes.argtypes = [nusd_stage_t, String, POINTER(nusd_attribute_iterator_t)]
     nusd_prim_get_attributes.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 250
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 251
 if _libs["nanousd"].has("nusd_prim_get_relationships", "cdecl"):
     nusd_prim_get_relationships = _libs["nanousd"].get("nusd_prim_get_relationships", "cdecl")
     nusd_prim_get_relationships.argtypes = [nusd_stage_t, String, POINTER(nusd_relationship_iterator_t)]
     nusd_prim_get_relationships.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 276
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 277
 if _libs["nanousd"].has("nusd_prim_create_property", "cdecl"):
     nusd_prim_create_property = _libs["nanousd"].get("nusd_prim_create_property", "cdecl")
     nusd_prim_create_property.argtypes = [nusd_stage_t, String, String, nusd_type_t]
     nusd_prim_create_property.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 309
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 310
 if _libs["nanousd"].has("nusd_prim_set_transform", "cdecl"):
     nusd_prim_set_transform = _libs["nanousd"].get("nusd_prim_set_transform", "cdecl")
     nusd_prim_set_transform.argtypes = [nusd_stage_t, String, POINTER(c_double), c_double]
     nusd_prim_set_transform.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 349
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 350
 if _libs["nanousd"].has("nusd_prim_compute_local_to_world_transform", "cdecl"):
     nusd_prim_compute_local_to_world_transform = _libs["nanousd"].get("nusd_prim_compute_local_to_world_transform", "cdecl")
     nusd_prim_compute_local_to_world_transform.argtypes = [nusd_stage_t, String, c_double, POINTER(c_double)]
     nusd_prim_compute_local_to_world_transform.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 382
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 397
 if _libs["nanousd"].has("nusd_prim_create_primvar", "cdecl"):
     nusd_prim_create_primvar = _libs["nanousd"].get("nusd_prim_create_primvar", "cdecl")
     nusd_prim_create_primvar.argtypes = [nusd_stage_t, String, String, nusd_type_t, String]
     nusd_prim_create_primvar.restype = nusd_result_t
 
-# /home/anders/code/nanousd/nanousd.h: 404
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 404
+if _libs["nanousd"].has("nusd_prim_set_extent", "cdecl"):
+    nusd_prim_set_extent = _libs["nanousd"].get("nusd_prim_set_extent", "cdecl")
+    nusd_prim_set_extent.argtypes = [nusd_stage_t, String, POINTER(c_float)]
+    nusd_prim_set_extent.restype = nusd_result_t
+
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 422
 if _libs["nanousd"].has("nusd_path_get_name", "cdecl"):
     nusd_path_get_name = _libs["nanousd"].get("nusd_path_get_name", "cdecl")
     nusd_path_get_name.argtypes = [String]
     nusd_path_get_name.restype = c_char_p
 
-# /home/anders/code/nanousd/nanousd.h: 418
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 436
 if _libs["nanousd"].has("nusd_asset_path_get_asset_path", "cdecl"):
     nusd_asset_path_get_asset_path = _libs["nanousd"].get("nusd_asset_path_get_asset_path", "cdecl")
     nusd_asset_path_get_asset_path.argtypes = [nusd_asset_path_t]
     nusd_asset_path_get_asset_path.restype = c_char_p
 
-# /home/anders/code/nanousd/nanousd.h: 428
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 446
 if _libs["nanousd"].has("nusd_asset_path_destroy", "cdecl"):
     nusd_asset_path_destroy = _libs["nanousd"].get("nusd_asset_path_destroy", "cdecl")
     nusd_asset_path_destroy.argtypes = [nusd_asset_path_t]
     nusd_asset_path_destroy.restype = None
 
-# /home/anders/code/nanousd/nanousd-types.h: 10
-try:
-    NUSD_TIMECODE_DEFAULT = 0.0
-except:
-    pass
+nusd_asset_path_s = struct_nusd_asset_path_s# /home/anders/code/nanousd/libnanousd/nanousd-types.h: 36
 
-nusd_asset_path_s = struct_nusd_asset_path_s# /home/anders/code/nanousd/nanousd-types.h: 37
+nusd_bool_array_s = struct_nusd_bool_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 10
 
-nusd_bool_array_s = struct_nusd_bool_array_s# /home/anders/code/nanousd/nanousd-array.h: 10
+nusd_float_array_s = struct_nusd_float_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 12
 
-nusd_float_array_s = struct_nusd_float_array_s# /home/anders/code/nanousd/nanousd-array.h: 12
+nusd_float2_array_s = struct_nusd_float2_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 13
 
-nusd_float2_array_s = struct_nusd_float2_array_s# /home/anders/code/nanousd/nanousd-array.h: 13
+nusd_float3_array_s = struct_nusd_float3_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 14
 
-nusd_float3_array_s = struct_nusd_float3_array_s# /home/anders/code/nanousd/nanousd-array.h: 14
+nusd_float4_array_s = struct_nusd_float4_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 15
 
-nusd_float4_array_s = struct_nusd_float4_array_s# /home/anders/code/nanousd/nanousd-array.h: 15
+nusd_double_array_s = struct_nusd_double_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 17
 
-nusd_double_array_s = struct_nusd_double_array_s# /home/anders/code/nanousd/nanousd-array.h: 17
+nusd_double2_array_s = struct_nusd_double2_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 18
 
-nusd_double2_array_s = struct_nusd_double2_array_s# /home/anders/code/nanousd/nanousd-array.h: 18
+nusd_double3_array_s = struct_nusd_double3_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 19
 
-nusd_double3_array_s = struct_nusd_double3_array_s# /home/anders/code/nanousd/nanousd-array.h: 19
+nusd_double4_array_s = struct_nusd_double4_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 20
 
-nusd_double4_array_s = struct_nusd_double4_array_s# /home/anders/code/nanousd/nanousd-array.h: 20
+nusd_int_array_s = struct_nusd_int_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 22
 
-nusd_int_array_s = struct_nusd_int_array_s# /home/anders/code/nanousd/nanousd-array.h: 22
+nusd_int2_array_s = struct_nusd_int2_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 23
 
-nusd_int2_array_s = struct_nusd_int2_array_s# /home/anders/code/nanousd/nanousd-array.h: 23
+nusd_int3_array_s = struct_nusd_int3_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 24
 
-nusd_int3_array_s = struct_nusd_int3_array_s# /home/anders/code/nanousd/nanousd-array.h: 24
+nusd_int4_array_s = struct_nusd_int4_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 25
 
-nusd_int4_array_s = struct_nusd_int4_array_s# /home/anders/code/nanousd/nanousd-array.h: 25
+nusd_int64_array_s = struct_nusd_int64_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 26
 
-nusd_int64_array_s = struct_nusd_int64_array_s# /home/anders/code/nanousd/nanousd-array.h: 26
+nusd_matrix2d_array_s = struct_nusd_matrix2d_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 28
 
-nusd_matrix2d_array_s = struct_nusd_matrix2d_array_s# /home/anders/code/nanousd/nanousd-array.h: 28
+nusd_matrix3d_array_s = struct_nusd_matrix3d_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 29
 
-nusd_matrix3d_array_s = struct_nusd_matrix3d_array_s# /home/anders/code/nanousd/nanousd-array.h: 29
+nusd_matrix4d_array_s = struct_nusd_matrix4d_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 30
 
-nusd_matrix4d_array_s = struct_nusd_matrix4d_array_s# /home/anders/code/nanousd/nanousd-array.h: 30
+nusd_uint_array_s = struct_nusd_uint_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 32
 
-nusd_uint_array_s = struct_nusd_uint_array_s# /home/anders/code/nanousd/nanousd-array.h: 32
+nusd_uint64_array_s = struct_nusd_uint64_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 33
 
-nusd_uint64_array_s = struct_nusd_uint64_array_s# /home/anders/code/nanousd/nanousd-array.h: 33
+nusd_uchar_array_s = struct_nusd_uchar_array_s# /home/anders/code/nanousd/libnanousd/nanousd-array.h: 34
 
-nusd_uchar_array_s = struct_nusd_uchar_array_s# /home/anders/code/nanousd/nanousd-array.h: 34
+nusd_prim_iterator_s = struct_nusd_prim_iterator_s# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 17
 
-nusd_prim_iterator_s = struct_nusd_prim_iterator_s# /home/anders/code/nanousd/nanousd-iterator.h: 17
+nusd_property_iterator_s = struct_nusd_property_iterator_s# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 18
 
-nusd_property_iterator_s = struct_nusd_property_iterator_s# /home/anders/code/nanousd/nanousd-iterator.h: 18
+nusd_attribute_iterator_s = struct_nusd_attribute_iterator_s# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 19
 
-nusd_attribute_iterator_s = struct_nusd_attribute_iterator_s# /home/anders/code/nanousd/nanousd-iterator.h: 19
+nusd_relationship_iterator_s = struct_nusd_relationship_iterator_s# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 20
 
-nusd_relationship_iterator_s = struct_nusd_relationship_iterator_s# /home/anders/code/nanousd/nanousd-iterator.h: 20
+nusd_relationship_targets_iterator_s = struct_nusd_relationship_targets_iterator_s# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 21
 
-nusd_relationship_targets_iterator_s = struct_nusd_relationship_targets_iterator_s# /home/anders/code/nanousd/nanousd-iterator.h: 21
+nusd_token_array_iterator_s = struct_nusd_token_array_iterator_s# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 23
 
-nusd_token_array_iterator_s = struct_nusd_token_array_iterator_s# /home/anders/code/nanousd/nanousd-iterator.h: 23
-
-nusd_asset_path_array_iterator_s = struct_nusd_asset_path_array_iterator_s# /home/anders/code/nanousd/nanousd-iterator.h: 24
+nusd_asset_path_array_iterator_s = struct_nusd_asset_path_array_iterator_s# /home/anders/code/nanousd/libnanousd/nanousd-iterator.h: 24
 
 # No inserted files
 

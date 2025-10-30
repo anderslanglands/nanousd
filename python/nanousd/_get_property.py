@@ -1,5 +1,6 @@
 from . import ffi as _lib
 from .array import *
+from .tokens import TIMECODE_DEFAULT
 
 from ctypes import (
     c_bool,
@@ -15,7 +16,7 @@ class GetPropertyError(RuntimeError):
     pass
 
 
-def _get_property(stage, property_path: str, time_code: float = 0.0):
+def _get_property(stage, property_path: str, time_code: float = TIMECODE_DEFAULT):
     property_type = _lib.nusd_type_t()
     result = _lib.nusd_property_get_type(
         stage._stage, property_path, byref(property_type)

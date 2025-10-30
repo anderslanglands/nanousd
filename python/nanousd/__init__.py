@@ -12,6 +12,7 @@ from ctypes import (
     c_void_p,
     c_bool,
     c_char_p,
+    c_int,
     POINTER,
     byref,
     c_float,
@@ -136,8 +137,21 @@ class Stage:
             raise StageCreateError(f'failed to create stage "{identifier}": {result}')
         return cls(stage)
 
+    @classmethod
+    def create_new(cls, identifier: str) -> "Stage":
+        stage = _lib.nusd_stage_t(0)
+        result = _lib.nusd_stage_create_new(
+            identifier.encode("ascii"), byref(stage)
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise StageCreateError(f'failed to create stage "{identifier}": {result}')
+        return cls(stage)
+
+    def save(self):
+        _lib.nusd_stage_save(self._stage)
+
     def traverse(self) -> PrimIterator:
-        it = _lib.nusd_prim_iterator_t(0)
+        it = _lib.nusd_prim_iterator_t()
         _lib.nusd_stage_traverse(self._stage, byref(it))
         return PrimIterator(it)
 
@@ -145,7 +159,7 @@ class Stage:
         return self.traverse()
 
     def prim_get_properties(self, prim_path: str) -> PropertyIterator:
-        it = _lib.nusd_property_iterator_t(0)
+        it = _lib.nusd_property_iterator_t()
         result = _lib.nusd_prim_get_properties(
             self._stage, prim_path.encode("ascii"), byref(it)
         )
@@ -157,11 +171,11 @@ class Stage:
 
         return PropertyIterator(it)
 
-    def get_property(self, property_path: str, time_code: float = 0.0):
+    def get_property(self, property_path: str, time_code: float = TIMECODE_DEFAULT):
         return _get_property(self, property_path, time_code)
 
     def set_property(
-        self, property_path: str, property_type, value: Any, time_code: float = 0.0
+        self, property_path: str, property_type, value: Any, time_code: float = TIMECODE_DEFAULT
     ):
         return _set_property(self, property_path, property_type, value, time_code)
 
@@ -176,7 +190,7 @@ class Stage:
         self,
         xformable_path: str,
         local_to_parent_matrix: np.ndarray,
-        time_code: float = 0.0,
+        time_code: float = TIMECODE_DEFAULT,
     ):
         """Set the transform matrix for an Xformable prim, positioning it relative to its parent.
 
@@ -211,7 +225,7 @@ class Stage:
             )
 
     def prim_compute_local_to_world_transform(
-        self, xformable_path: str, time_code: float = 0.0
+        self, xformable_path: str, time_code: float = TIMECODE_DEFAULT
     ) -> np.ndarray:
         """Compute the complete transformation matrix from a prim's local space to world space.
 
@@ -243,7 +257,7 @@ class Stage:
         property_name: str,
         property_type: str,
         value=None,
-        time_code: float = 0.0,
+        time_code: float = TIMECODE_DEFAULT,
     ):
         result = _lib.nusd_prim_create_property(
             self._stage, prim, property_name, property_type
@@ -265,7 +279,7 @@ class Stage:
         primvar_type: str,
         primvar_interpolation: str,
         value=None,
-        time_code: float = 0.0,
+        time_code: float = TIMECODE_DEFAULT,
     ):
         """Create a new primvar (primitive variable) on a prim for geometry attribute data.
         
@@ -321,7 +335,7 @@ class Stage:
             )
 
     def camera_set_fov_w(
-        self, camera_path: str, fov_w_deg: float, time_code: float = 0.0
+        self, camera_path: str, fov_w_deg: float, time_code: float = TIMECODE_DEFAULT,
     ):
         """Set the horizontal field of view for a camera by setting its focal length.
 
@@ -352,7 +366,7 @@ class Stage:
         f_stop: float,
         compensation: float,
         responsivity: float,
-        time_code: float = 0.0,
+        time_code: float = TIMECODE_DEFAULT,
     ):
         """Set the exposure parameters for a camera, simulating real camera controls.
 
@@ -384,7 +398,7 @@ class Stage:
             )
 
     def camera_set_clipping_range(
-        self, camera_path: str, near: float, far: float, time_code: float = 0.0
+        self, camera_path: str, near: float, far: float, time_code: float = TIMECODE_DEFAULT,
     ):
         """Set the near and far clipping distances for a camera's viewing frustum.
 
@@ -410,7 +424,7 @@ class Stage:
             )
 
     def camera_set_aperture(
-        self, camera_path: str, width: float, height: float, time_code: float = 0.0
+        self, camera_path: str, width: float, height: float, time_code: float = TIMECODE_DEFAULT,
     ):
         """Set the horizontal and vertical aperture dimensions for a camera.
 
@@ -482,7 +496,7 @@ class Stage:
         input_name: str,
         input_type: str,
         value=None,
-        time_code=0.0,
+        time_code=TIMECODE_DEFAULT,
     ):
         """Create an input parameter on a shader for receiving values or connections from other shaders.
 
@@ -527,7 +541,7 @@ class Stage:
         output_name: str,
         output_type: str,
         value=None,
-        time_code=0.0,
+        time_code=TIMECODE_DEFAULT,
     ):
         """Create an output parameter on a shader for providing values to other shaders or materials.
 
@@ -662,3 +676,119 @@ class Stage:
             )
 
         return color_space.value.decode("utf-8") if color_space.value else ""
+
+    def mesh_define(
+        self,
+        mesh_path: str,
+        face_vertex_counts: np.ndarray,
+        face_vertex_indices: np.ndarray,
+        vertices: np.ndarray,
+    ):
+        """Define a new USD mesh prim at the specified path with geometry data.
+
+        Args:
+            mesh_path: USD path where the mesh should be created (e.g., "/World/Geometry/MyMesh")
+            face_vertex_counts: Array of integers specifying the number of vertices for each face
+            face_vertex_indices: Array of integers specifying vertex indices for each face (flattened)
+            vertices: Array of vertex positions as float triplets (x, y, z)
+
+        Raises:
+            DefinePrimError: If the mesh cannot be defined at the specified path
+            ValueError: If array inputs have incorrect types or shapes
+
+        Note:
+            - face_vertex_counts must be 1D array of integers
+            - face_vertex_indices must be 1D array of integers
+            - vertices must be 1D array of floats with length divisible by 3 (x,y,z triplets)
+            - Creates a UsdGeomMesh prim with the specified topology and vertex positions
+            - Vertex positions are expected as consecutive float triplets representing 3D coordinates
+        """
+        # Validate face_vertex_counts
+        if not isinstance(face_vertex_counts, np.ndarray) or face_vertex_counts.ndim != 1:
+            raise ValueError("face_vertex_counts must be a 1D NumPy array")
+        if face_vertex_counts.dtype not in [np.int32, np.int64]:
+            face_vertex_counts = face_vertex_counts.astype(np.int32)
+
+        # Validate face_vertex_indices
+        if not isinstance(face_vertex_indices, np.ndarray) or face_vertex_indices.ndim != 1:
+            raise ValueError("face_vertex_indices must be a 1D NumPy array")
+        if face_vertex_indices.dtype not in [np.int32, np.int64]:
+            face_vertex_indices = face_vertex_indices.astype(np.int32)
+
+        # Validate vertices
+        if (
+            not isinstance(vertices, np.ndarray)
+            or vertices.dtype not in [np.float32, np.float64]
+            or vertices.ndim != 2
+            or vertices.shape[1] != 3
+        ):
+            raise ValueError("vertices must be a (N, 3) float ndarray")
+
+        vertices = vertices.astype(np.float32)
+
+        result = _lib.nusd_mesh_define(
+            self._stage,
+            mesh_path.encode("ascii"),
+            face_vertex_counts.ctypes.data_as(POINTER(c_int)),
+            len(face_vertex_counts),
+            face_vertex_indices.ctypes.data_as(POINTER(c_int)),
+            len(face_vertex_indices),
+            vertices.ctypes.data_as(POINTER(c_float)),
+            len(vertices),
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise DefinePrimError(
+                f'failed to define mesh at "{mesh_path}": {result}'
+            )
+
+    def mesh_set_normals(
+        self,
+        mesh_path: str,
+        normals: np.ndarray,
+        interpolation,
+    ):
+        """Set vertex normals for an existing mesh with specified interpolation mode.
+
+        Args:
+            mesh_path: USD path to an existing mesh prim
+            normals: Array of normal vectors as float triplets (x, y, z)
+            interpolation: Interpolation mode for the normals (default: "vertex")
+
+        Raises:
+            SetPropertyError: If mesh_path is invalid or normals cannot be set
+            ValueError: If normals array has incorrect type or shape
+
+        Note:
+            - normals must be 1D array of floats with length divisible by 3 (x,y,z triplets)
+            - Normal vectors should be unit length for proper shading results
+            - Common interpolation modes:
+              * "vertex": One normal per vertex
+              * "faceVarying": One normal per face-vertex (allows discontinuities)
+              * "uniform": One normal per face
+              * "constant": One normal for entire mesh
+            - The mesh prim must already exist before calling this function
+        """
+        # Validate normals
+        if (
+            not isinstance(normals, np.ndarray)
+            or normals.dtype not in [np.float32, np.float64]
+            or normals.ndim != 2
+            or normals.shape[1] != 3
+        ):
+            raise ValueError(f"normals must be an (N, 3) float ndarray")
+
+        normals = normals.astype(np.float32)
+
+        result = _lib.nusd_mesh_set_normals(
+            self._stage,
+            mesh_path.encode("ascii"),
+            normals.ctypes.data_as(POINTER(c_float)),
+            len(normals),
+            interpolation,
+        )
+        if result == _lib.NUSD_RESULT_INVALID_PRIM_PATH:
+            raise SetPropertyError(f'mesh not found at "{mesh_path}"')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(
+                f'failed to set normals for mesh "{mesh_path}": {result}'
+            )

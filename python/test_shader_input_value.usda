@@ -1,0 +1,19 @@
+#usda 1.0
+
+def "World"
+{
+    def "Materials"
+    {
+        def "Mat"
+        {
+            def Shader "Surface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (1, 0.5, 0)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.8
+            }
+        }
+    }
+}
+

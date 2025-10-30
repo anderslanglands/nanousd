@@ -1,5 +1,5 @@
 configure:
-    cmake -B build -G Ninja -DCMAKE_PREFIX_PATH=/home/anders/packages/usd/25.08/_v/a
+    cmake -B build -G Ninja -S libnanousd
 
 build:
     cmake --build build
@@ -8,8 +8,8 @@ test:
     ctest --test-dir build --output-on-failure
 
 bind:
-    cd python && uv run ctypesgen -L../build  -lnanousd -o nanousd/ffi.py \
-        $PWD/../*.h \
+    uv run ctypesgen -Lbuild -L../build  -lnanousd -o python/nanousd/ffi.py \
+        $PWD/libnanousd/*.h \
         ; cd - 
 
 pytest:
