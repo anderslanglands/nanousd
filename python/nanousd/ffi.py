@@ -2444,22 +2444,16 @@ if _libs["nanousd"].has("nusd_rect_light_define", "cdecl"):
     nusd_rect_light_define.restype = nusd_result_t
 
 # /home/anders/code/nanousd/libnanousd/nanousd-light.h: 75
-for _lib in _libs.values():
-    if not _lib.has("nusd_disk_light_define", "cdecl"):
-        continue
-    nusd_disk_light_define = _lib.get("nusd_disk_light_define", "cdecl")
+if _libs["nanousd"].has("nusd_disk_light_define", "cdecl"):
+    nusd_disk_light_define = _libs["nanousd"].get("nusd_disk_light_define", "cdecl")
     nusd_disk_light_define.argtypes = [nusd_stage_t, String, c_float, c_float, POINTER(c_float)]
     nusd_disk_light_define.restype = nusd_result_t
-    break
 
 # /home/anders/code/nanousd/libnanousd/nanousd-light.h: 106
-for _lib in _libs.values():
-    if not _lib.has("nusd_sphere_light_define", "cdecl"):
-        continue
-    nusd_sphere_light_define = _lib.get("nusd_sphere_light_define", "cdecl")
+if _libs["nanousd"].has("nusd_sphere_light_define", "cdecl"):
+    nusd_sphere_light_define = _libs["nanousd"].get("nusd_sphere_light_define", "cdecl")
     nusd_sphere_light_define.argtypes = [nusd_stage_t, String, c_float, c_float, POINTER(c_float)]
     nusd_sphere_light_define.restype = nusd_result_t
-    break
 
 # /home/anders/code/nanousd/libnanousd/nanousd-material.h: 35
 if _libs["nanousd"].has("nusd_material_define", "cdecl"):
@@ -3175,25 +3169,25 @@ if _libs["nanousd"].has("nusd_prim_create_primvar", "cdecl"):
     nusd_prim_create_primvar.argtypes = [nusd_stage_t, String, String, nusd_type_t, String]
     nusd_prim_create_primvar.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 404
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 425
 if _libs["nanousd"].has("nusd_prim_set_extent", "cdecl"):
     nusd_prim_set_extent = _libs["nanousd"].get("nusd_prim_set_extent", "cdecl")
     nusd_prim_set_extent.argtypes = [nusd_stage_t, String, POINTER(c_float)]
     nusd_prim_set_extent.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 422
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 443
 if _libs["nanousd"].has("nusd_path_get_name", "cdecl"):
     nusd_path_get_name = _libs["nanousd"].get("nusd_path_get_name", "cdecl")
     nusd_path_get_name.argtypes = [String]
     nusd_path_get_name.restype = c_char_p
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 436
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 457
 if _libs["nanousd"].has("nusd_asset_path_get_asset_path", "cdecl"):
     nusd_asset_path_get_asset_path = _libs["nanousd"].get("nusd_asset_path_get_asset_path", "cdecl")
     nusd_asset_path_get_asset_path.argtypes = [nusd_asset_path_t]
     nusd_asset_path_get_asset_path.restype = c_char_p
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 446
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 467
 if _libs["nanousd"].has("nusd_asset_path_destroy", "cdecl"):
     nusd_asset_path_destroy = _libs["nanousd"].get("nusd_asset_path_destroy", "cdecl")
     nusd_asset_path_destroy.argtypes = [nusd_asset_path_t]

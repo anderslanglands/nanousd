@@ -400,6 +400,27 @@ nusd_result_t nusd_prim_create_primvar(nusd_stage_t stage,
                                        nusd_type_t primvar_type,
                                        char const* primvar_interpolation);
 
+/// Sets the extent (bounding box) attribute on a UsdGeomBoundable prim.
+///
+/// @param stage Valid stage handle.
+/// @param prim_path USD path to an existing boundable prim (e.g., "/World/Mesh", "/World/Cube").
+/// @param extent Array of 6 float values representing the bounding box as [min_x, min_y, min_z, max_x, max_y, max_z].
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, prim_path, or extent is null
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if the prim doesn't exist or is not a boundable prim
+///
+/// @note stage must not be null.
+/// @note prim_path must not be null and should point to an existing UsdGeomBoundable prim.
+/// @note extent must not be null and should contain exactly 6 float values.
+/// @note The extent represents the axis-aligned bounding box of the prim in local coordinates.
+/// @note Only prims derived from UsdGeomBoundable (like Mesh, Cube, Sphere, etc.) support extent.
+/// @note The extent format is [min_x, min_y, min_z, max_x, max_y, max_z] where:
+///       - (min_x, min_y, min_z) is the minimum corner of the bounding box
+///       - (max_x, max_y, max_z) is the maximum corner of the bounding box
+/// @note Extent is used by USD for culling and optimization during rendering and traversal.
+/// @note For meshes, the extent should encompass all vertex positions.
+/// @note For primitives like cubes and spheres, the extent should match their geometric bounds.
 NANOUSD_API
 nusd_result_t nusd_prim_set_extent(nusd_stage_t stage, char const* prim_path, float* extent);
 

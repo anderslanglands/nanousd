@@ -450,6 +450,141 @@ def test_prim_set_transform():
     assert np.allclose(world_transform, transform_matrix)
 
 
+def test_prim_set_extent_basic():
+    """Test basic extent setting with list format"""
+    stage = nusd.Stage.create_in_memory("test_prim_set_extent_basic")
+    stage.define_prim("/World", "Xform")
+    stage.define_prim("/World/Cube", "Cube")
+    
+    # Set extent as list: bounding box from (-1,-1,-1) to (1,1,1)
+    extent = [-1.0, -1.0, -1.0, 1.0, 1.0, 1.0]
+    stage.prim_set_extent("/World/Cube", extent)
+
+
+def test_prim_set_extent_tuple():
+    """Test extent setting with tuple format"""
+    stage = nusd.Stage.create_in_memory("test_prim_set_extent_tuple")
+    stage.define_prim("/World", "Xform")
+    stage.define_prim("/World/Sphere", "Sphere")
+    
+    # Set extent as tuple
+    extent = (-2.0, -2.0, -2.0, 2.0, 2.0, 2.0)
+    stage.prim_set_extent("/World/Sphere", extent)
+
+
+def test_prim_set_extent_numpy_1d():
+    """Test extent setting with 1D NumPy array"""
+    stage = nusd.Stage.create_in_memory("test_prim_set_extent_numpy_1d")
+    stage.define_prim("/World", "Xform")
+    
+    # Create a simple triangle mesh
+    vertices = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, 1.0, 0.0]], dtype=np.float32)
+    face_vertex_counts = np.array([3], dtype=np.int32)
+    face_vertex_indices = np.array([0, 1, 2], dtype=np.int32)
+    
+    stage.mesh_define("/World/Mesh", face_vertex_counts, face_vertex_indices, vertices)
+    
+    # Set extent as 1D NumPy array
+    extent = np.array([0.0, 0.0, 0.0, 1.0, 1.0, 0.0], dtype=np.float32)
+    stage.prim_set_extent("/World/Mesh", extent)
+
+
+def test_prim_set_extent_numpy_3x2():
+    """Test extent setting with 3x2 NumPy array format"""
+    stage = nusd.Stage.create_in_memory("test_prim_set_extent_numpy_3x2")
+    stage.define_prim("/World", "Xform")
+    stage.define_prim("/World/Cube", "Cube")
+    
+    # Set extent as 3x2 array: [[min_x, max_x], [min_y, max_y], [min_z, max_z]]
+    extent = np.array([[-0.5, 0.5], [-0.5, 0.5], [-0.5, 0.5]], dtype=np.float32)
+    stage.prim_set_extent("/World/Cube", extent)
+
+
+def test_prim_set_extent_mesh_workflow():
+    """Test extent setting on a mesh after creation"""
+    stage = nusd.Stage.create_in_memory("test_prim_set_extent_mesh")
+    stage.define_prim("/World", "Xform")
+    
+    # Create a simple triangle mesh
+    vertices = np.array([[0.0, 0.0, 0.0], [2.0, 0.0, 0.0], [1.0, 2.0, 0.0]], dtype=np.float32)
+    face_vertex_counts = np.array([3], dtype=np.int32)
+    face_vertex_indices = np.array([0, 1, 2], dtype=np.int32)
+    
+    stage.mesh_define("/World/Triangle", face_vertex_counts, face_vertex_indices, vertices)
+    
+    # Set extent that encompasses the triangle vertices
+    extent = [0.0, 0.0, 0.0, 2.0, 2.0, 0.0]
+    stage.prim_set_extent("/World/Triangle", extent)
+
+
+def test_prim_set_extent_validation_errors():
+    """Test various validation error scenarios"""
+    stage = nusd.Stage.create_in_memory("test_prim_set_extent_errors")
+    stage.define_prim("/World", "Xform")
+    stage.define_prim("/World/Cube", "Cube")
+    
+    # Test wrong number of elements in list
+    with pytest.raises(ValueError, match="list or tuple must contain exactly 6 numbers"):
+        stage.prim_set_extent("/World/Cube", [1.0, 2.0, 3.0])  # Only 3 elements
+    
+    with pytest.raises(ValueError, match="list or tuple must contain exactly 6 numbers"):
+        stage.prim_set_extent("/World/Cube", [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0])  # 7 elements
+    
+    # Test wrong NumPy array shape
+    with pytest.raises(ValueError, match="NumPy array must be either shape \\(6,\\) or \\(3, 2\\)"):
+        stage.prim_set_extent("/World/Cube", np.array([[1, 2, 3], [4, 5, 6]]))  # 2x3 array
+    
+    # Test non-numeric values
+    with pytest.raises(ValueError, match="extent components must be numeric values"):
+        stage.prim_set_extent("/World/Cube", ["a", "b", "c", "d", "e", "f"])
+    
+    # Test invalid input type
+    with pytest.raises(ValueError, match="extent must be a list, tuple, or NumPy array"):
+        stage.prim_set_extent("/World/Cube", "invalid")
+
+
+def test_prim_set_extent_prim_errors():
+    """Test prim-related error scenarios"""
+    stage = nusd.Stage.create_in_memory("test_prim_set_extent_prim_errors")
+    stage.define_prim("/World", "Xform")
+    stage.define_prim("/World/Cube", "Cube")
+    
+    extent = [-1.0, -1.0, -1.0, 1.0, 1.0, 1.0]
+    
+    # Test non-existent prim
+    with pytest.raises(nusd.SetPropertyError, match='does not exist or is not a boundable prim'):
+        stage.prim_set_extent("/NonExistent/Prim", extent)
+    
+    # Test non-boundable prim (Xform is not boundable)
+    with pytest.raises(nusd.SetPropertyError, match='does not exist or is not a boundable prim'):
+        stage.prim_set_extent("/World", extent)
+
+
+def test_prim_set_extent_different_formats():
+    """Test that different input formats produce equivalent results"""
+    stage = nusd.Stage.create_in_memory("test_prim_set_extent_formats")
+    stage.define_prim("/World", "Xform")
+    
+    # Create multiple cubes to test different formats
+    stage.define_prim("/World/Cube1", "Cube")
+    stage.define_prim("/World/Cube2", "Cube")
+    stage.define_prim("/World/Cube3", "Cube")
+    
+    # Same extent in different formats
+    extent_list = [-1.0, -2.0, -3.0, 1.0, 2.0, 3.0]
+    extent_tuple = (-1.0, -2.0, -3.0, 1.0, 2.0, 3.0)
+    extent_array_1d = np.array([-1.0, -2.0, -3.0, 1.0, 2.0, 3.0])
+    extent_array_3x2 = np.array([[-1.0, 1.0], [-2.0, 2.0], [-3.0, 3.0]])
+    
+    # All should work without error
+    stage.prim_set_extent("/World/Cube1", extent_list)
+    stage.prim_set_extent("/World/Cube2", extent_tuple)
+    stage.prim_set_extent("/World/Cube3", extent_array_1d)
+    
+    # Test the 3x2 format on the first cube again
+    stage.prim_set_extent("/World/Cube1", extent_array_3x2)
+
+
 def test_camera_set_fov_w():
     """Test camera field of view setting"""
     stage = nusd.Stage.create_in_memory("test_camera_fov")

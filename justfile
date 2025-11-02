@@ -12,8 +12,8 @@ bind:
         $PWD/libnanousd/*.h \
         ; cd - 
 
-pytest TARGET="":
-    cd python && uv run pytest -s {{TARGET}}; cd -
+pytest *ARGS:
+    cd python && uv run pytest -s {{ARGS}}; cd -
 
 pyexample:
     cd python && uv run example01.py; cd -

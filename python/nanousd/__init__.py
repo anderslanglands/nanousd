@@ -259,6 +259,71 @@ class Stage:
 
         return np.array(transform).reshape(4, 4)
 
+    def prim_set_extent(self, prim_path: str, extent):
+        """Set the extent (bounding box) attribute on a UsdGeomBoundable prim.
+
+        Args:
+            prim_path: USD path to an existing boundable prim (e.g., "/World/Mesh", "/World/Cube")
+            extent: List, tuple, or array of 6 float values representing the bounding box as [min_x, min_y, min_z, max_x, max_y, max_z],
+                   or a 3x2 NumPy array where first column is min corner and second column is max corner
+
+        Raises:
+            SetPropertyError: If the prim doesn't exist or is not a boundable prim
+            ValueError: If extent is not a valid format or contains non-numeric values
+
+        Note:
+            The extent represents the axis-aligned bounding box of the prim in local coordinates.
+            Only prims derived from UsdGeomBoundable (like Mesh, Cube, Sphere, etc.) support extent.
+            The extent format is [min_x, min_y, min_z, max_x, max_y, max_z] where:
+            - (min_x, min_y, min_z) is the minimum corner of the bounding box
+            - (max_x, max_y, max_z) is the maximum corner of the bounding box
+            Extent is used by USD for culling and optimization during rendering and traversal.
+            
+            Accepted formats:
+            - List/tuple: [min_x, min_y, min_z, max_x, max_y, max_z]
+            - 1D array: [min_x, min_y, min_z, max_x, max_y, max_z]
+            - 3x2 array: [[min_x, max_x], [min_y, max_y], [min_z, max_z]]
+        """
+        # Handle different input formats
+        if isinstance(extent, np.ndarray):
+            if extent.shape == (3, 2):
+                # 3x2 array: convert to flat array [min_x, min_y, min_z, max_x, max_y, max_z]
+                extent_flat = [extent[0, 0], extent[1, 0], extent[2, 0], 
+                              extent[0, 1], extent[1, 1], extent[2, 1]]
+            elif extent.shape == (6,):
+                # 1D array with 6 elements
+                extent_flat = extent.flatten()
+            else:
+                raise ValueError("NumPy array must be either shape (6,) or (3, 2)")
+        elif isinstance(extent, (list, tuple)):
+            if len(extent) != 6:
+                raise ValueError("list or tuple must contain exactly 6 numbers")
+            extent_flat = extent
+        else:
+            raise ValueError("extent must be a list, tuple, or NumPy array")
+        
+        # Validate we have exactly 6 values
+        if len(extent_flat) != 6:
+            raise ValueError("extent must contain exactly 6 values")
+        
+        # Convert to float array
+        try:
+            extent_array = (c_float * 6)(float(extent_flat[0]), float(extent_flat[1]), float(extent_flat[2]),
+                                         float(extent_flat[3]), float(extent_flat[4]), float(extent_flat[5]))
+        except (ValueError, TypeError):
+            raise ValueError("extent components must be numeric values")
+
+        result = _lib.nusd_prim_set_extent(
+            self._stage,
+            prim_path.encode("ascii"),
+            extent_array
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            if result == _lib.NUSD_RESULT_INVALID_PRIM_PATH:
+                raise SetPropertyError(f'prim "{prim_path}" does not exist or is not a boundable prim')
+            else:
+                raise SetPropertyError(f'failed to set extent for "{prim_path}": {result}')
+
     def prim_create_property(
         self,
         prim: str,
