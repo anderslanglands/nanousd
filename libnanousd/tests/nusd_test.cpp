@@ -1300,6 +1300,67 @@ TEST(nusd, shader_connect_invalid_shader_input) {
     nusd_stage_destroy(stage);
 }
 
+TEST(nusd, material_create_input) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-material_create_input", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a material
+    result = nusd_material_define(stage, "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Create material input
+    result = nusd_material_create_input(stage, "/World/Materials/Mat", "surface", NUSD_TYPE_TOKEN);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, material_create_output) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-material_create_output", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a material
+    result = nusd_material_define(stage, "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Create material output
+    result = nusd_material_create_output(stage, "/World/Materials/Mat", "surface", NUSD_TYPE_TOKEN);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, shader_connect_outputs) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-shader_connect_outputs", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a material and shader
+    result = nusd_material_define(stage, "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Surface", "UsdPreviewSurface");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Create shader output
+    result = nusd_shader_create_output(stage, "/World/Materials/Mat/Surface", "surface", NUSD_TYPE_TOKEN);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Create material output using the new function
+    result = nusd_material_create_output(stage, "/World/Materials/Mat", "surface", NUSD_TYPE_TOKEN);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Connect the shader output to the material output
+    result = nusd_shader_connect_outputs(stage, 
+                                        "/World/Materials/Mat/Surface.outputs:surface", 
+                                        "/World/Materials/Mat.outputs:surface");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    nusd_stage_destroy(stage);
+}
+
 TEST(nusd, set_asset_attribute) {
     nusd_stage_t stage;
     nusd_result_t result = nusd_stage_create_in_memory("test", &stage);

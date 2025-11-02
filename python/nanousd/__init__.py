@@ -625,6 +625,141 @@ class Stage:
         elif result != _lib.NUSD_RESULT_OK:
             raise SetPropertyError(f"failed to connect shaders: {result}")
 
+    def material_create_input(
+        self,
+        material_path: str,
+        input_name: str,
+        input_type: str,
+        value=None,
+        time_code=TIMECODE_DEFAULT,
+    ):
+        """Create an input parameter on a material for receiving connections from shaders.
+
+        Args:
+            material_path: USD path to an existing material prim
+            input_name: Name of the input parameter to create (e.g., "surface", "displacement", "volume")
+            input_type: USD type for the input parameter (e.g., TOKEN, COLOR3F)
+            value: Optional value to set on the input parameter
+            time_code: Time code for the value (default: 0.0)
+
+        Raises:
+            CreatePropertyError: If the input cannot be created
+            SetPropertyError: If input_type is RELATIONSHIP (not supported for material inputs)
+
+        Note:
+            The created input will be automatically placed in the "inputs:" namespace (e.g., "inputs:surface").
+            Material inputs typically receive connections from shader outputs.
+            If value is provided, it will be automatically set on the input parameter.
+        """
+        result = _lib.nusd_material_create_input(
+            self._stage,
+            material_path.encode("ascii"),
+            input_name.encode("ascii"),
+            input_type,
+        )
+        if result == _lib.NUSD_RESULT_WRONG_TYPE:
+            raise SetPropertyError(
+                f'RELATIONSHIP type not supported for material input "{input_name}"'
+            )
+        elif result == _lib.NUSD_RESULT_CREATE_INPUT_FAILED:
+            raise CreatePropertyError(
+                f'failed to create material input "{input_name}" on "{material_path}": {result}'
+            )
+        elif result != _lib.NUSD_RESULT_OK:
+            raise CreatePropertyError(
+                f'failed to create material input "{input_name}" on "{material_path}": {result}'
+            )
+
+        if value is not None:
+            input_path = f"{material_path}.inputs:{input_name}"
+            self.set_property(input_path, input_type, value, time_code)
+
+    def material_create_output(
+        self,
+        material_path: str,
+        output_name: str,
+        output_type: str,
+        value=None,
+        time_code=TIMECODE_DEFAULT,
+    ):
+        """Create an output parameter on a material for providing values to other materials or renderers.
+
+        Args:
+            material_path: USD path to an existing material prim
+            output_name: Name of the output parameter to create (e.g., "surface", "displacement", "volume")
+            output_type: USD type for the output parameter (e.g., TOKEN, COLOR3F)
+            value: Optional value to set on the output parameter
+            time_code: Time code for the value (default: 0.0)
+
+        Raises:
+            CreatePropertyError: If the output cannot be created
+            SetPropertyError: If output_type is RELATIONSHIP (not supported for material outputs)
+
+        Note:
+            The created output will be automatically placed in the "outputs:" namespace (e.g., "outputs:surface").
+            Material outputs define the final result of the material's shader network.
+            If value is provided, it will be automatically set on the output parameter.
+        """
+        result = _lib.nusd_material_create_output(
+            self._stage,
+            material_path.encode("ascii"),
+            output_name.encode("ascii"),
+            output_type,
+        )
+        if result == _lib.NUSD_RESULT_WRONG_TYPE:
+            raise SetPropertyError(
+                f'RELATIONSHIP type not supported for material output "{output_name}"'
+            )
+        elif result == _lib.NUSD_RESULT_CREATE_OUTPUT_FAILED:
+            raise CreatePropertyError(
+                f'failed to create material output "{output_name}" on "{material_path}": {result}'
+            )
+        elif result != _lib.NUSD_RESULT_OK:
+            raise CreatePropertyError(
+                f'failed to create material output "{output_name}" on "{material_path}": {result}'
+            )
+
+        if value is not None:
+            output_path = f"{material_path}.outputs:{output_name}"
+            self.set_property(output_path, output_type, value, time_code)
+
+    def shader_connect_outputs(self, source_output_path: str, destination_output_path: str):
+        """Connect a shader output to another shader output, typically used to connect a shader output to a material output.
+
+        Args:
+            source_output_path: Full USD path to the source shader output (e.g., "/World/Materials/Mat/Surface.outputs:surface")
+            destination_output_path: Full USD path to the destination shader output (e.g., "/World/Materials/Mat.outputs:surface")
+
+        Raises:
+            GetPropertyError: If either the source output or destination output attribute cannot be found
+            ShaderConnectError: If either the source or destination attribute is not a valid shader output, or connection fails
+            SetPropertyError: If other connection-related errors occur
+
+        Note:
+            The connection creates a data flow from the source shader's output to the destination shader's output.
+            This is commonly used to connect shader outputs to material outputs.
+            Both the source and destination must exist before calling this function.
+        """
+        result = _lib.nusd_shader_connect_outputs(
+            self._stage,
+            source_output_path.encode("ascii"),
+            destination_output_path.encode("ascii"),
+        )
+        if result == _lib.NUSD_RESULT_INVALID_ATTRIBUTE_PATH:
+            raise GetPropertyError(
+                f'cannot find source output "{source_output_path}" or destination output "{destination_output_path}"'
+            )
+        elif result == _lib.NUSD_RESULT_INVALID_SHADER_OUTPUT:
+            raise ShaderConnectError(
+                f'source attribute "{source_output_path}" or destination attribute "{destination_output_path}" is not a valid shader output'
+            )
+        elif result == _lib.NUSD_RESULT_CONNECTION_FAILED:
+            raise ShaderConnectError(
+                f'failed to connect "{source_output_path}" to "{destination_output_path}"'
+            )
+        elif result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(f"failed to connect shader outputs: {result}")
+
     def rect_light_define(self, light_path: str, width: float, height: float, intensity: float, color: list):
         """Define a new USD rectangular light prim at the specified path with light parameters.
 

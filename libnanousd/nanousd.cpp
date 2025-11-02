@@ -1033,6 +1033,97 @@ nusd_result_t nusd_shader_connect(nusd_stage_t stage,
     return NUSD_RESULT_OK;
 }
 
+nusd_result_t nusd_material_create_input(nusd_stage_t stage,
+                                         char const* material_path,
+                                         char const* input_name,
+                                         nusd_type_t input_type) {
+    if (stage == nullptr || material_path == nullptr || input_name == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    if (input_type == NUSD_TYPE_RELATIONSHIP) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdShadeMaterial material =
+        UsdShadeMaterial(_stage->GetPrimAtPath(SdfPath(material_path)));
+    if (!material) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    UsdShadeInput input = material.CreateInput(TfToken(input_name),
+                                              TOKEN_TO_TYPENAME[input_type]);
+    if (!input) {
+        return NUSD_RESULT_CREATE_INPUT_FAILED;
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_material_create_output(nusd_stage_t stage,
+                                          char const* material_path,
+                                          char const* output_name,
+                                          nusd_type_t output_type) {
+    if (stage == nullptr || material_path == nullptr || output_name == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    if (output_type == NUSD_TYPE_RELATIONSHIP) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdShadeMaterial material =
+        UsdShadeMaterial(_stage->GetPrimAtPath(SdfPath(material_path)));
+    if (!material) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    UsdShadeOutput output = material.CreateOutput(TfToken(output_name),
+                                                 TOKEN_TO_TYPENAME[output_type]);
+    if (!output) {
+        return NUSD_RESULT_CREATE_OUTPUT_FAILED;
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_shader_connect_outputs(nusd_stage_t stage,
+                                          char const* source_output_path,
+                                          char const* destination_output_path) {
+    if (stage == nullptr || source_output_path == nullptr ||
+        destination_output_path == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr_source =
+        _stage->GetAttributeAtPath(SdfPath(source_output_path));
+    UsdAttribute attr_dest =
+        _stage->GetAttributeAtPath(SdfPath(destination_output_path));
+
+    if (!attr_source || !attr_dest) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    UsdShadeOutput source = UsdShadeOutput(attr_source);
+    UsdShadeOutput destination = UsdShadeOutput(attr_dest);
+
+    if (!source) {
+        return NUSD_RESULT_INVALID_SHADER_OUTPUT;
+    }
+    if (!destination) {
+        return NUSD_RESULT_INVALID_SHADER_OUTPUT;
+    }
+
+    if (!destination.ConnectToSource(SdfPath(source_output_path))) {
+        return NUSD_RESULT_CONNECTION_FAILED;
+    }
+
+    return NUSD_RESULT_OK;
+}
+
 nusd_result_t nusd_attribute_set_token(nusd_stage_t stage,
                                        char const* attribute_path,
                                        char const* value,
