@@ -7,7 +7,15 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-add_executable(nusd_test nusd_test.cpp)
+add_executable(nusd_test 
+    nusd_test.cpp
+    nusd_test-camera.cpp
+    nusd_test-light.cpp
+    nusd_test-material.cpp
+    nusd_test-mesh.cpp
+    nusd_test-prim.cpp
+    nusd_test-property.cpp
+)
 target_link_libraries(nusd_test PRIVATE GTest::gtest_main nanousd)
 
 # Register tests with CTest
