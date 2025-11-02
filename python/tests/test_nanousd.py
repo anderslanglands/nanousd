@@ -1057,3 +1057,178 @@ def test_asset_special_characters():
     assert assets[1] == "path-with-dashes.png"
     assert assets[2] == "path_with_underscores.tga"
     assert assets[3] == "path.with.dots.exr"
+
+
+def test_prim_add_translate_op_basic():
+    """Test basic translate operation addition with initial translation"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_basic")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    # Add translate operation with initial translation
+    translation = [5.0, 3.0, 10.0]
+    stage.prim_add_translate_op("/World/Camera", translation=translation)
+    
+    # Function should succeed without raising exceptions
+
+
+def test_prim_add_translate_op_with_suffix():
+    """Test translate operation addition with custom suffix"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_suffix")
+    stage.define_prim("/World", "Xform")
+    
+    # Create a mesh which is also xformable
+    face_vertex_counts = np.array([3], dtype=np.int32)
+    face_vertex_indices = np.array([0, 1, 2], dtype=np.int32) 
+    vertices = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, 1.0, 0.0]], dtype=np.float32)
+    stage.mesh_define("/World/Mesh", face_vertex_counts, face_vertex_indices, vertices)
+    
+    # Add translate operation with custom suffix
+    translation = [2.0, 1.0, 0.0]
+    stage.prim_add_translate_op("/World/Mesh", op_suffix="pivot", translation=translation)
+    
+    # Function should succeed without raising exceptions
+
+
+def test_prim_add_translate_op_no_initial_value():
+    """Test translate operation addition without initial value"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_no_value")
+    stage.define_prim("/World", "Xform")
+    stage.define_prim("/World/Cube", "Cube")
+    
+    # Add translate operation without initial value
+    stage.prim_add_translate_op("/World/Cube", op_suffix="offset")
+    
+    # Function should succeed without raising exceptions
+
+
+def test_prim_add_translate_op_list_input():
+    """Test translate operation with list input"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_list")
+    stage.define_prim("/World", "Xform") 
+    stage.camera_define("/World/Camera")
+    
+    # Test with Python list
+    translation = [1.0, 2.0, 3.0]
+    stage.prim_add_translate_op("/World/Camera", translation=translation)
+
+
+def test_prim_add_translate_op_tuple_input():
+    """Test translate operation with tuple input"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_tuple")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    # Test with Python tuple
+    translation = (4.0, 5.0, 6.0)
+    stage.prim_add_translate_op("/World/Camera", translation=translation)
+
+
+def test_prim_add_translate_op_numpy_float32():
+    """Test translate operation with NumPy float32 array (should convert to double)"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_numpy32")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    # Test with NumPy float32 array (should be converted to double)
+    translation = np.array([7.0, 8.0, 9.0], dtype=np.float32)
+    stage.prim_add_translate_op("/World/Camera", translation=translation)
+
+
+def test_prim_add_translate_op_numpy_float64():
+    """Test translate operation with NumPy float64 array"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_numpy64")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    # Test with NumPy float64 array
+    translation = np.array([10.0, 11.0, 12.0], dtype=np.float64)
+    stage.prim_add_translate_op("/World/Camera", translation=translation)
+
+
+def test_prim_add_translate_op_numpy_int():
+    """Test translate operation with NumPy int array (should convert to double)"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_numpy_int")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    # Test with NumPy int array (should be converted to double)
+    translation = np.array([13, 14, 15], dtype=np.int32)
+    stage.prim_add_translate_op("/World/Camera", translation=translation)
+
+
+def test_prim_add_translate_op_multiple_operations():
+    """Test adding multiple translate operations with different suffixes"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_multiple")
+    stage.define_prim("/World", "Xform")
+    
+    # Add multiple translate operations with different suffixes
+    stage.prim_add_translate_op("/World", op_suffix="offset1", translation=[1.0, 0.0, 0.0])
+    stage.prim_add_translate_op("/World", op_suffix="offset2", translation=[0.0, 2.0, 0.0])
+    stage.prim_add_translate_op("/World", op_suffix="offset3", translation=[0.0, 0.0, 3.0])
+    
+    # All operations should succeed without raising exceptions
+
+
+def test_prim_add_translate_op_with_time_code():
+    """Test translate operation addition with explicit time code"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_time")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    # Test with non-default time code
+    time_code = 24.0
+    translation = [16.0, 17.0, 18.0]
+    stage.prim_add_translate_op("/World/Camera", translation=translation, time_code=time_code)
+
+
+def test_prim_add_translate_op_invalid_prim_path():
+    """Test translate operation addition with invalid prim path"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_invalid")
+    
+    # Test with non-existent prim
+    translation = [1.0, 2.0, 3.0]
+    with pytest.raises(nusd.SetPropertyError):
+        stage.prim_add_translate_op("/NonExistent/Prim", translation=translation)
+
+
+def test_prim_add_translate_op_invalid_translation_wrong_length():
+    """Test translate operation with invalid translation length"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_invalid_length")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    # Test with wrong number of elements
+    with pytest.raises(ValueError, match="translation must contain exactly 3 values"):
+        stage.prim_add_translate_op("/World/Camera", translation=[1.0, 2.0])  # Only 2 elements
+    
+    with pytest.raises(ValueError, match="translation must contain exactly 3 values"):
+        stage.prim_add_translate_op("/World/Camera", translation=[1.0, 2.0, 3.0, 4.0])  # 4 elements
+
+
+def test_prim_add_translate_op_invalid_translation_type():
+    """Test translate operation with invalid translation type"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_invalid_type")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    # Test with invalid type
+    with pytest.raises(ValueError, match="translation must be a list, tuple, or array"):
+        stage.prim_add_translate_op("/World/Camera", translation="invalid")
+    
+    with pytest.raises(ValueError, match="translation must be a list, tuple, or array"):
+        stage.prim_add_translate_op("/World/Camera", translation=42)
+
+
+def test_prim_add_translate_op_invalid_translation_values():
+    """Test translate operation with non-numeric translation values"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_translate_op_invalid_values")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    # Test with non-numeric values
+    with pytest.raises(ValueError, match="translation components must be numeric values"):
+        stage.prim_add_translate_op("/World/Camera", translation=["a", "b", "c"])
+    
+    with pytest.raises(ValueError, match="translation components must be numeric values"):
+        stage.prim_add_translate_op("/World/Camera", translation=[1.0, None, 3.0])

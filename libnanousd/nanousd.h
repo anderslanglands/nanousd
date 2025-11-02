@@ -312,6 +312,39 @@ nusd_result_t nusd_prim_set_transform(nusd_stage_t stage,
                                       double* local_to_parent,
                                       double time_code);
 
+
+/// Adds a translate transform operation to a UsdGeomXformable prim.
+///
+/// @param stage Valid stage handle.
+/// @param xformable_path USD path to an existing xformable prim (e.g., "/World/Camera", "/World/Mesh").
+/// @param op_suffix Optional suffix for the operation name. If null, USD will generate a default name.
+///                  If provided, the operation will be named "xformOp:translate:{op_suffix}".
+/// @param translation Optional array of 3 double values representing the translation as [x, y, z].
+///                   If null, the operation is created but no initial value is set.
+/// @param time_code The time at which to set the translation value. Use NUSD_TIMECODE_DEFAULT for default time.
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage or xformable_path is null
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if the prim doesn't exist or is not xformable
+///
+/// @note stage must not be null.
+/// @note xformable_path must not be null and should point to an existing UsdGeomXformable prim.
+/// @note op_suffix is optional and can be null for auto-generated operation names.
+/// @note translation is optional and can be null to create the operation without setting an initial value.
+/// @note If translation is provided, it must contain exactly 3 double values for [x, y, z] coordinates.
+/// @note The translate operation uses double precision for maximum accuracy.
+/// @note Multiple translate operations can be added to the same prim with different suffixes.
+/// @note Transform operations are evaluated in the order they appear in the xformOpOrder attribute.
+/// @note The resulting transform operation will be named "xformOp:translate" or "xformOp:translate:{op_suffix}".
+/// @note Translation values are in the prim's local coordinate space.
+NANOUSD_API
+nusd_result_t nusd_prim_add_translate_op(nusd_stage_t stage,
+                                      char const* xformable_path,
+                                      char const* op_suffix,
+                                      double* translation,
+                                      double time_code);
+                                    
+
 /// Computes the complete transformation matrix from a prim's local space to
 /// world space.
 ///

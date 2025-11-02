@@ -259,6 +259,76 @@ class Stage:
 
         return np.array(transform).reshape(4, 4)
 
+    def prim_add_translate_op(
+        self,
+        xformable_path: str,
+        op_suffix: str = None,
+        translation=None,
+        time_code: float = TIMECODE_DEFAULT,
+    ):
+        """Add a translate transform operation to a UsdGeomXformable prim.
+
+        Args:
+            xformable_path: USD path to an existing xformable prim (e.g., "/World/Camera", "/World/Mesh")
+            op_suffix: Optional suffix for the operation name. If None, USD will generate a default name.
+                      If provided, the operation will be named "xformOp:translate:{op_suffix}"
+            translation: Optional array of 3 values representing the translation as [x, y, z].
+                        Can be any 3-element array, tuple, or list of floats.
+                        If None, the operation is created but no initial value is set.
+                        Float32 values are automatically converted to double precision.
+            time_code: The time at which to set the translation value (default: 0.0)
+
+        Raises:
+            SetPropertyError: If xformable_path is invalid or the prim is not xformable
+            ValueError: If translation is provided but is not a valid 3-element sequence of numbers
+
+        Note:
+            - The translate operation uses double precision for maximum accuracy
+            - Multiple translate operations can be added to the same prim with different suffixes
+            - Transform operations are evaluated in the order they appear in the xformOpOrder attribute
+            - The resulting transform operation will be named "xformOp:translate" or "xformOp:translate:{op_suffix}"
+            - Translation values are in the prim's local coordinate space
+        """
+        # Handle optional translation parameter
+        translation_array = None
+        if translation is not None:
+            # Validate translation format
+            if not isinstance(translation, (list, tuple, np.ndarray)):
+                raise ValueError("translation must be a list, tuple, or array")
+            
+            if len(translation) != 3:
+                raise ValueError("translation must contain exactly 3 values")
+            
+            # Convert to double array, handling float32 to double conversion
+            try:
+                if isinstance(translation, np.ndarray):
+                    # Handle NumPy arrays - convert to double if needed
+                    if translation.dtype == np.float32:
+                        translation = translation.astype(np.float64)
+                    elif translation.dtype not in [np.float32, np.float64]:
+                        translation = translation.astype(np.float64)
+                    translation_array = (c_double * 3)(float(translation[0]), float(translation[1]), float(translation[2]))
+                else:
+                    # Handle lists and tuples
+                    translation_array = (c_double * 3)(float(translation[0]), float(translation[1]), float(translation[2]))
+            except (ValueError, TypeError, IndexError):
+                raise ValueError("translation components must be numeric values")
+
+        # Call C function
+        result = _lib.nusd_prim_add_translate_op(
+            self._stage,
+            xformable_path.encode("ascii"),
+            op_suffix.encode("ascii") if op_suffix is not None else None,
+            translation_array,
+            c_double(time_code),
+        )
+        if result == _lib.NUSD_RESULT_NULL_PARAMETER:
+            raise SetPropertyError(f'invalid parameters for translate operation on "{xformable_path}"')
+        elif result == _lib.NUSD_RESULT_INVALID_PRIM_PATH:
+            raise SetPropertyError(f'prim "{xformable_path}" does not exist or is not xformable')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(f'failed to add translate operation for "{xformable_path}": {result}')
+
     def prim_set_extent(self, prim_path: str, extent):
         """Set the extent (bounding box) attribute on a UsdGeomBoundable prim.
 
