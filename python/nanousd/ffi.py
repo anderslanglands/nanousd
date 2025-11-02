@@ -2443,6 +2443,24 @@ if _libs["nanousd"].has("nusd_rect_light_define", "cdecl"):
     nusd_rect_light_define.argtypes = [nusd_stage_t, String, c_float, c_float, c_float, POINTER(c_float)]
     nusd_rect_light_define.restype = nusd_result_t
 
+# /home/anders/code/nanousd/libnanousd/nanousd-light.h: 75
+for _lib in _libs.values():
+    if not _lib.has("nusd_disk_light_define", "cdecl"):
+        continue
+    nusd_disk_light_define = _lib.get("nusd_disk_light_define", "cdecl")
+    nusd_disk_light_define.argtypes = [nusd_stage_t, String, c_float, c_float, POINTER(c_float)]
+    nusd_disk_light_define.restype = nusd_result_t
+    break
+
+# /home/anders/code/nanousd/libnanousd/nanousd-light.h: 106
+for _lib in _libs.values():
+    if not _lib.has("nusd_sphere_light_define", "cdecl"):
+        continue
+    nusd_sphere_light_define = _lib.get("nusd_sphere_light_define", "cdecl")
+    nusd_sphere_light_define.argtypes = [nusd_stage_t, String, c_float, c_float, POINTER(c_float)]
+    nusd_sphere_light_define.restype = nusd_result_t
+    break
+
 # /home/anders/code/nanousd/libnanousd/nanousd-material.h: 35
 if _libs["nanousd"].has("nusd_material_define", "cdecl"):
     nusd_material_define = _libs["nanousd"].get("nusd_material_define", "cdecl")

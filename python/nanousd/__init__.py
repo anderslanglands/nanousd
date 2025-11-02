@@ -848,6 +848,90 @@ class Stage:
                 f'failed to define rectangular light at "{light_path}": {result}'
             )
 
+    def disk_light_define(self, light_path: str, radius: float, intensity: float, color: list):
+        """Define a new USD disk light prim at the specified path with light parameters.
+
+        Args:
+            light_path: USD path where the disk light should be created (e.g., "/World/Lights/MyDiskLight")
+            radius: Radius of the disk light in scene units
+            intensity: Intensity of the light (brightness multiplier)
+            color: List or array of 3 float values representing the light color as RGB components (range 0.0 to 1.0)
+
+        Raises:
+            DefinePrimError: If the light cannot be defined at the specified path
+            ValueError: If color is not a list/array of exactly 3 numbers
+
+        Note:
+            Creates a UsdLuxDiskLight prim with the specified radius, intensity, and color.
+            radius defines the size of the circular light emitter in scene units.
+            intensity controls the brightness of the light (1.0 is normal intensity).
+            color components should typically be in the range [0.0, 1.0] for normalized RGB.
+            The light emits from a circular disk area, providing soft shadows and realistic area lighting with circular falloff.
+        """
+        # Validate color parameter
+        if not isinstance(color, (list, tuple, np.ndarray)) or len(color) != 3:
+            raise ValueError("color must be a list, tuple, or array of exactly 3 numbers")
+        
+        # Convert to float array
+        try:
+            color_array = (c_float * 3)(float(color[0]), float(color[1]), float(color[2]))
+        except (ValueError, TypeError):
+            raise ValueError("color components must be numeric values")
+
+        result = _lib.nusd_disk_light_define(
+            self._stage,
+            light_path.encode("ascii"),
+            c_float(radius),
+            c_float(intensity),
+            color_array
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise DefinePrimError(
+                f'failed to define disk light at "{light_path}": {result}'
+            )
+
+    def sphere_light_define(self, light_path: str, radius: float, intensity: float, color: list):
+        """Define a new USD sphere light prim at the specified path with light parameters.
+
+        Args:
+            light_path: USD path where the sphere light should be created (e.g., "/World/Lights/MySphereLight")
+            radius: Radius of the sphere light in scene units
+            intensity: Intensity of the light (brightness multiplier)
+            color: List or array of 3 float values representing the light color as RGB components (range 0.0 to 1.0)
+
+        Raises:
+            DefinePrimError: If the light cannot be defined at the specified path
+            ValueError: If color is not a list/array of exactly 3 numbers
+
+        Note:
+            Creates a UsdLuxSphereLight prim with the specified radius, intensity, and color.
+            radius defines the size of the spherical light emitter in scene units.
+            intensity controls the brightness of the light (1.0 is normal intensity).
+            color components should typically be in the range [0.0, 1.0] for normalized RGB.
+            The light emits from a spherical volume, providing omnidirectional soft shadows and realistic volumetric area lighting.
+        """
+        # Validate color parameter
+        if not isinstance(color, (list, tuple, np.ndarray)) or len(color) != 3:
+            raise ValueError("color must be a list, tuple, or array of exactly 3 numbers")
+        
+        # Convert to float array
+        try:
+            color_array = (c_float * 3)(float(color[0]), float(color[1]), float(color[2]))
+        except (ValueError, TypeError):
+            raise ValueError("color components must be numeric values")
+
+        result = _lib.nusd_sphere_light_define(
+            self._stage,
+            light_path.encode("ascii"),
+            c_float(radius),
+            c_float(intensity),
+            color_array
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise DefinePrimError(
+                f'failed to define sphere light at "{light_path}": {result}'
+            )
+
     def attribute_set_color_space(self, attribute_path: str, color_space: str):
         """Set the color space metadata for an attribute.
 
