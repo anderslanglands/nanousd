@@ -15,7 +15,9 @@
 #include <pxr/usd/usdGeom/camera.h>
 #include <pxr/usd/usdGeom/mesh.h>
 #include <pxr/usd/usdGeom/xformable.h>
+
 #include <pxr/usd/usdShade/material.h>
+#include <pxr/usd/usdShade/materialBindingAPI.h>
 
 #include <pxr/base/tf/refPtr.h>
 #include <pxr/base/vt/array.h>
@@ -1121,6 +1123,42 @@ nusd_result_t nusd_shader_connect_outputs(nusd_stage_t stage,
         return NUSD_RESULT_CONNECTION_FAILED;
     }
 
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_material_bind(nusd_stage_t stage,
+                                 char const* prim_path,
+                                 char const* material_path) {
+    if (stage == nullptr || prim_path == nullptr || material_path == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+
+    UsdPrim prim = _stage->GetPrimAtPath(SdfPath(prim_path));
+    if (!prim) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    UsdPrim prim_material = _stage->GetPrimAtPath(SdfPath(material_path));
+    if (!prim_material) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    UsdShadeMaterial material(prim_material);
+    if (!material) {
+        return NUSD_RESULT_INVALID_MATERIAL_PATH;
+    }
+
+    UsdShadeMaterialBindingAPI binding = UsdShadeMaterialBindingAPI::Apply(prim);
+    if (!binding) {
+        return NUSD_RESULT_APPLY_BINDING_API_FAILED;
+    }
+
+    if (!binding.Bind(material)) {
+        return NUSD_RESULT_CREATE_BINDING_FAILED;
+    }
+    
     return NUSD_RESULT_OK;
 }
 

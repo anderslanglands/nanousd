@@ -47,6 +47,20 @@ nusd_result_t nusd_rect_light_define(nusd_stage_t stage,
                                      float intensity,
                                      float* color);
 
+NANOUSD_API
+nusd_result_t nusd_disk_light_define(nusd_stage_t stage,
+                                     char const* light_path,
+                                     float radius,
+                                     float intensity,
+                                     float* color);
+
+NANOUSD_API
+nusd_result_t nusd_sphere_light_define(nusd_stage_t stage,
+                                     char const* light_path,
+                                     float radius,
+                                     float intensity,
+                                     float* color);
+
 /// @}
 
 #ifdef __cplusplus

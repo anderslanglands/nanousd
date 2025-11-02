@@ -204,3 +204,44 @@ def test_shader_connect_outputs_multiple_scenarios():
 def test_shader_connect_outputs_error_inheritance():
     """Test that ShaderConnectError is a subclass of RuntimeError"""
     assert issubclass(nusd.ShaderConnectError, RuntimeError)
+
+
+def test_material_bind_basic():
+    """Test basic material binding functionality"""
+    stage = nusd.Stage.create_in_memory("test_material_bind_basic")
+    stage.define_prim("/World", "Xform")
+    
+    # Create a material and a geometry prim
+    stage.material_define("/World/Materials/Mat")
+    stage.define_prim("/World/Geometry", "Xform")
+    stage.define_prim("/World/Geometry/Mesh", "Mesh")
+    
+    # Bind the material to the mesh
+    stage.material_bind("/World/Geometry/Mesh", "/World/Materials/Mat")
+    
+    # If no exception is raised, the binding was successful
+
+
+def test_material_bind_error_scenarios():
+    """Test various error scenarios for material binding"""
+    stage = nusd.Stage.create_in_memory("test_material_bind_errors")
+    stage.define_prim("/World", "Xform")
+    
+    # Create a material and a geometry prim
+    stage.material_define("/World/Materials/Mat")
+    stage.define_prim("/World/Geometry", "Xform")
+    stage.define_prim("/World/Geometry/Mesh", "Mesh")
+    
+    # Test binding to non-existent prim
+    with pytest.raises(nusd.MaterialBindError, match='does not exist'):
+        stage.material_bind("/NonExistent/Prim", "/World/Materials/Mat")
+    
+    # Test binding non-existent material
+    with pytest.raises(nusd.MaterialBindError, match='does not exist'):
+        stage.material_bind("/World/Geometry/Mesh", "/NonExistent/Material")
+    
+    # Test that MaterialBindError is a subclass of RuntimeError
+    assert issubclass(nusd.MaterialBindError, RuntimeError)
+    
+    # Test successful binding after error scenarios
+    stage.material_bind("/World/Geometry/Mesh", "/World/Materials/Mat")

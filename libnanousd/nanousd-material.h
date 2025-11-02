@@ -140,12 +140,13 @@ nusd_result_t nusd_shader_create_output(nusd_stage_t stage,
 ///
 /// @return NUSD_RESULT_OK on success
 /// @return NUSD_RESULT_NULL_PARAMETER if any parameter is null
-/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if either the source output attribute or
-/// destination input attribute paths do not specify a valid attribute
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if either the source output
+/// attribute or destination input attribute paths do not specify a valid
+/// attribute
 /// @return NUSD_RESULT_INVALID_SHADER_OUTPUT if the source attribute is not a
 /// valid shader output
-/// @return NUSD_RESULT_INVALID_SHADER_INPUT if the destination attribute is not a
-/// valid shader input
+/// @return NUSD_RESULT_INVALID_SHADER_INPUT if the destination attribute is not
+/// a valid shader input
 /// @return NUSD_RESULT_CONNECTION_FAILED if the connection cannot be
 /// established
 ///
@@ -165,24 +166,32 @@ nusd_result_t nusd_shader_connect(nusd_stage_t stage,
                                   char const* source_output_path,
                                   char const* destination_input_path);
 
-/// Creates an input parameter on a material for receiving connections from shaders.
+/// Creates an input parameter on a material for receiving connections from
+/// shaders.
 ///
 /// @param stage Valid stage handle.
 /// @param material_path USD path to an existing material prim.
-/// @param input_name Name of the input parameter to create (e.g., "surface", "displacement", "volume").
-/// @param input_type USD type for the input parameter (e.g., NUSD_TYPE_TOKEN, NUSD_TYPE_COLOR3F).
+/// @param input_name Name of the input parameter to create (e.g., "surface",
+/// "displacement", "volume").
+/// @param input_type USD type for the input parameter (e.g., NUSD_TYPE_TOKEN,
+/// NUSD_TYPE_COLOR3F).
 ///
 /// @return NUSD_RESULT_OK on success
 /// @return NUSD_RESULT_NULL_PARAMETER if any pointer parameter is null
-/// @return NUSD_RESULT_WRONG_TYPE if input_type is NUSD_TYPE_RELATIONSHIP (not supported for material inputs)
-/// @return NUSD_RESULT_INVALID_PRIM_PATH if no material exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if input_type is NUSD_TYPE_RELATIONSHIP (not
+/// supported for material inputs)
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if no material exists at the specified
+/// path
 /// @return NUSD_RESULT_CREATE_INPUT_FAILED if the input cannot be created
 ///
 /// @note stage must not be null.
-/// @note material_path must not be null and should point to an existing material prim.
+/// @note material_path must not be null and should point to an existing
+/// material prim.
 /// @note input_name must not be null and should follow USD naming conventions.
-/// @note input_type must be a valid USD attribute type, not a relationship type.
-/// @note The created input will be automatically placed in the "inputs:" namespace (e.g., "inputs:surface").
+/// @note input_type must be a valid USD attribute type, not a relationship
+/// type.
+/// @note The created input will be automatically placed in the "inputs:"
+/// namespace (e.g., "inputs:surface").
 /// @note Material inputs typically receive connections from shader outputs.
 NANOUSD_API
 nusd_result_t nusd_material_create_input(nusd_stage_t stage,
@@ -190,25 +199,34 @@ nusd_result_t nusd_material_create_input(nusd_stage_t stage,
                                          char const* input_name,
                                          nusd_type_t input_type);
 
-/// Creates an output parameter on a material for providing values to other materials or renderers.
+/// Creates an output parameter on a material for providing values to other
+/// materials or renderers.
 ///
 /// @param stage Valid stage handle.
 /// @param material_path USD path to an existing material prim.
-/// @param output_name Name of the output parameter to create (e.g., "surface", "displacement", "volume").
-/// @param output_type USD type for the output parameter (e.g., NUSD_TYPE_TOKEN, NUSD_TYPE_COLOR3F).
+/// @param output_name Name of the output parameter to create (e.g., "surface",
+/// "displacement", "volume").
+/// @param output_type USD type for the output parameter (e.g., NUSD_TYPE_TOKEN,
+/// NUSD_TYPE_COLOR3F).
 ///
 /// @return NUSD_RESULT_OK on success
 /// @return NUSD_RESULT_NULL_PARAMETER if any pointer parameter is null
-/// @return NUSD_RESULT_WRONG_TYPE if output_type is NUSD_TYPE_RELATIONSHIP (not supported for material outputs)
-/// @return NUSD_RESULT_INVALID_PRIM_PATH if no material exists at the specified path
+/// @return NUSD_RESULT_WRONG_TYPE if output_type is NUSD_TYPE_RELATIONSHIP (not
+/// supported for material outputs)
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if no material exists at the specified
+/// path
 /// @return NUSD_RESULT_CREATE_OUTPUT_FAILED if the output cannot be created
 ///
 /// @note stage must not be null.
-/// @note material_path must not be null and should point to an existing material prim.
+/// @note material_path must not be null and should point to an existing
+/// material prim.
 /// @note output_name must not be null and should follow USD naming conventions.
-/// @note output_type must be a valid USD attribute type, not a relationship type.
-/// @note The created output will be automatically placed in the "outputs:" namespace (e.g., "outputs:surface").
-/// @note Material outputs define the final result of the material's shader network.
+/// @note output_type must be a valid USD attribute type, not a relationship
+/// type.
+/// @note The created output will be automatically placed in the "outputs:"
+/// namespace (e.g., "outputs:surface").
+/// @note Material outputs define the final result of the material's shader
+/// network.
 NANOUSD_API
 nusd_result_t nusd_material_create_output(nusd_stage_t stage,
                                           char const* material_path,
@@ -221,15 +239,16 @@ nusd_result_t nusd_material_create_output(nusd_stage_t stage,
 /// @param stage Valid stage handle.
 /// @param source_output_path Full USD path to the source shader output (e.g.,
 /// "/World/Materials/Mat/Surface.outputs:surface").
-/// @param destination_output_path Full USD path to the destination shader output
-/// (e.g., "/World/Materials/Mat.outputs:surface").
+/// @param destination_output_path Full USD path to the destination shader
+/// output (e.g., "/World/Materials/Mat.outputs:surface").
 ///
 /// @return NUSD_RESULT_OK on success
 /// @return NUSD_RESULT_NULL_PARAMETER if any parameter is null
-/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if either the source output attribute or
-/// destination output attribute paths do not specify a valid attribute
-/// @return NUSD_RESULT_INVALID_SHADER_OUTPUT if either the source or destination
-/// attribute is not a valid shader output
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if either the source output
+/// attribute or destination output attribute paths do not specify a valid
+/// attribute
+/// @return NUSD_RESULT_INVALID_SHADER_OUTPUT if either the source or
+/// destination attribute is not a valid shader output
 /// @return NUSD_RESULT_CONNECTION_FAILED if the connection cannot be
 /// established
 ///
@@ -239,13 +258,39 @@ nusd_result_t nusd_material_create_output(nusd_stage_t stage,
 /// @note destination_output_path must not be null and should point to a valid
 /// shader output attribute with "outputs:" namespace.
 /// @note The connection creates a data flow from the source shader's output to
-/// the destination shader's output, commonly used to connect shader outputs to material outputs.
+/// the destination shader's output, commonly used to connect shader outputs to
+/// material outputs.
 /// @note Both the source and destination must exist before calling this
 /// function.
 NANOUSD_API
 nusd_result_t nusd_shader_connect_outputs(nusd_stage_t stage,
                                           char const* source_output_path,
                                           char const* destination_output_path);
+
+/// Binds a material to a prim, establishing the material assignment for rendering.
+///
+/// @param stage Valid stage handle.
+/// @param prim_path USD path to the prim that should receive the material binding (e.g., "/World/Geometry/Mesh").
+/// @param material_path USD path to an existing material prim (e.g., "/World/Materials/MyMaterial").
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if any parameter is null
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if either the target prim or material prim does not exist
+/// @return NUSD_RESULT_INVALID_MATERIAL_PATH if the material_path does not point to a valid material prim
+/// @return NUSD_RESULT_APPLY_BINDING_API_FAILED if the MaterialBindingAPI cannot be applied to the target prim
+/// @return NUSD_RESULT_CREATE_BINDING_FAILED if the material binding cannot be created
+///
+/// @note stage must not be null.
+/// @note prim_path must not be null and should point to an existing prim that can receive material bindings.
+/// @note material_path must not be null and should point to an existing UsdShadeMaterial prim.
+/// @note Material bindings determine which material is used when rendering the geometry.
+/// @note The binding is created using USD's MaterialBindingAPI, which handles material inheritance and purpose-based bindings.
+/// @note Both the target prim and material must exist before calling this function.
+/// @note This function applies the MaterialBindingAPI schema to the target prim if not already present.
+NANOUSD_API
+nusd_result_t nusd_material_bind(nusd_stage_t stage,
+                                 char const* prim_path,
+                                 char const* material_path);
 
 /// @}
 

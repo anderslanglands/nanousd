@@ -1332,6 +1332,70 @@ TEST(nusd, material_create_output) {
     nusd_stage_destroy(stage);
 }
 
+TEST(nusd, material_bind_basic) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-material_bind_basic", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a material and a geometry prim
+    result = nusd_material_define(stage, "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_stage_define_prim(stage, "/World/Geometry", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_stage_define_prim(stage, "/World/Geometry/Mesh", "Mesh");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Bind the material to the mesh
+    result = nusd_material_bind(stage, "/World/Geometry/Mesh", "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, material_bind_invalid_paths) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-material_bind_invalid", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Define a material and a geometry prim
+    result = nusd_material_define(stage, "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_stage_define_prim(stage, "/World/Geometry", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_stage_define_prim(stage, "/World/Geometry/Mesh", "Mesh");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    // Test binding to non-existent prim
+    result = nusd_material_bind(stage, "/NonExistent/Prim", "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_INVALID_PRIM_PATH);
+    
+    // Test binding non-existent material
+    result = nusd_material_bind(stage, "/World/Geometry/Mesh", "/NonExistent/Material");
+    EXPECT_EQ(result, NUSD_RESULT_INVALID_PRIM_PATH);
+    
+    // Test null parameters
+    result = nusd_material_bind(nullptr, "/World/Geometry/Mesh", "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_NULL_PARAMETER);
+    
+    result = nusd_material_bind(stage, nullptr, "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_NULL_PARAMETER);
+    
+    result = nusd_material_bind(stage, "/World/Geometry/Mesh", nullptr);
+    EXPECT_EQ(result, NUSD_RESULT_NULL_PARAMETER);
+    
+    nusd_stage_destroy(stage);
+}
+
 TEST(nusd, shader_connect_outputs) {
     nusd_stage_t stage;
     nusd_result_t result = nusd_stage_create_in_memory("test-shader_connect_outputs", &stage);

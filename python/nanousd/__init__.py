@@ -116,6 +116,10 @@ class ShaderConnectError(RuntimeError):
     pass
 
 
+class MaterialBindError(RuntimeError):
+    pass
+
+
 class Stage:
     def __init__(self, stage: c_void_p):
         self._stage = stage
@@ -759,6 +763,46 @@ class Stage:
             )
         elif result != _lib.NUSD_RESULT_OK:
             raise SetPropertyError(f"failed to connect shader outputs: {result}")
+
+    def material_bind(self, prim_path: str, material_path: str):
+        """Bind a material to a prim, establishing the material assignment for rendering.
+
+        Args:
+            prim_path: USD path to the prim that should receive the material binding (e.g., "/World/Geometry/Mesh")
+            material_path: USD path to an existing material prim (e.g., "/World/Materials/MyMaterial")
+
+        Raises:
+            MaterialBindError: If the binding fails due to invalid paths, material validation, API application, or binding creation issues
+
+        Note:
+            Material bindings determine which material is used when rendering the geometry.
+            The binding is created using USD's MaterialBindingAPI, which handles material inheritance and purpose-based bindings.
+            Both the target prim and material must exist before calling this function.
+            This function applies the MaterialBindingAPI schema to the target prim if not already present.
+        """
+        result = _lib.nusd_material_bind(
+            self._stage,
+            prim_path.encode("ascii"),
+            material_path.encode("ascii"),
+        )
+        if result == _lib.NUSD_RESULT_INVALID_PRIM_PATH:
+            raise MaterialBindError(
+                f'target prim "{prim_path}" or material prim "{material_path}" does not exist'
+            )
+        elif result == _lib.NUSD_RESULT_INVALID_MATERIAL_PATH:
+            raise MaterialBindError(
+                f'"{material_path}" does not point to a valid material prim'
+            )
+        elif result == _lib.NUSD_RESULT_APPLY_BINDING_API_FAILED:
+            raise MaterialBindError(
+                f'MaterialBindingAPI cannot be applied to prim "{prim_path}"'
+            )
+        elif result == _lib.NUSD_RESULT_CREATE_BINDING_FAILED:
+            raise MaterialBindError(
+                f'failed to create material binding between "{prim_path}" and "{material_path}"'
+            )
+        elif result != _lib.NUSD_RESULT_OK:
+            raise MaterialBindError(f"failed to bind material: {result}")
 
     def rect_light_define(self, light_path: str, width: float, height: float, intensity: float, color: list):
         """Define a new USD rectangular light prim at the specified path with light parameters.
