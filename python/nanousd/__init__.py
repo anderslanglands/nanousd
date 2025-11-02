@@ -194,6 +194,26 @@ class Stage:
                 f'failed to define prim <{prim_path}> of type "{prim_type}": {result}'
             )
 
+    def path_is_valid_prim(self, prim_path: str) -> bool:
+        """Check if the specified path refers to a valid prim on the stage.
+
+        Args:
+            prim_path: USD path to check for prim existence (e.g., "/World", "/World/Camera")
+
+        Returns:
+            True if a valid prim exists at the path, False otherwise
+
+        Note:
+            - Returns False for null or invalid paths
+            - USD root path "/" is always considered valid
+            - Path matching is case-sensitive and exact
+            - Trailing slashes or spaces will make paths invalid
+        """
+        if prim_path is None:
+            return False
+        
+        return _lib.nusd_stage_path_is_valid_prim(self._stage, prim_path.encode("ascii"))
+
     def prim_set_transform(
         self,
         xformable_path: str,

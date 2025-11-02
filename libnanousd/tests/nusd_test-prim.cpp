@@ -274,3 +274,106 @@ TEST(nusd, prim_add_translate_op_multiple_operations) {
 
     nusd_stage_destroy(stage);
 }
+
+TEST(nusd, stage_path_is_valid_prim_comprehensive) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-stage_path_is_valid_prim", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test root path validity (USD root "/" is always valid)
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/"), true);
+
+    // Create basic hierarchy
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World/Geometry", "Xform"), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World/Geometry/Mesh", "Mesh"), NUSD_RESULT_OK);
+
+    // Test valid paths
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World"), true);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Geometry"), true);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Geometry/Mesh"), true);
+
+    // Test invalid paths
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/NonExistent"), false);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/NonExistent"), false);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Geometry/NonExistent"), false);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, stage_path_is_valid_prim_edge_cases) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-stage_path_edge_cases", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    // Test empty string (should be false)
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, ""), false);
+
+    // Test partial path matches (should be false)
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/Worl"), false);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/Worldx"), false);
+
+    // Test case sensitivity
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/world"), false);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/WORLD"), false);
+
+    // Test paths with trailing characters
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/"), false);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World "), false);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, stage_path_is_valid_prim_different_prim_types) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-stage_path_prim_types", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    // Create different types of prims
+    result = nusd_camera_define(stage, "/World/Camera");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_material_define(stage, "/World/Materials/MyMaterial");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_shader_define(stage, "/World/Materials/MyMaterial/Surface", "UsdPreviewSurface");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World/Geometry/Cube", "Cube"), NUSD_RESULT_OK);
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World/Geometry/Sphere", "Sphere"), NUSD_RESULT_OK);
+
+    // Test all created prims are valid
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World"), true);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Camera"), true);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Materials"), true);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Materials/MyMaterial"), true);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Materials/MyMaterial/Surface"), true);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Geometry"), true);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Geometry/Cube"), true);
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/Geometry/Sphere"), true);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, stage_path_is_valid_prim_null_parameters) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-stage_path_null_params", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    // Test null prim_path - function should handle gracefully
+    // Note: Since this returns bool, it should return false for null path
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, nullptr), false);
+
+    // Test null stage - function should handle gracefully
+    // Note: This might crash, but we're testing the boundary condition
+    // In production, calling with null stage would be a programming error
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(nullptr, "/World"), false);
+
+    nusd_stage_destroy(stage);
+}

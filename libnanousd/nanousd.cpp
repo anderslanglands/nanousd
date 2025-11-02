@@ -597,6 +597,10 @@ nusd_result_t nusd_stage_define_prim(nusd_stage_t stage,
 }
 
 bool nusd_stage_path_is_valid_prim(nusd_stage_t stage, char const* prim_path) {
+    if (stage == nullptr || prim_path == nullptr) {
+        return false;
+    }
+
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdPrim prim = _stage->GetPrimAtPath(SdfPath(prim_path));
 

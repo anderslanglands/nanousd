@@ -1232,3 +1232,133 @@ def test_prim_add_translate_op_invalid_translation_values():
     
     with pytest.raises(ValueError, match="translation components must be numeric values"):
         stage.prim_add_translate_op("/World/Camera", translation=[1.0, None, 3.0])
+
+
+def test_path_is_valid_prim_basic():
+    """Test basic path validity checking"""
+    stage = nusd.Stage.create_in_memory("test_path_is_valid_prim_basic")
+    
+    # USD root is always valid
+    assert stage.path_is_valid_prim("/") == True
+    
+    # Non-existent paths should be invalid
+    assert stage.path_is_valid_prim("/NonExistent") == False
+    
+    # Create some prims and test validity
+    stage.define_prim("/World", "Xform")
+    stage.define_prim("/World/Geometry", "Xform") 
+    stage.define_prim("/World/Geometry/Mesh", "Mesh")
+    
+    # Test valid paths
+    assert stage.path_is_valid_prim("/World") == True
+    assert stage.path_is_valid_prim("/World/Geometry") == True
+    assert stage.path_is_valid_prim("/World/Geometry/Mesh") == True
+    
+    # Test invalid paths
+    assert stage.path_is_valid_prim("/NonExistent") == False
+    assert stage.path_is_valid_prim("/World/NonExistent") == False
+    assert stage.path_is_valid_prim("/World/Geometry/NonExistent") == False
+
+
+def test_path_is_valid_prim_edge_cases():
+    """Test edge cases for path validity checking"""
+    stage = nusd.Stage.create_in_memory("test_path_is_valid_prim_edge_cases")
+    stage.define_prim("/World", "Xform")
+    
+    # Test empty string
+    assert stage.path_is_valid_prim("") == False
+    
+    # Test None path
+    assert stage.path_is_valid_prim(None) == False
+    
+    # Test partial matches (should be false)
+    assert stage.path_is_valid_prim("/Worl") == False
+    assert stage.path_is_valid_prim("/Worldx") == False
+    
+    # Test case sensitivity
+    assert stage.path_is_valid_prim("/world") == False
+    assert stage.path_is_valid_prim("/WORLD") == False
+    
+    # Test paths with trailing characters
+    assert stage.path_is_valid_prim("/World/") == False
+    assert stage.path_is_valid_prim("/World ") == False
+
+
+def test_path_is_valid_prim_different_prim_types():
+    """Test path validity with different prim types"""
+    stage = nusd.Stage.create_in_memory("test_path_is_valid_prim_types")
+    stage.define_prim("/World", "Xform")
+    
+    # Create different types of prims
+    stage.camera_define("/World/Camera")
+    stage.material_define("/World/Materials/MyMaterial")
+    stage.shader_define("/World/Materials/MyMaterial/Surface", "UsdPreviewSurface")
+    stage.define_prim("/World/Geometry/Cube", "Cube")
+    stage.define_prim("/World/Geometry/Sphere", "Sphere")
+    
+    # Test all created prims are valid
+    assert stage.path_is_valid_prim("/World") == True
+    assert stage.path_is_valid_prim("/World/Camera") == True
+    assert stage.path_is_valid_prim("/World/Materials") == True
+    assert stage.path_is_valid_prim("/World/Materials/MyMaterial") == True
+    assert stage.path_is_valid_prim("/World/Materials/MyMaterial/Surface") == True
+    assert stage.path_is_valid_prim("/World/Geometry") == True
+    assert stage.path_is_valid_prim("/World/Geometry/Cube") == True
+    assert stage.path_is_valid_prim("/World/Geometry/Sphere") == True
+
+
+def test_path_is_valid_prim_hierarchy():
+    """Test path validity with complex hierarchy"""
+    stage = nusd.Stage.create_in_memory("test_path_is_valid_prim_hierarchy")
+    
+    # Create a complex hierarchy
+    stage.define_prim("/Root", "Xform")
+    stage.define_prim("/Root/Level1", "Xform")
+    stage.define_prim("/Root/Level1/Level2", "Xform")
+    stage.define_prim("/Root/Level1/Level2/Level3", "Xform")
+    stage.define_prim("/Root/Level1/Level2/Level3/Leaf", "Mesh")
+    
+    # Test entire hierarchy is valid
+    assert stage.path_is_valid_prim("/Root") == True
+    assert stage.path_is_valid_prim("/Root/Level1") == True
+    assert stage.path_is_valid_prim("/Root/Level1/Level2") == True
+    assert stage.path_is_valid_prim("/Root/Level1/Level2/Level3") == True
+    assert stage.path_is_valid_prim("/Root/Level1/Level2/Level3/Leaf") == True
+    
+    # Test non-existent paths in hierarchy
+    assert stage.path_is_valid_prim("/Root/WrongLevel1") == False
+    assert stage.path_is_valid_prim("/Root/Level1/WrongLevel2") == False
+    assert stage.path_is_valid_prim("/Root/Level1/Level2/WrongLevel3") == False
+    assert stage.path_is_valid_prim("/Root/Level1/Level2/Level3/WrongLeaf") == False
+
+
+def test_path_is_valid_prim_mesh_integration():
+    """Test path validity with mesh creation"""
+    stage = nusd.Stage.create_in_memory("test_path_is_valid_prim_mesh")
+    stage.define_prim("/World", "Xform")
+    
+    # Create a mesh
+    face_vertex_counts = np.array([3], dtype=np.int32)
+    face_vertex_indices = np.array([0, 1, 2], dtype=np.int32)
+    vertices = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, 1.0, 0.0]], dtype=np.float32)
+    stage.mesh_define("/World/Triangle", face_vertex_counts, face_vertex_indices, vertices)
+    
+    # Test mesh path is valid
+    assert stage.path_is_valid_prim("/World/Triangle") == True
+    assert stage.path_is_valid_prim("/World/NonExistentMesh") == False
+
+
+def test_path_is_valid_prim_special_characters():
+    """Test path validity with special characters in names"""
+    stage = nusd.Stage.create_in_memory("test_path_is_valid_prim_special")
+    
+    # Create prims with various naming patterns  
+    stage.define_prim("/World", "Xform")
+    stage.define_prim("/World/prim_with_underscores", "Xform")
+    stage.define_prim("/World/PrimWithCamelCase", "Xform")
+    stage.define_prim("/World/prim123", "Xform")
+    
+    # Test these prims are valid
+    assert stage.path_is_valid_prim("/World/prim_with_underscores") == True
+    assert stage.path_is_valid_prim("/World/PrimWithCamelCase") == True
+    assert stage.path_is_valid_prim("/World/prim123") == True
