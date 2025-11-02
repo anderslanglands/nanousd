@@ -4,8 +4,8 @@ configure:
 build:
     cmake --build build
 
-test:
-    ctest --test-dir build --output-on-failure
+test *ARGS:
+    ctest --test-dir build --output-on-failure {{ARGS}}
 
 bind:
     uv run ctypesgen -Lbuild -L../build  -lnanousd -o python/nanousd/ffi.py \

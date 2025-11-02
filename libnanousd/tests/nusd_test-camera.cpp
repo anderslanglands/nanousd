@@ -5,6 +5,7 @@
 #include <nanousd-material.h>
 #include <nanousd-mesh.h>
 #include <nanousd-light.h>
+#include <nanousd-property.h>
 
 #include <cmath>
 
