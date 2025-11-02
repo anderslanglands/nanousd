@@ -1181,6 +1181,125 @@ TEST(nusd, shader_connect) {
     nusd_stage_destroy(stage);
 }
 
+TEST(nusd, shader_connect_null_parameters) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-shader_connect_null", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test null stage
+    EXPECT_EQ(nusd_shader_connect(nullptr, 
+                                 "/World/Materials/Mat/Texture.outputs:rgb", 
+                                 "/World/Materials/Mat/Surface.inputs:diffuseColor"), 
+              NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null source_output_path
+    EXPECT_EQ(nusd_shader_connect(stage, nullptr, 
+                                 "/World/Materials/Mat/Surface.inputs:diffuseColor"), 
+              NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null destination_input_path
+    EXPECT_EQ(nusd_shader_connect(stage, "/World/Materials/Mat/Texture.outputs:rgb", nullptr), 
+              NUSD_RESULT_NULL_PARAMETER);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, shader_connect_invalid_attribute_paths) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-shader_connect_invalid_attrs", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test invalid source attribute path (non-existent prim)
+    EXPECT_EQ(nusd_shader_connect(stage, 
+                                 "/NonExistent/Shader.outputs:rgb", 
+                                 "/World/Materials/Mat/Surface.inputs:diffuseColor"), 
+              NUSD_RESULT_INVALID_ATTRIBUTE_PATH);
+
+    // Test invalid destination attribute path (non-existent prim)
+    EXPECT_EQ(nusd_shader_connect(stage, 
+                                 "/World/Materials/Mat/Texture.outputs:rgb", 
+                                 "/NonExistent/Shader.inputs:diffuseColor"), 
+              NUSD_RESULT_INVALID_ATTRIBUTE_PATH);
+
+    // Create a valid shader but test invalid attribute names
+    result = nusd_material_define(stage, "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Texture", "UsdUVTexture");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test invalid attribute name on valid prim
+    EXPECT_EQ(nusd_shader_connect(stage, 
+                                 "/World/Materials/Mat/Texture.outputs:nonexistent", 
+                                 "/World/Materials/Mat/Texture.inputs:diffuseColor"), 
+              NUSD_RESULT_INVALID_ATTRIBUTE_PATH);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, shader_connect_invalid_shader_output) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-shader_connect_invalid_output", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Create a material and shader
+    result = nusd_material_define(stage, "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Surface", "UsdPreviewSurface");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Texture", "UsdUVTexture");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Create a regular attribute (not a shader output)
+    result = nusd_prim_create_property(stage, "/World/Materials/Mat/Texture", "regularAttr", NUSD_TYPE_FLOAT3);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Create a valid input
+    result = nusd_shader_create_input(stage, "/World/Materials/Mat/Surface", "diffuseColor", NUSD_TYPE_FLOAT3);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Try to connect from regular attribute (not a shader output) - should fail
+    EXPECT_EQ(nusd_shader_connect(stage, 
+                                 "/World/Materials/Mat/Texture.regularAttr", 
+                                 "/World/Materials/Mat/Surface.inputs:diffuseColor"), 
+              NUSD_RESULT_INVALID_SHADER_OUTPUT);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, shader_connect_invalid_shader_input) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-shader_connect_invalid_input", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Create a material and shader
+    result = nusd_material_define(stage, "/World/Materials/Mat");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Surface", "UsdPreviewSurface");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    
+    result = nusd_shader_define(stage, "/World/Materials/Mat/Texture", "UsdUVTexture");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Create two valid shader outputs
+    result = nusd_shader_create_output(stage, "/World/Materials/Mat/Texture", "rgb", NUSD_TYPE_FLOAT3);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_shader_create_output(stage, "/World/Materials/Mat/Surface", "surface", NUSD_TYPE_TOKEN);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Try to connect shader output to shader output (not a shader input) - should fail
+    EXPECT_EQ(nusd_shader_connect(stage, 
+                                 "/World/Materials/Mat/Texture.outputs:rgb", 
+                                 "/World/Materials/Mat/Surface.outputs:surface"), 
+              NUSD_RESULT_INVALID_SHADER_INPUT);
+
+    nusd_stage_destroy(stage);
+}
+
 TEST(nusd, set_asset_attribute) {
     nusd_stage_t stage;
     nusd_result_t result = nusd_stage_create_in_memory("test", &stage);

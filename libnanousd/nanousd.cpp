@@ -1007,12 +1007,23 @@ nusd_result_t nusd_shader_connect(nusd_stage_t stage,
     }
 
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
-    UsdShadeOutput source =
-        UsdShadeOutput(_stage->GetAttributeAtPath(SdfPath(source_output_path)));
-    UsdShadeInput destination = UsdShadeInput(
-        _stage->GetAttributeAtPath(SdfPath(destination_input_path)));
-    if (!source || !destination) {
+    UsdAttribute attr_source =
+        _stage->GetAttributeAtPath(SdfPath(source_output_path));
+    UsdAttribute attr_dest =
+        _stage->GetAttributeAtPath(SdfPath(destination_input_path));
+
+    if (!attr_source || !attr_dest) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    UsdShadeOutput source = UsdShadeOutput(attr_source);
+    UsdShadeInput destination = UsdShadeInput(attr_dest);
+
+    if (!source) {
+        return NUSD_RESULT_INVALID_SHADER_OUTPUT;
+    }
+    if (!destination) {
+        return NUSD_RESULT_INVALID_SHADER_INPUT;
     }
 
     if (!destination.ConnectToSource(SdfPath(source_output_path))) {

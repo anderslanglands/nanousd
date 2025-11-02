@@ -140,8 +140,12 @@ nusd_result_t nusd_shader_create_output(nusd_stage_t stage,
 ///
 /// @return NUSD_RESULT_OK on success
 /// @return NUSD_RESULT_NULL_PARAMETER if any parameter is null
-/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if either the source output or
-/// destination input cannot be found
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if either the source output attribute or
+/// destination input attribute paths do not specify a valid attribute
+/// @return NUSD_RESULT_INVALID_SHADER_OUTPUT if the source attribute is not a
+/// valid shader output
+/// @return NUSD_RESULT_INVALID_SHADER_INPUT if the destination attribute is not a
+/// valid shader input
 /// @return NUSD_RESULT_CONNECTION_FAILED if the connection cannot be
 /// established
 ///

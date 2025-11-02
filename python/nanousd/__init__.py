@@ -112,6 +112,10 @@ class DefinePrimError(RuntimeError):
     pass
 
 
+class ShaderConnectError(RuntimeError):
+    pass
+
+
 class Stage:
     def __init__(self, stage: c_void_p):
         self._stage = stage
@@ -588,8 +592,9 @@ class Stage:
             destination_input_path: Full USD path to the destination shader input (e.g., "/World/Materials/Mat/Surface.inputs:diffuseColor")
 
         Raises:
-            GetPropertyError: If either the source output or destination input cannot be found
-            SetPropertyError: If the connection cannot be established
+            GetPropertyError: If either the source output or destination input attribute cannot be found
+            ShaderConnectError: If the source is not a valid shader output, destination is not a valid shader input, or connection fails
+            SetPropertyError: If other connection-related errors occur
 
         Note:
             The connection creates a data flow from the source shader's output to the destination shader's input.
@@ -605,8 +610,16 @@ class Stage:
             raise GetPropertyError(
                 f'cannot find source output "{source_output_path}" or destination input "{destination_input_path}"'
             )
+        elif result == _lib.NUSD_RESULT_INVALID_SHADER_OUTPUT:
+            raise ShaderConnectError(
+                f'source attribute "{source_output_path}" is not a valid shader output'
+            )
+        elif result == _lib.NUSD_RESULT_INVALID_SHADER_INPUT:
+            raise ShaderConnectError(
+                f'destination attribute "{destination_input_path}" is not a valid shader input'
+            )
         elif result == _lib.NUSD_RESULT_CONNECTION_FAILED:
-            raise SetPropertyError(
+            raise ShaderConnectError(
                 f'failed to connect "{source_output_path}" to "{destination_input_path}"'
             )
         elif result != _lib.NUSD_RESULT_OK:
