@@ -25,9 +25,9 @@ def _set_property(
     stage, property_path: str, property_type, value: Any, time_code: float = TIMECODE_DEFAULT
 ):
     if property_type == FLOAT:
-        if not isinstance(value, float):
+        if not isinstance(value, float) and not isinstance(value, int) and not isinstance(value, np.float32) and not isinstance(value, np.float64):
             raise SetPropertyError(
-                f"incompatible types for property <{property_path}> with value type of float and requested type of {property_type}"
+                f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
             )
         result = _lib.nusd_attribute_set_float(
             stage._stage, property_path, c_float(value), time_code

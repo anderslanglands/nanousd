@@ -408,6 +408,12 @@ static void initialize_tokens() {
         NUSD_TYPE_QUATHARRAY =
             SdfValueTypeNames->QuathArray.GetAsToken().GetText();
         TOKEN_TO_TYPENAME[NUSD_TYPE_QUATHARRAY] = SdfValueTypeNames->QuathArray;
+        NUSD_TYPE_STRING =
+            SdfValueTypeNames->String.GetAsToken().GetText();
+        TOKEN_TO_TYPENAME[NUSD_TYPE_STRING] = SdfValueTypeNames->String;
+        NUSD_TYPE_STRINGARRAY =
+            SdfValueTypeNames->StringArray.GetAsToken().GetText();
+        TOKEN_TO_TYPENAME[NUSD_TYPE_STRINGARRAY] = SdfValueTypeNames->StringArray;
         NUSD_TYPE_TEXCOORD2D =
             SdfValueTypeNames->TexCoord2d.GetAsToken().GetText();
         TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD2D] = SdfValueTypeNames->TexCoord2d;
