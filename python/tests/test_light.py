@@ -187,3 +187,131 @@ def test_sphere_light_define_validation_errors():
     # Test with non-list color
     with pytest.raises(ValueError, match="color must be a list, tuple, or array of exactly 3 numbers"):
         stage.sphere_light_define("/World/BadSphereColor4", 1.0, 100.0, "rgb")
+
+
+def test_dome_light_define_basic():
+    """Test defining a basic dome light without texture"""
+    stage = nusd.Stage.create_in_memory("test_dome_light_basic")
+    stage.define_prim("/World", "Xform")
+    
+    # Define a basic white dome light with default parameters
+    stage.dome_light_define("/World/DomeLight")
+    
+    # Verify the light prim was created by trying to get properties from it
+    properties = stage.prim_get_properties("/World/DomeLight")
+
+
+def test_dome_light_define_with_texture():
+    """Test defining a dome light with HDRI texture"""
+    stage = nusd.Stage.create_in_memory("test_dome_light_texture")
+    stage.define_prim("/World", "Xform")
+    
+    # Define a dome light with HDRI texture and custom parameters
+    stage.dome_light_define("/World/EnvironmentLight", "environment.exr", 2.0, [0.9, 0.95, 1.0])
+    
+    # Verify the light prim was created
+    properties = stage.prim_get_properties("/World/EnvironmentLight")
+
+
+def test_dome_light_define_various_parameters():
+    """Test dome_light_define with various parameter combinations"""
+    stage = nusd.Stage.create_in_memory("test_dome_light_params")
+    stage.define_prim("/World", "Xform")
+    
+    # Basic dome light with defaults
+    stage.dome_light_define("/World/BasicDome")
+    
+    # Dome light with only intensity specified
+    stage.dome_light_define("/World/BrightDome", intensity=3.0)
+    
+    # Dome light with only color specified
+    stage.dome_light_define("/World/ColoredDome", color=[1.0, 0.8, 0.6])
+    
+    # Dome light with texture file only
+    stage.dome_light_define("/World/TexturedDome", texture_file="sky.hdr")
+    
+    # Full parameter specification
+    stage.dome_light_define("/World/FullDome", "studio.exr", 1.5, [0.95, 0.98, 1.0])
+    
+    # Test with different color formats
+    color_tuple = (0.8, 0.9, 1.0)
+    stage.dome_light_define("/World/TupleDome", intensity=1.2, color=color_tuple)
+    
+    color_array = np.array([0.7, 0.85, 0.95])
+    stage.dome_light_define("/World/ArrayDome", texture_file="hdri.exr", color=color_array)
+    
+    # Verify all lights were created
+    properties_basic = stage.prim_get_properties("/World/BasicDome")
+    properties_bright = stage.prim_get_properties("/World/BrightDome")
+    properties_colored = stage.prim_get_properties("/World/ColoredDome")
+    properties_textured = stage.prim_get_properties("/World/TexturedDome")
+    properties_full = stage.prim_get_properties("/World/FullDome")
+    properties_tuple = stage.prim_get_properties("/World/TupleDome")
+    properties_array = stage.prim_get_properties("/World/ArrayDome")
+
+
+def test_dome_light_define_hdri_textures():
+    """Test dome light with various HDRI texture file types"""
+    stage = nusd.Stage.create_in_memory("test_dome_light_hdri")
+    stage.define_prim("/World", "Xform")
+    
+    # Test with different HDRI file extensions
+    stage.dome_light_define("/World/ExrDome", "environment.exr", 1.0, [1.0, 1.0, 1.0])
+    stage.dome_light_define("/World/HdrDome", "sky.hdr", 1.5, [0.9, 0.95, 1.0])
+    stage.dome_light_define("/World/TifDome", "studio.tif", 0.8, [1.0, 0.9, 0.8])
+    
+    # Test with relative and absolute paths
+    stage.dome_light_define("/World/RelativeDome", "./textures/env.exr")
+    stage.dome_light_define("/World/AbsoluteDome", "/assets/hdri/environment.hdr")
+    
+    # Verify all lights were created
+    properties_exr = stage.prim_get_properties("/World/ExrDome")
+    properties_hdr = stage.prim_get_properties("/World/HdrDome") 
+    properties_tif = stage.prim_get_properties("/World/TifDome")
+    properties_rel = stage.prim_get_properties("/World/RelativeDome")
+    properties_abs = stage.prim_get_properties("/World/AbsoluteDome")
+
+
+def test_dome_light_define_validation_errors():
+    """Test validation errors for invalid dome light inputs"""
+    stage = nusd.Stage.create_in_memory("test_dome_light_validation")
+    stage.define_prim("/World", "Xform")
+    
+    # Test with wrong number of color components
+    with pytest.raises(ValueError, match="color must be a list, tuple, or array of exactly 3 numbers"):
+        stage.dome_light_define("/World/BadDomeColor1", color=[1.0, 1.0])  # Only 2 components
+    
+    with pytest.raises(ValueError, match="color must be a list, tuple, or array of exactly 3 numbers"):
+        stage.dome_light_define("/World/BadDomeColor2", color=[1.0, 1.0, 1.0, 1.0])  # 4 components
+    
+    # Test with non-numeric color values
+    with pytest.raises(ValueError, match="color components must be numeric values"):
+        stage.dome_light_define("/World/BadDomeColor3", color=["red", "green", "blue"])
+    
+    # Test with non-list color
+    with pytest.raises(ValueError, match="color must be a list, tuple, or array of exactly 3 numbers"):
+        stage.dome_light_define("/World/BadDomeColor4", color="rgb")
+
+
+def test_dome_light_define_default_values():
+    """Test that dome light default values work correctly"""
+    stage = nusd.Stage.create_in_memory("test_dome_light_defaults")
+    stage.define_prim("/World", "Xform")
+    
+    # Test with no parameters (all defaults)
+    stage.dome_light_define("/World/DefaultDome")
+    
+    # Test with texture_file=None explicitly
+    stage.dome_light_define("/World/ExplicitNoneDome", texture_file=None)
+    
+    # Test with intensity default
+    stage.dome_light_define("/World/IntensityDefaultDome", texture_file="env.exr")
+    
+    # Test with color default  
+    stage.dome_light_define("/World/ColorDefaultDome", intensity=2.0)
+    
+    # Verify all lights were created
+    properties_default = stage.prim_get_properties("/World/DefaultDome")
+    properties_none = stage.prim_get_properties("/World/ExplicitNoneDome")
+    properties_intensity = stage.prim_get_properties("/World/IntensityDefaultDome")
+    properties_color = stage.prim_get_properties("/World/ColorDefaultDome")

@@ -214,6 +214,47 @@ class Stage:
         
         return _lib.nusd_stage_path_is_valid_prim(self._stage, prim_path.encode("ascii"))
 
+    def set_meters_per_unit(self, meters_per_unit: float):
+        """Set the stage's linear measurement scale by authoring the metersPerUnit metadata.
+
+        Args:
+            meters_per_unit: The linear unit scale, representing how many meters are 
+                            equivalent to one unit in the stage. Common values:
+                            - 1.0 = meters (1 stage unit = 1 meter)
+                            - 0.01 = centimeters (1 stage unit = 1 centimeter)  
+                            - 0.001 = millimeters (1 stage unit = 1 millimeter)
+                            - 0.3048 = feet (1 stage unit = 1 foot)
+                            - 0.0254 = inches (1 stage unit = 1 inch)
+
+        Raises:
+            SetPropertyError: If the metadata cannot be set (e.g., edit target is not 
+                            root layer or session layer) or if stage is null
+        """
+        result = _lib.nusd_stage_set_meters_per_unit(self._stage, c_double(meters_per_unit))
+        if result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(f'failed to set meters per unit to {meters_per_unit}: {result}')
+
+    def get_meters_per_unit(self) -> float:
+        """Get the stage's linear measurement scale from the metersPerUnit metadata.
+
+        Returns:
+            The linear unit scale, representing how many meters are equivalent to one unit 
+            in the stage. Common values:
+            - 1.0 = meters (1 stage unit = 1 meter)
+            - 0.01 = centimeters (1 stage unit = 1 centimeter)  
+            - 0.001 = millimeters (1 stage unit = 1 millimeter)
+            - 0.3048 = feet (1 stage unit = 1 foot)
+            - 0.0254 = inches (1 stage unit = 1 inch)
+
+        Raises:
+            GetPropertyError: If the metadata cannot be retrieved or if stage is null
+        """
+        value = c_double(0.0)
+        result = _lib.nusd_stage_get_meters_per_unit(self._stage, byref(value))
+        if result != _lib.NUSD_RESULT_OK:
+            raise GetPropertyError(f'failed to get meters per unit: {result}')
+        return value.value
+
     def prim_set_transform(
         self,
         xformable_path: str,
@@ -1085,6 +1126,63 @@ class Stage:
         if result != _lib.NUSD_RESULT_OK:
             raise DefinePrimError(
                 f'failed to define sphere light at "{light_path}": {result}'
+            )
+
+    def dome_light_define(self, light_path: str, texture_file: str = None, intensity: float = 1.0, color: list = None):
+        """Define a new USD dome light prim at the specified path with environment lighting parameters.
+
+        Args:
+            light_path: USD path where the dome light should be created (e.g., "/World/Lights/MyDomeLight")
+            texture_file: Optional path to an HDRI texture file for environment lighting. 
+                         Can be None for procedural dome lighting.
+            intensity: Intensity of the light (brightness multiplier). Default is 1.0.
+            color: List or array of 3 float values representing the light color as RGB components 
+                   (range 0.0 to 1.0). Default is white [1.0, 1.0, 1.0].
+
+        Raises:
+            DefinePrimError: If the light cannot be defined at the specified path
+            ValueError: If color is not a list/array of exactly 3 numbers
+
+        Note:
+            Creates a UsdLuxDomeLight prim with the specified texture, intensity, and color.
+            intensity controls the brightness of the environment lighting (1.0 is normal intensity).
+            color components should typically be in the range [0.0, 1.0] for normalized RGB.
+            Dome lights provide infinite-distance environment lighting that illuminates the 
+            entire scene from all directions, commonly used for IBL (Image-Based Lighting).
+            When texture_file is provided, it should be an HDRI (.exr, .hdr) file for 
+            realistic environment lighting.
+            The dome light creates ambient lighting that affects all objects in the scene 
+            and provides realistic reflections and global illumination.
+        """
+        # Set default color if not provided
+        if color is None:
+            color = [1.0, 1.0, 1.0]  # White light
+        
+        # Validate color parameter
+        if not isinstance(color, (list, tuple, np.ndarray)) or len(color) != 3:
+            raise ValueError("color must be a list, tuple, or array of exactly 3 numbers")
+        
+        # Convert to float array
+        try:
+            color_array = (c_float * 3)(float(color[0]), float(color[1]), float(color[2]))
+        except (ValueError, TypeError):
+            raise ValueError("color components must be numeric values")
+
+        # Handle optional texture file
+        texture_file_encoded = None
+        if texture_file is not None:
+            texture_file_encoded = texture_file.encode("ascii")
+
+        result = _lib.nusd_dome_light_define(
+            self._stage,
+            light_path.encode("ascii"),
+            texture_file_encoded,
+            c_float(intensity),
+            color_array
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise DefinePrimError(
+                f'failed to define dome light at "{light_path}": {result}'
             )
 
     def attribute_set_color_space(self, attribute_path: str, color_space: str):

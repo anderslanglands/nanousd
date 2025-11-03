@@ -14,6 +14,7 @@
 
 #include <pxr/usd/usdGeom/camera.h>
 #include <pxr/usd/usdGeom/mesh.h>
+#include <pxr/usd/usdGeom/metrics.h>
 #include <pxr/usd/usdGeom/xformable.h>
 
 #include <pxr/usd/usdShade/material.h>
@@ -605,6 +606,31 @@ bool nusd_stage_path_is_valid_prim(nusd_stage_t stage, char const* prim_path) {
     UsdPrim prim = _stage->GetPrimAtPath(SdfPath(prim_path));
 
     return bool(prim);
+}
+
+
+nusd_result_t nusd_stage_set_meters_per_unit(nusd_stage_t stage, double meters_per_unit) {
+    if (stage == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    if (!UsdGeomSetStageMetersPerUnit(UsdStageWeakPtr(_stage), meters_per_unit)) {
+        return NUSD_RESULT_SET_METADATA_FAILED;
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_stage_get_meters_per_unit(nusd_stage_t stage, double* meters_per_unit) {
+    if (stage == nullptr || meters_per_unit == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    *meters_per_unit = UsdGeomGetStageMetersPerUnit(UsdStageWeakPtr(_stage));
+
+    return NUSD_RESULT_OK;
 }
 
 nusd_result_t nusd_stage_traverse(nusd_stage_t stage,

@@ -34,6 +34,7 @@ enum nusd_result_e {
     NUSD_RESULT_INVALID_MATERIAL_PATH,
     NUSD_RESULT_APPLY_BINDING_API_FAILED,
     NUSD_RESULT_CREATE_BINDING_FAILED,
+    NUSD_RESULT_SET_METADATA_FAILED,
 };
 typedef int nusd_result_t;
 
@@ -184,6 +185,10 @@ extern nusd_type_t NUSD_INTERPOLATION_VARYING;
 extern nusd_type_t NUSD_INTERPOLATION_FACEVARYING;
 
 extern double NUSD_TIMECODE_DEFAULT;
+
+#define NUSD_UNIT_METERS 1.0
+#define NUSD_UNIT_DECIMETERS 0.1
+#define NUSD_UNIT_CENTIMETERS 0.01
 
 #ifdef __cplusplus
 }

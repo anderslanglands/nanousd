@@ -8,6 +8,7 @@
 #include <pxr/usd/usdLux/diskLight.h>
 #include <pxr/usd/usdLux/rectLight.h>
 #include <pxr/usd/usdLux/sphereLight.h>
+#include <pxr/usd/usdLux/domeLight.h>
 
 using namespace PXR_NS;
 
@@ -83,4 +84,32 @@ nusd_result_t nusd_sphere_light_define(nusd_stage_t stage,
 
     return NUSD_RESULT_OK;
 }
+
+
+nusd_result_t nusd_dome_light_define(nusd_stage_t stage,
+                                     char const* light_path,
+                                     char const* texture_file,
+                                     float intensity,
+                                     float* color) {
+    if (stage == nullptr || light_path == nullptr || color == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdLuxDomeLight light = UsdLuxDomeLight::Define(UsdStageWeakPtr(_stage), SdfPath(light_path));
+    
+    if (!light) {
+        return NUSD_RESULT_DEFINE_PRIM_FAILED;
+    }
+
+    light.GetIntensityAttr().Set(intensity);
+    light.GetColorAttr().Set(GfVec3f(color[0], color[1], color[2]));
+
+    if (texture_file != nullptr) {
+        light.GetTextureFileAttr().Set(SdfAssetPath(texture_file));
+    }
+
+    return NUSD_RESULT_OK;
+}
+
 }

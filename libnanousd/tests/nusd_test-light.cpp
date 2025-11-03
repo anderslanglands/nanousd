@@ -176,3 +176,74 @@ TEST(nusd, sphere_light_define_null_parameters) {
 
     nusd_stage_destroy(stage);
 }
+
+TEST(nusd, dome_light_define_basic) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-dome-light-basic", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    // Define a dome light with basic parameters
+    float color[] = {1.0f, 1.0f, 1.0f};  // White light
+    
+    result = nusd_dome_light_define(stage, "/World/DomeLight", 
+                                   nullptr,     // no texture file
+                                   1.0f,        // intensity
+                                   color);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Verify the light prim was created
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/DomeLight"), true);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, dome_light_define_with_texture) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-dome-light-texture", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    // Define a dome light with HDRI texture and colored tint
+    float color[] = {0.9f, 0.95f, 1.0f};  // Cool blue tint
+    
+    result = nusd_dome_light_define(stage, "/World/EnvironmentLight", 
+                                   "environment.exr",  // HDRI texture
+                                   2.0f,               // higher intensity
+                                   color);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Verify the light prim was created
+    EXPECT_EQ(nusd_stage_path_is_valid_prim(stage, "/World/EnvironmentLight"), true);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, dome_light_define_null_parameters) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory("test-dome-light-null", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    EXPECT_EQ(nusd_stage_define_prim(stage, "/World", "Xform"), NUSD_RESULT_OK);
+
+    float color[] = {1.0f, 1.0f, 1.0f};
+
+    // Test null stage
+    EXPECT_EQ(nusd_dome_light_define(nullptr, "/World/Light", 
+                                    "env.exr", 1.0f, color), 
+              NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null light_path
+    EXPECT_EQ(nusd_dome_light_define(stage, nullptr, 
+                                    "env.exr", 1.0f, color), 
+              NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null color (texture_file can be null, so don't test that)
+    EXPECT_EQ(nusd_dome_light_define(stage, "/World/Light", 
+                                    "env.exr", 1.0f, nullptr), 
+              NUSD_RESULT_NULL_PARAMETER);
+
+    nusd_stage_destroy(stage);
+}

@@ -1362,3 +1362,136 @@ def test_path_is_valid_prim_special_characters():
     assert stage.path_is_valid_prim("/World/prim_with_underscores") == True
     assert stage.path_is_valid_prim("/World/PrimWithCamelCase") == True
     assert stage.path_is_valid_prim("/World/prim123") == True
+
+
+def test_set_meters_per_unit_basic():
+    """Test basic meters per unit functionality"""
+    stage = nusd.Stage.create_in_memory("test_set_meters_per_unit_basic")
+    
+    # Test setting common unit scales
+    stage.set_meters_per_unit(0.01)    # centimeters
+    stage.set_meters_per_unit(1.0)     # meters
+    stage.set_meters_per_unit(0.001)   # millimeters
+    stage.set_meters_per_unit(0.3048)  # feet
+    stage.set_meters_per_unit(0.0254)  # inches
+
+
+def test_set_meters_per_unit_various_values():
+    """Test setting various meters per unit values"""
+    stage = nusd.Stage.create_in_memory("test_set_meters_per_unit_values")
+    
+    # Test different numeric values
+    stage.set_meters_per_unit(1.0)      # meters
+    stage.set_meters_per_unit(0.01)     # centimeters (USD default)
+    stage.set_meters_per_unit(10.0)     # decameters
+    stage.set_meters_per_unit(0.1)      # decimeters
+    stage.set_meters_per_unit(100.0)    # hectometers
+    stage.set_meters_per_unit(0.001)    # millimeters
+    
+    # Test engineering units
+    stage.set_meters_per_unit(0.0254)   # inches
+    stage.set_meters_per_unit(0.3048)   # feet
+    stage.set_meters_per_unit(0.9144)   # yards
+
+
+def test_set_meters_per_unit_type_validation():
+    """Test type validation for meters per unit"""
+    stage = nusd.Stage.create_in_memory("test_set_meters_per_unit_types")
+    
+    # Test with integer (should work due to Python's automatic conversion)
+    stage.set_meters_per_unit(1)
+    
+    # Test with float
+    stage.set_meters_per_unit(1.0)
+    
+    # Test with small values
+    stage.set_meters_per_unit(1e-6)    # micrometers
+    
+    # Test with large values  
+    stage.set_meters_per_unit(1000.0)  # kilometers
+
+
+def test_get_meters_per_unit_basic():
+    """Test basic get meters per unit functionality"""
+    stage = nusd.Stage.create_in_memory("test_get_meters_per_unit_basic")
+    
+    # Test setting and getting common unit scales
+    test_values = [0.01, 1.0, 0.001, 0.3048, 0.0254]  # cm, m, mm, ft, in
+    
+    for expected_value in test_values:
+        stage.set_meters_per_unit(expected_value)
+        actual_value = stage.get_meters_per_unit()
+        assert actual_value == expected_value, f"Expected {expected_value}, got {actual_value}"
+
+
+def test_get_meters_per_unit_precision():
+    """Test precision of get meters per unit"""
+    stage = nusd.Stage.create_in_memory("test_get_meters_per_unit_precision")
+    
+    # Test with high precision values
+    test_values = [
+        1.0,          # meters
+        0.01,         # centimeters
+        0.001,        # millimeters
+        0.3048,       # feet
+        0.0254,       # inches
+        0.9144,       # yards
+        1e-6,         # micrometers
+        1000.0,       # kilometers
+        2.54e-5,      # mils (thousandths of an inch)
+    ]
+    
+    for expected_value in test_values:
+        stage.set_meters_per_unit(expected_value)
+        actual_value = stage.get_meters_per_unit()
+        # Use pytest.approx for floating point comparison
+        assert actual_value == pytest.approx(expected_value), f"Expected {expected_value}, got {actual_value}"
+
+
+def test_get_set_meters_per_unit_round_trip():
+    """Test round trip set/get meters per unit operations"""
+    stage = nusd.Stage.create_in_memory("test_get_set_meters_per_unit_round_trip")
+    
+    # Test multiple round trips with different values
+    test_sequence = [1.0, 0.01, 0.3048, 0.001, 0.0254, 100.0, 1e-6]
+    
+    for value in test_sequence:
+        # Set the value
+        stage.set_meters_per_unit(value)
+        
+        # Get it back
+        retrieved_value = stage.get_meters_per_unit()
+        
+        # Should be exactly equal for these values
+        assert retrieved_value == value, f"Round trip failed: set {value}, got {retrieved_value}"
+        
+        # Set a different value and verify it changes
+        different_value = value * 2.0
+        stage.set_meters_per_unit(different_value)
+        new_retrieved_value = stage.get_meters_per_unit()
+        assert new_retrieved_value == different_value
+        assert new_retrieved_value != value  # Make sure it actually changed
+
+
+def test_get_meters_per_unit_multiple_stages():
+    """Test that different stages maintain independent meters per unit values"""
+    stage1 = nusd.Stage.create_in_memory("test_get_meters_per_unit_stage1")
+    stage2 = nusd.Stage.create_in_memory("test_get_meters_per_unit_stage2")
+    
+    # Set different values for each stage
+    value1 = 0.01  # centimeters
+    value2 = 0.3048  # feet
+    
+    stage1.set_meters_per_unit(value1)
+    stage2.set_meters_per_unit(value2)
+    
+    # Verify each stage maintains its own value
+    assert stage1.get_meters_per_unit() == value1
+    assert stage2.get_meters_per_unit() == value2
+    
+    # Modify one and verify the other is unchanged
+    new_value1 = 1.0  # meters
+    stage1.set_meters_per_unit(new_value1)
+    
+    assert stage1.get_meters_per_unit() == new_value1
+    assert stage2.get_meters_per_unit() == value2  # Should be unchanged

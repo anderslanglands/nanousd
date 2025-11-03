@@ -180,6 +180,65 @@ nusd_result_t nusd_stage_define_prim(nusd_stage_t stage,
 NANOUSD_API
 bool nusd_stage_path_is_valid_prim(nusd_stage_t stage, char const* prim_path);
 
+/// Sets the stage's linear measurement scale by authoring the metersPerUnit metadata.
+///
+/// @param stage Valid stage handle.
+/// @param meters_per_unit The linear unit scale, representing how many meters are 
+/// equivalent to one unit in the stage. For example:
+///                        - 1.0 = meters (1 stage unit = 1 meter)
+///                        - 0.01 = centimeters (1 stage unit = 1 centimeter)  
+///                        - 0.001 = millimeters (1 stage unit = 1 millimeter)
+///                        - 0.3048 = feet (1 stage unit = 1 foot)
+///                        - 0.0254 = inches (1 stage unit = 1 inch)
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage is null
+/// @return NUSD_RESULT_SET_METADATA_FAILED if the metadata cannot be set (e.g., 
+/// edit target is not root layer or session layer)
+///
+/// @note stage must not be null.
+/// @note The stage's edit target must be either its root layer or session layer 
+/// for this operation to succeed.
+/// @note This sets stage-wide linear unit metadata that affects all geometry and 
+/// measurements on the stage.
+/// @note USD defaults to centimeters (0.01) if no metersPerUnit is explicitly set.
+/// @note This function uses UsdGeomSetStageMetersPerUnit() internally.
+/// @note All existing geometry and measurements on the stage are conceptually 
+/// scaled by this value - changing this does not modify existing data but changes 
+/// how it is interpreted.
+/// @note Common values: 1.0 (meters), 0.01 (centimeters), 0.001 (millimeters), 
+/// 0.3048 (feet), 0.0254 (inches).
+NANOUSD_API
+nusd_result_t nusd_stage_set_meters_per_unit(nusd_stage_t stage, double meters_per_unit);
+
+/// Gets the stage's linear measurement scale from the metersPerUnit metadata.
+///
+/// @param stage Valid stage handle.
+/// @param meters_per_unit Output pointer that will receive the linear unit scale, 
+/// representing how many meters are equivalent to one unit in the stage. Common values:
+///                        - 1.0 = meters (1 stage unit = 1 meter)
+///                        - 0.01 = centimeters (1 stage unit = 1 centimeter)  
+///                        - 0.001 = millimeters (1 stage unit = 1 millimeter)
+///                        - 0.3048 = feet (1 stage unit = 1 foot)
+///                        - 0.0254 = inches (1 stage unit = 1 inch)
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage or meters_per_unit is null
+/// @return NUSD_RESULT_GET_METADATA_FAILED if the metadata cannot be retrieved
+///
+/// @note stage must not be null.
+/// @note meters_per_unit must not be null.
+/// @note If no metersPerUnit metadata has been explicitly set, USD defaults to 
+/// centimeters (0.01).
+/// @note This function uses UsdGeomGetStageMetersPerUnit() internally.
+/// @note The returned value represents the linear scale factor that converts stage 
+/// units to meters - smaller values indicate smaller base units.
+/// @note This is the inverse operation of nusd_stage_set_meters_per_unit().
+/// @note Common values: 1.0 (meters), 0.01 (centimeters), 0.001 (millimeters), 
+/// 0.3048 (feet), 0.0254 (inches).
+NANOUSD_API
+nusd_result_t nusd_stage_get_meters_per_unit(nusd_stage_t stage, double* meters_per_unit);
+
 /// @}
 
 

@@ -453,3 +453,78 @@ TEST(nusd, stage_path_is_valid_prim_null_parameters) {
 
     nusd_stage_destroy(stage);
 }
+
+TEST(nusd, stage_set_meters_per_unit) {
+    nusd_stage_t stage;
+    nusd_result_t result =
+        nusd_stage_create_in_memory("test-stage_set_meters_per_unit", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test setting meters per unit (default USD units are centimeters = 0.01)
+    result = nusd_stage_set_meters_per_unit(stage, 0.01);  // centimeters
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test setting different unit scales
+    result = nusd_stage_set_meters_per_unit(stage, 1.0);   // meters
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_set_meters_per_unit(stage, 0.001); // millimeters
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_set_meters_per_unit(stage, 0.3048); // feet
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_set_meters_per_unit(stage, 0.0254); // inches
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test null stage parameter
+    result = nusd_stage_set_meters_per_unit(nullptr, 1.0);
+    EXPECT_EQ(result, NUSD_RESULT_NULL_PARAMETER);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, stage_get_meters_per_unit) {
+    nusd_stage_t stage;
+    nusd_result_t result =
+        nusd_stage_create_in_memory("test-stage_get_meters_per_unit", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test setting and getting meters per unit
+    double set_value = 0.01;  // centimeters
+    result = nusd_stage_set_meters_per_unit(stage, set_value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double get_value = 0.0;
+    result = nusd_stage_get_meters_per_unit(stage, &get_value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_DOUBLE_EQ(get_value, set_value);
+
+    // Test different values
+    set_value = 1.0;  // meters
+    result = nusd_stage_set_meters_per_unit(stage, set_value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_get_meters_per_unit(stage, &get_value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_DOUBLE_EQ(get_value, set_value);
+
+    // Test engineering units
+    set_value = 0.3048;  // feet
+    result = nusd_stage_set_meters_per_unit(stage, set_value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_get_meters_per_unit(stage, &get_value);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_DOUBLE_EQ(get_value, set_value);
+
+    // Test null stage parameter
+    result = nusd_stage_get_meters_per_unit(nullptr, &get_value);
+    EXPECT_EQ(result, NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null output parameter
+    result = nusd_stage_get_meters_per_unit(stage, nullptr);
+    EXPECT_EQ(result, NUSD_RESULT_NULL_PARAMETER);
+
+    nusd_stage_destroy(stage);
+}
