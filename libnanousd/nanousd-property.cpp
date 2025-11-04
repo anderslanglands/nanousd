@@ -11,6 +11,10 @@ struct nusd_asset_path_s {
     PXR_NS::SdfAssetPath path;
 };
 
+struct nusd_string_s {
+    std::string value;
+};
+
 struct nusd_relationship_iterator_s {
     std::vector<PXR_NS::UsdRelationship> relationships;
     std::vector<PXR_NS::UsdRelationship>::iterator current;
@@ -80,6 +84,20 @@ void nusd_asset_path_destroy(nusd_asset_path_t asset_path) {
     }
 }
 
+char const* nusd_string_get_string(nusd_string_t string_value) {
+    if (!string_value) {
+        return nullptr;
+    }
+
+    return string_value->value.c_str();
+}
+
+void nusd_string_destroy(nusd_string_t string_value) {
+    if (string_value) {
+        delete string_value;
+    }
+}
+
 nusd_result_t nusd_attribute_get_asset(nusd_stage_t stage,
                                        char const* attribute_path,
                                        double time_code,
@@ -102,6 +120,32 @@ nusd_result_t nusd_attribute_get_asset(nusd_stage_t stage,
 
     *asset_path = new nusd_asset_path_s();
     attr.Get(&(*asset_path)->path, time_code);
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_get_string(nusd_stage_t stage,
+                                        char const* attribute_path,
+                                        double time_code,
+                                        nusd_string_t* string_value) {
+    if (stage == nullptr || attribute_path == nullptr ||
+        string_value == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_STRING) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    *string_value = new nusd_string_s();
+    attr.Get(&(*string_value)->value, time_code);
 
     return NUSD_RESULT_OK;
 }
@@ -1048,6 +1092,26 @@ nusd_result_t nusd_attribute_set_asset(nusd_stage_t stage,
     return NUSD_RESULT_OK;
 }
 
+nusd_result_t nusd_attribute_set_string(nusd_stage_t stage,
+                                        char const* attribute_path,
+                                        char const* value,
+                                        double time_code) {
+    if (stage == nullptr || attribute_path == nullptr || value == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_STRING) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+    attr.Set(std::string(value), time_code);
+    return NUSD_RESULT_OK;
+}
+
 nusd_result_t nusd_attribute_set_asset_array(nusd_stage_t stage,
                                              char const* attribute_path,
                                              char const** value,
@@ -1069,6 +1133,33 @@ nusd_result_t nusd_attribute_set_asset_array(nusd_stage_t stage,
     VtArray<SdfAssetPath> arr;
     for (size_t i = 0; i < num_elements; ++i) {
         arr.push_back(SdfAssetPath(value[i]));
+    }
+
+    attr.Set(arr, time_code);
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_set_string_array(nusd_stage_t stage,
+                                              char const* attribute_path,
+                                              char const** value,
+                                              size_t num_elements,
+                                              double time_code) {
+    if (stage == nullptr || attribute_path == nullptr || value == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_STRINGARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    VtArray<std::string> arr;
+    for (size_t i = 0; i < num_elements; ++i) {
+        arr.push_back(std::string(value[i]));
     }
 
     attr.Set(arr, time_code);

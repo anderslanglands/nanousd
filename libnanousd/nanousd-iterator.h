@@ -24,6 +24,9 @@ typedef struct nusd_token_array_iterator_s* nusd_token_array_iterator_t;
 typedef struct nusd_asset_path_array_iterator_s*
     nusd_asset_path_array_iterator_t;
 
+typedef struct nusd_string_array_iterator_s*
+    nusd_string_array_iterator_t;
+
 /// Advances the prim iterator to the next prim and returns its path.
 ///
 /// @param iterator Valid prim iterator handle.
@@ -276,6 +279,50 @@ nusd_asset_path_array_iterator_size(nusd_asset_path_array_iterator_t iterator);
 NANOUSD_API
 nusd_result_t nusd_asset_path_array_iterator_destroy(
     nusd_asset_path_array_iterator_t asset_paths);
+
+/// Advances the string array iterator to the next string and returns it.
+///
+/// @param strings Valid string array iterator handle.
+/// @param string_value Output pointer that will contain the current string if 
+/// available.
+///
+/// @return true if a string is available and string_value was set, false if 
+/// the iterator has reached the end or if an error occurred
+///
+/// @note strings must not be null.
+/// @note string_value must not be null.
+/// @note The returned string pointer is valid until the iterator is destroyed 
+/// or advanced.
+/// @note This function advances the iterator position, so subsequent calls 
+/// will return different strings.
+NANOUSD_API
+bool nusd_string_array_iterator_next(
+    nusd_string_array_iterator_t strings, char const** string_value);
+
+/// Returns the total number of strings in a string array iterator.
+///
+/// @param iterator Valid string array iterator handle.
+///
+/// @return Number of strings in the iterator.
+///
+/// @note iterator must not be null.
+/// @note This function returns the total size regardless of the current
+/// iteration position.
+NANOUSD_API
+size_t
+nusd_string_array_iterator_size(nusd_string_array_iterator_t iterator);
+
+/// Destroys a string array iterator and releases associated resources.
+///
+/// @param strings Valid string array iterator handle to destroy. Can be
+/// null (no-op).
+///
+/// @note After calling this function, the strings handle becomes invalid and
+/// must not be used.
+/// @note It is safe to call this function with a null strings handle.
+NANOUSD_API
+nusd_result_t nusd_string_array_iterator_destroy(
+    nusd_string_array_iterator_t strings);
 
 /// @}
 

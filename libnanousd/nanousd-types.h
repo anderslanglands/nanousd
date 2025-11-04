@@ -42,6 +42,7 @@ typedef char const* nusd_type_t;
 typedef char const* nusd_colorspace_t;
 typedef void* nusd_stage_t;
 typedef struct nusd_asset_path_s* nusd_asset_path_t;
+typedef struct nusd_string_s* nusd_string_t;
 
 extern nusd_type_t NUSD_TYPE_ASSET;
 extern nusd_type_t NUSD_TYPE_ASSETARRAY;

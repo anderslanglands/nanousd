@@ -834,5 +834,41 @@ def _set_property(
             raise SetPropertyError(
                 f'failed to set property "{property_path}: {result}'
             )
+    elif property_type == STRING:
+        if not isinstance(value, str):
+            raise SetPropertyError(
+                f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+            )
+        result = _lib.nusd_attribute_set_string(
+            stage._stage,
+            property_path.encode("ascii"),
+            value.encode("ascii"),
+            time_code,
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(
+                f'failed to set property "{property_path}: {result}'
+            )
+    elif property_type == STRINGARRAY:
+        if not isinstance(value, (list, tuple)) or not all(
+            isinstance(v, str) for v in value
+        ):
+            raise SetPropertyError(
+                f"incompatible types for property <{property_path}> with value type of {type(value)} and requested type of {property_type}"
+            )
+        # Convert string list to C array of char pointers
+        c_strings = [v.encode("ascii") for v in value]
+        c_array = (c_char_p * len(c_strings))(*c_strings)
+        result = _lib.nusd_attribute_set_string_array(
+            stage._stage,
+            property_path.encode("ascii"),
+            ctypes.cast(c_array, POINTER(POINTER(c_char))),
+            c_size_t(len(value)),
+            time_code,
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(
+                f'failed to set property "{property_path}: {result}'
+            )
     else:
         raise SetPropertyError(f"invalid type for property: {type(value)}")

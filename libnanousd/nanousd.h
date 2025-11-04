@@ -282,6 +282,29 @@ char const* nusd_asset_path_get_asset_path(nusd_asset_path_t asset_path);
 NANOUSD_API
 void nusd_asset_path_destroy(nusd_asset_path_t asset_path);
 
+/// Gets the string value from a string handle.
+///
+/// @param string_value Valid string handle.
+///
+/// @return The string value, or null if string_value is null.
+///
+/// @note string_value must not be null for valid results.
+/// @note The returned string is valid as long as the string_value handle remains
+/// valid.
+/// @note String handles represent USD string attributes.
+NANOUSD_API
+char const* nusd_string_get_string(nusd_string_t string_value);
+
+/// Destroys a string handle and releases associated resources.
+///
+/// @param string_value Valid string handle to destroy. Can be null (no-op).
+///
+/// @note After calling this function, the string_value handle becomes invalid and
+/// must not be used.
+/// @note It is safe to call this function with a null string_value handle.
+NANOUSD_API
+void nusd_string_destroy(nusd_string_t string_value);
+
 #ifdef __cplusplus
 }
 #endif

@@ -16,6 +16,11 @@ struct nusd_asset_path_array_iterator_s {
     PXR_NS::VtArray<PXR_NS::SdfAssetPath>::iterator current;
 };
 
+struct nusd_string_array_iterator_s {
+    PXR_NS::VtArray<std::string> strings;
+    PXR_NS::VtArray<std::string>::iterator current;
+};
+
 struct nusd_float_array_s {
     PXR_NS::VtFloatArray value;
 };
@@ -124,6 +129,39 @@ nusd_result_t nusd_asset_path_array_iterator_destroy(
     nusd_asset_path_array_iterator_t asset_paths) {
     if (asset_paths) {
         delete asset_paths;
+    }
+    return NUSD_RESULT_OK;
+}
+
+bool nusd_string_array_iterator_next(
+    nusd_string_array_iterator_t strings, char const** string_value) {
+    if (!strings || !string_value) {
+        return false;
+    }
+
+    if (strings->current == strings->strings.end()) {
+        return false;
+    }
+
+    *string_value = strings->current->c_str();
+
+    ++strings->current;
+    return true;
+}
+
+size_t
+nusd_string_array_iterator_size(nusd_string_array_iterator_t iterator) {
+    if (!iterator) {
+        return 0;
+    }
+
+    return iterator->strings.size();
+}
+
+nusd_result_t nusd_string_array_iterator_destroy(
+    nusd_string_array_iterator_t strings) {
+    if (strings) {
+        delete strings;
     }
     return NUSD_RESULT_OK;
 }
@@ -438,6 +476,35 @@ nusd_result_t nusd_attribute_get_asset_array(
 
     attr.Get(&(*asset_path_array)->paths, time_code);
     (*asset_path_array)->current = (*asset_path_array)->paths.begin();
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_attribute_get_string_array(
+    nusd_stage_t stage,
+    char const* attribute_path,
+    double time_code,
+    nusd_string_array_iterator_t* string_array) {
+    if (stage == nullptr || attribute_path == nullptr ||
+        string_array == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
+
+    *string_array = new nusd_string_array_iterator_s();
+
+    if (!attr) {
+        return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
+    }
+
+    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_STRINGARRAY) {
+        return NUSD_RESULT_WRONG_TYPE;
+    }
+
+    attr.Get(&(*string_array)->strings, time_code);
+    (*string_array)->current = (*string_array)->strings.begin();
 
     return NUSD_RESULT_OK;
 }

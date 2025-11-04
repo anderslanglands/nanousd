@@ -45,6 +45,10 @@ _lib.nusd_attribute_get_color_space.argtypes = [
     _lib.String,
     POINTER(c_char_p),
 ]
+_lib.nusd_string_array_iterator_next.argtypes = [
+    _lib.nusd_string_array_iterator_t,
+    POINTER(c_char_p),
+]
 
 
 class PrimIterator:

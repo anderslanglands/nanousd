@@ -2550,6 +2550,105 @@ nusd_result_t nusd_attribute_set_asset_array(nusd_stage_t stage,
                                              size_t num_elements,
                                              double time_code);
 
+/// Gets the value of the given attribute as a string, if the attribute is of 
+/// that type.
+///
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param time_code Time code at which to get the value.
+/// @param string_value Output pointer that will contain the string handle.
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or string_value 
+/// is null
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the 
+/// specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of string type
+///
+/// @note The returned string must be released with nusd_string_destroy() when 
+/// no longer needed.
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note string_value must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_string(nusd_stage_t stage,
+                                        char const* attribute_path,
+                                        double time_code,
+                                        nusd_string_t* string_value);
+
+/// Gets the value of the given attribute as a string array, if the attribute 
+/// is of that type.
+///
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param time_code Time code at which to get the value.
+/// @param string_array Output pointer that will contain the string array iterator.
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or string_array 
+/// is null
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the 
+/// specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of string array type
+///
+/// @note The returned string array must be released with 
+/// nusd_string_array_iterator_destroy() when no longer needed.
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note string_array must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_get_string_array(
+    nusd_stage_t stage,
+    char const* attribute_path,
+    double time_code,
+    nusd_string_array_iterator_t* string_array);
+
+/// Sets the value of the given attribute as a string.
+///
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value String value to set.
+/// @param time_code Time code at which to set the value.
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or value is null
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the 
+/// specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of string type
+///
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_string(nusd_stage_t stage,
+                                        char const* attribute_path,
+                                        char const* value,
+                                        double time_code);
+
+/// Sets the value of the given attribute as a string array.
+///
+/// @param stage Valid stage handle.
+/// @param attribute_path USD path to the attribute.
+/// @param value Array of string values to set.
+/// @param num_elements Number of elements in the string array.
+/// @param time_code Time code at which to set the value.
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, attribute_path, or value is null
+/// @return NUSD_RESULT_INVALID_ATTRIBUTE_PATH if no attribute exists at the 
+/// specified path
+/// @return NUSD_RESULT_WRONG_TYPE if the attribute is not of string array type
+///
+/// @note stage must not be null.
+/// @note attribute_path must not be null.
+/// @note value must not be null.
+NANOUSD_API
+nusd_result_t nusd_attribute_set_string_array(nusd_stage_t stage,
+                                              char const* attribute_path,
+                                              char const** value,
+                                              size_t num_elements,
+                                              double time_code);
+
 /// Sets the color space metadata for an attribute.
 /// @param stage The USD stage handle.
 /// @param attribute_path The full path to the attribute (e.g.,

@@ -526,6 +526,36 @@ def _get_property(stage, property_path: str, time_code: float = TIMECODE_DEFAULT
 
         _lib.nusd_asset_path_array_iterator_destroy(value)
         return result
+    elif property_type == _lib.NUSD_TYPE_STRING:
+        value = _lib.nusd_string_t()
+        result = _lib.nusd_attribute_get_string(
+            stage._stage, property_path, time_code, byref(value)
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise GetPropertyError(
+                f'failed to get value for "{property_path}": {result}'
+            )
+        string_value = _lib.nusd_string_get_string(value)
+        string_result = string_value.decode("utf-8") if string_value else ""
+        _lib.nusd_string_destroy(value)
+        return string_result
+    elif property_type == _lib.NUSD_TYPE_STRINGARRAY:
+        value = _lib.nusd_string_array_iterator_t()
+        result = _lib.nusd_attribute_get_string_array(
+            stage._stage, property_path, time_code, byref(value)
+        )
+        if result != _lib.NUSD_RESULT_OK:
+            raise GetPropertyError(
+                f'failed to get value for "{property_path}": {result}'
+            )
+
+        result = []
+        string_value = c_char_p()
+        while _lib.nusd_string_array_iterator_next(value, byref(string_value)):
+            result.append(string_value.value.decode("utf-8"))
+
+        _lib.nusd_string_array_iterator_destroy(value)
+        return result
     else:
         raise GetPropertyError(
             f'unknown type "{property_type}" for property "{property_path}"'
