@@ -1,5 +1,5 @@
-configure:
-    cmake -B build -G Ninja -S libnanousd
+configure *ARGS:
+    cmake -B build -G Ninja -S libnanousd {{ARGS}}
 
 build:
     cmake --build build
