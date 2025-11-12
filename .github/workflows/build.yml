@@ -1,0 +1,47 @@
+name: Build and Release nanousd as python wheel and C library distribution with dependencies
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    env:
+      OPENSUBDIV_VERSION: v3_7_0
+      OPENUSD_VERSION: v25.11
+      TBB_VERSION: 2021.12.0
+      DIST_FOLDER: openusd-minimal-25.11
+
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'  # Specify your desired version
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential wget git patchelf
+          pip install uv
+
+      - name: Build
+        run: |
+          uv build
+
+      - name: Archive built binaries
+        run: |
+          cp $GITHUB_WORKSPACE/dist/nanousd-0.1.0-cp311-cp311-linux_x86_64.whl $GITHUB_WORKSPACE/dist/nanousd-0.1.0.tar.gz $GITHUB_WORKSPACE/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: nanousd-0.1.0-cp311-cp311-linux_x86_64.whl nanousd-0.1.0.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+
