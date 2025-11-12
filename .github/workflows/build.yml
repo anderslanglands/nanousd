@@ -33,7 +33,7 @@ jobs:
       - name: Build
         run: |
           uv build
-          cmake -DCMAKE_INSTALL_PREFIX=dist -B build -G Ninja
+          cmake -DCMAKE_INSTALL_PREFIX=dist -B build -S libnanousd -G Ninja
           cmake --build build --target install
 
       - name: Archive built binaries
