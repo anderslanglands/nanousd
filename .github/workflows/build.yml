@@ -42,7 +42,9 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: nanousd-0.1.0-cp311-cp311-linux_x86_64.whl nanousd-0.1.0.tar.gz
+          files: |
+            nanousd-0.1.0-cp310-cp310-linux_x86_64.whl 
+            nanousd-0.1.0.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
 
