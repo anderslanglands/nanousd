@@ -36,6 +36,7 @@ jobs:
 
       - name: Archive built binaries
         run: |
+          ls $GITHUB_WORKSPACE/dist
           cp $GITHUB_WORKSPACE/dist/nanousd-0.1.0-cp311-cp311-linux_x86_64.whl $GITHUB_WORKSPACE/dist/nanousd-0.1.0.tar.gz $GITHUB_WORKSPACE/
 
       - name: Create Release
