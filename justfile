@@ -1,8 +1,8 @@
 configure *ARGS:
     cmake -B build -G Ninja -S libnanousd {{ARGS}}
 
-build:
-    cmake --build build
+build *ARGS:
+    cmake --build build {{ARGS}}
 
 test *ARGS:
     ctest --test-dir build --output-on-failure {{ARGS}}

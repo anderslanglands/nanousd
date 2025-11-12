@@ -11,10 +11,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(FetchContent)
 
+set(USD_MINIMAL_VERSION 25.11.15)
 if(LOCAL_USD_BUILD)
-    set(usd_minimal_SOURCE_DIR /home/anders/code/openusd-minimal-build/build/openusd-minimal-25.11)
+    set(usd_minimal_SOURCE_DIR /home/anders/code/openusd-minimal-build/build/openusd-minimal-${USD_MINIMAL_VERSION})
 else()
-    set(USD_MINIMAL_VERSION 25.11.10)
     FetchContent_Declare(
       usd_minimal
       URL "https://github.com/anderslanglands/openusd-minimal-build/releases/download/v${USD_MINIMAL_VERSION}/openusd-minimal-v${USD_MINIMAL_VERSION}.tar.gz"
@@ -25,6 +25,7 @@ endif()
 
 set(CMAKE_PREFIX_PATH ${usd_minimal_SOURCE_DIR})
 
+set(PXR_BUILD_MONOLITHIC ON)
 find_package(pxr REQUIRED)
 find_package(TBB REQUIRED)
 find_package(OpenSubdiv REQUIRED)
@@ -46,18 +47,55 @@ endif()
 
 target_include_directories(nanousd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+# set(CMAKE_INSTALL_RPATH "$ORIGIN")
 set_target_properties(nanousd PROPERTIES INSTALL_RPATH "$ORIGIN")
 
 get_target_property(TBB_LIBRARY_PATH TBB::tbb LOCATION)
 message("TBB: ${TBB_LIBRARY_PATH}")
+file(REAL_PATH "${TBB_LIBRARY_PATH}" TBB_RESOLVED_PATH)
+message("TBB_RESOLVED_PATH: ${TBB_RESOLVED_PATH}")
 
 get_target_property(USD_LIBRARY_PATH usd_ms LOCATION)
 message("USD: ${USD_LIBRARY_PATH}")
 
-install(TARGETS nanousd 
+set(HEADERS
+    nanousd-array.h
+    nanousd-camera.h
+    nanousd-iterator.h
+    nanousd-light.h
+    nanousd-material.h
+    nanousd-mesh.h
+    nanousd-prim.h
+    nanousd-property.h
+    nanousd-types.h
+    nanousd.h
+)
+
+target_sources(nanousd 
+    PUBLIC FILE_SET HEADERS
+    BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
+    FILES
+        nanousd-array.h
+        nanousd-camera.h
+        nanousd-iterator.h
+        nanousd-light.h
+        nanousd-material.h
+        nanousd-mesh.h
+        nanousd-prim.h
+        nanousd-property.h
+        nanousd-types.h
+        nanousd.h
+)
+
+install(TARGETS nanousd
         LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd"
         ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd"
-        RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd")
+        RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd"
+        FILE_SET HEADERS DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd"
+)
+
+message("INSTALL PATH ${CMAKE_INSTALL_PREFIX}/nanousd")
+install(FILES ${TBB_LIBRARY_PATH} ${TBB_RESOLVED_PATH} ${USD_LIBRARY_PATH} DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd")
 
 add_executable(example01 example01.cpp)
 target_link_libraries(example01 PUBLIC nanousd)
