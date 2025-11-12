@@ -33,11 +33,14 @@ jobs:
       - name: Build
         run: |
           uv build
+          cmake -DCMAKE_INSTALL_PREFIX=dist -B build -G Ninja
+          cmake --build build --target install
 
       - name: Archive built binaries
         run: |
           ls $GITHUB_WORKSPACE/dist
-          cp $GITHUB_WORKSPACE/dist/nanousd-0.1.0-cp310-cp310-linux_x86_64.whl $GITHUB_WORKSPACE/dist/nanousd-0.1.0.tar.gz $GITHUB_WORKSPACE/
+          cp $GITHUB_WORKSPACE/dist/nanousd-0.1.0-cp310-cp310-linux_x86_64.whl $GITHUB_WORKSPACE/
+          tar czf nanousd-0.1.0.tar.gz dist/nanousd
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
