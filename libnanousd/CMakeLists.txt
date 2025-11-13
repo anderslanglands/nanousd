@@ -13,7 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(FetchContent)
 
-set(USD_MINIMAL_VERSION 25.11.16)
+set(USD_MINIMAL_VERSION 25.11.17)
 if(LOCAL_USD_BUILD)
     set(usd_minimal_SOURCE_DIR /home/anders/code/openusd-minimal-build/build/openusd-minimal-${USD_MINIMAL_VERSION})
 else()
