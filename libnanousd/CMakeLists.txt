@@ -3,7 +3,8 @@ project(nanousd VERSION 0.1.0)
 
 option(ENABLE_DOCS "Enable buliding the API docs using Doxygen and Sphinx" OFF)
 option(ENABLE_TESTS "Enable the ctest-based tests" ON)
-option(USD_BUILD_TYPE "Choose debug or release for USD dependency" "release")
+
+set(USD_BUILD_TYPE "release" CACHE STRING "Choose debug or release for USD dependency")
 
 set(LOCAL_USD_BUILD OFF)
 set(STATIC_USD_BUILD OFF)
