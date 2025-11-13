@@ -3,6 +3,7 @@ project(nanousd VERSION 0.1.0)
 
 option(ENABLE_DOCS "Enable buliding the API docs using Doxygen and Sphinx" OFF)
 option(ENABLE_TESTS "Enable the ctest-based tests" ON)
+option(USD_BUILD_TYPE "Choose debug or release for USD dependency" "release")
 
 set(LOCAL_USD_BUILD OFF)
 set(STATIC_USD_BUILD OFF)
@@ -11,13 +12,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(FetchContent)
 
-set(USD_MINIMAL_VERSION 25.11.15)
+set(USD_MINIMAL_VERSION 25.11.16)
 if(LOCAL_USD_BUILD)
     set(usd_minimal_SOURCE_DIR /home/anders/code/openusd-minimal-build/build/openusd-minimal-${USD_MINIMAL_VERSION})
 else()
     FetchContent_Declare(
       usd_minimal
-      URL "https://github.com/anderslanglands/openusd-minimal-build/releases/download/v${USD_MINIMAL_VERSION}/openusd-minimal-v${USD_MINIMAL_VERSION}.tar.gz"
+      URL "https://github.com/anderslanglands/openusd-minimal-build/releases/download/v${USD_MINIMAL_VERSION}/openusd-minimal-${USD_BUILD_TYPE}-v${USD_MINIMAL_VERSION}.tar.gz"
       DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
     FetchContent_MakeAvailable(usd_minimal)
