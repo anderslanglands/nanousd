@@ -30,7 +30,7 @@ find_package(pxr REQUIRED)
 find_package(TBB REQUIRED)
 find_package(OpenSubdiv REQUIRED)
 
-add_library(nanousd SHARED 
+add_library(nanousd 
     nanousd.cpp
     nanousd-property.cpp
     nanousd-array.cpp
