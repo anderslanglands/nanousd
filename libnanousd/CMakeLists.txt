@@ -13,7 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(FetchContent)
 
-set(USD_MINIMAL_VERSION 25.11.17)
+set(USD_MINIMAL_VERSION 25.11.19)
 if(LOCAL_USD_BUILD)
     set(usd_minimal_SOURCE_DIR /home/anders/code/openusd-minimal-build/build/openusd-minimal-${USD_MINIMAL_VERSION})
 else()
@@ -27,7 +27,6 @@ endif()
 
 set(CMAKE_PREFIX_PATH ${usd_minimal_SOURCE_DIR})
 
-set(PXR_BUILD_MONOLITHIC ON)
 find_package(pxr REQUIRED)
 find_package(TBB REQUIRED)
 find_package(OpenSubdiv REQUIRED)
@@ -44,7 +43,7 @@ add_library(nanousd
 if(STATIC_USD_BUILD)
     target_link_libraries(nanousd PUBLIC "$<LINK_LIBRARY:WHOLE_ARCHIVE,usd_m>" "$<LINK_LIBRARY:WHOLE_ARCHIVE,OpenSubdiv::osdCPU_static>")
 else()
-    target_link_libraries(nanousd PUBLIC usd_ms)
+    target_link_libraries(nanousd PUBLIC ${PXR_LIBRARIES})
 endif()
 
 target_include_directories(nanousd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -57,8 +56,16 @@ message("TBB: ${TBB_LIBRARY_PATH}")
 file(REAL_PATH "${TBB_LIBRARY_PATH}" TBB_RESOLVED_PATH)
 message("TBB_RESOLVED_PATH: ${TBB_RESOLVED_PATH}")
 
-get_target_property(USD_LIBRARY_PATH usd_ms LOCATION)
-message("USD: ${USD_LIBRARY_PATH}")
+# get_target_property(USD_LIBRARY_PATH usd_ms LOCATION)
+# message("USD: ${USD_LIBRARY_PATH}")
+
+set(USD_LIBRARY_PATHS)
+foreach(lib IN LISTS PXR_LIBRARIES)
+    get_target_property(_lib_location ${lib} LOCATION)
+    if(_lib_location)
+        list(APPEND USD_LIBRARY_PATHS ${_lib_location})
+    endif()
+endforeach()
 
 set(HEADERS
     nanousd-array.h
@@ -97,7 +104,7 @@ install(TARGETS nanousd
 )
 
 message("INSTALL PATH ${CMAKE_INSTALL_PREFIX}/nanousd")
-install(FILES ${TBB_LIBRARY_PATH} ${TBB_RESOLVED_PATH} ${USD_LIBRARY_PATH} DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd")
+install(FILES ${TBB_LIBRARY_PATH} ${TBB_RESOLVED_PATH} ${USD_LIBRARY_PATHS} DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd")
 
 add_executable(example01 example01.cpp)
 target_link_libraries(example01 PUBLIC nanousd)
