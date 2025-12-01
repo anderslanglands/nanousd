@@ -6,7 +6,6 @@ option(ENABLE_TESTS "Enable the ctest-based tests" ON)
 
 set(USD_BUILD_TYPE "release" CACHE STRING "Choose debug or release for USD dependency")
 
-set(LOCAL_USD_BUILD OFF)
 set(STATIC_USD_BUILD OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -15,7 +14,7 @@ include(FetchContent)
 
 set(USD_MINIMAL_VERSION 25.11.19)
 if(LOCAL_USD_BUILD)
-    set(usd_minimal_SOURCE_DIR /home/anders/code/openusd-minimal-build/build/openusd-minimal-${USD_MINIMAL_VERSION})
+    set(usd_minimal_SOURCE_DIR /home/anders/code/openusd-minimal-build/build/openusd-minimal-25.11)
 else()
     FetchContent_Declare(
       usd_minimal
@@ -29,7 +28,6 @@ set(CMAKE_PREFIX_PATH ${usd_minimal_SOURCE_DIR})
 
 find_package(pxr REQUIRED)
 find_package(TBB REQUIRED)
-find_package(OpenSubdiv REQUIRED)
 
 add_library(nanousd 
     nanousd.cpp
@@ -41,6 +39,7 @@ add_library(nanousd
 )
 
 if(STATIC_USD_BUILD)
+    find_package(OpenSubdiv REQUIRED)
     target_link_libraries(nanousd PUBLIC "$<LINK_LIBRARY:WHOLE_ARCHIVE,usd_m>" "$<LINK_LIBRARY:WHOLE_ARCHIVE,OpenSubdiv::osdCPU_static>")
 else()
     target_link_libraries(nanousd PUBLIC ${PXR_LIBRARIES})
@@ -64,6 +63,7 @@ foreach(lib IN LISTS PXR_LIBRARIES)
     get_target_property(_lib_location ${lib} LOCATION)
     if(_lib_location)
         list(APPEND USD_LIBRARY_PATHS ${_lib_location})
+        cmake_path(GET _lib_location PARENT_PATH USD_LIB_DIR)
     endif()
 endforeach()
 
@@ -105,6 +105,7 @@ install(TARGETS nanousd
 
 message("INSTALL PATH ${CMAKE_INSTALL_PREFIX}/nanousd")
 install(FILES ${TBB_LIBRARY_PATH} ${TBB_RESOLVED_PATH} ${USD_LIBRARY_PATHS} DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd")
+install(DIRECTORY ${USD_LIB_DIR}/usd DESTINATION "${CMAKE_INSTALL_PREFIX}/nanousd")
 
 add_executable(example01 example01.cpp)
 target_link_libraries(example01 PUBLIC nanousd)
