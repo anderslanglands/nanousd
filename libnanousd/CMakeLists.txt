@@ -13,13 +13,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(FetchContent)
 
-set(USD_MINIMAL_VERSION 25.11.20)
+set(USD_MINIMAL_VERSION 25.11.23)
 if(LOCAL_USD_BUILD)
     set(usd_minimal_SOURCE_DIR /home/anders/code/openusd-minimal-build/build/openusd-minimal-25.11)
 else()
     FetchContent_Declare(
       usd_minimal
-      URL "https://github.com/anderslanglands/openusd-minimal-build/releases/download/v${USD_MINIMAL_VERSION}/openusd-minimal-${USD_BUILD_MONOLITHIC}-${USD_BUILD_TYPE}-v${USD_MINIMAL_VERSION}.tar.gz"
+      URL "https://github.com/anderslanglands/openusd-minimal-build/releases/download/v${USD_MINIMAL_VERSION}/openusd-minimal-v${USD_MINIMAL_VERSION}.tar.gz"
       DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
     FetchContent_MakeAvailable(usd_minimal)
