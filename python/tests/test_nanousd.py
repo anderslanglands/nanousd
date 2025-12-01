@@ -16,6 +16,30 @@ def test_stage_create_in_memory():
     stage = nusd.Stage.create_in_memory("test")
 
 
+def test_stage_create_new():
+    import tempfile
+    import os
+    
+    with tempfile.NamedTemporaryFile(suffix=".usda", delete=False) as f:
+        filepath = f.name
+    
+    try:
+        stage = nusd.Stage.create_new(filepath)
+        stage.define_prim("/World", "Xform")
+        stage.prim_create_property("/World", "testFloat", nusd.FLOAT, 42.0)
+        stage.save()
+        
+        assert os.path.exists(filepath)
+        
+        # Re-open and verify
+        stage2 = nusd.Stage.open(filepath)
+        value = stage2.get_property("/World.testFloat")
+        assert abs(value - 42.0) < 1e-6
+    finally:
+        if os.path.exists(filepath):
+            os.unlink(filepath)
+
+
 def test_stage_define_prim():
     stage = nusd.Stage.create_in_memory("test")
     stage.define_prim("/World", "Xform")
