@@ -23,7 +23,7 @@ source_path = "libnanousd"
 build_type = "Release"
 build_args = ["-j"]
 # args = ["-DCMAKE_PREFIX_PATH=/home/anders/packages/usd/25.08/_v/a:/home/anders/packages/osd/3.6.0/platform-linux/arch-x86_64/cxx11abi-1/cfg-release:/home/anders/packages/tbb/2020.3/platform-linux/arch-x86_64:/home/anders/packages/glew/2.1.0/platform-linux/arch-x86_64/cxx11abi-1/cfg-release:/home/anders/packages/boost/1.82.0/platform-linux/arch-x86_64/cxx11abi-1/python-3.11.9/cfg-release:/home/anders/packages/imath/3.1.9/platform-linux/arch-x86_64/cxx11abi-1/cfg-release:/home/anders/packages/jpegturbo/2.0.6/platform-linux/arch-x86_64/cxx11abi-1/cfg-release:/home/anders/packages/zlib/1.2.12/platform-linux/arch-x86_64/cxx11abi-1/cfg-release:/home/anders/packages/openexr/3.1.5/platform-linux/arch-x86_64/cxx11abi-1/cfg-release:/home/anders/packages/ocio/2.3.1/_v/b/bin:/home/anders/packages/openjpeg/2.4.0/platform-linux/arch-x86_64/cxx11abi-1/cfg-release/bin:/home/anders/packages/png/1.6.35/platform-linux/arch-x86_64/cxx11abi-1/cfg-release/bin:/home/anders/packages/raw/0.21.0/platform-linux/arch-x86_64/cxx11abi-1/cfg-release/bin:/home/anders/packages/tiff/4.3.0/platform-linux/arch-x86_64/cxx11abi-1/cfg-release/bin:/home/anders/packages/oiio/2.5.7.0/_v/b", "-DENABLE_TESTS=OFF", "-DENABLE_DOCS=OFF"]
-args = ["-DBUILD_SHARED_LIBS=ON", "-DENABLE_TESTS=OFF", "-DENABLE_DOCS=OFF", "-DLOCAL_USD_BUILD=ON", "-DCMAKE_VERBOSE_MAKEFILE=ON"]
+args = ["-DBUILD_SHARED_LIBS=ON", "-DENABLE_TESTS=OFF", "-DENABLE_DOCS=OFF", "-DCMAKE_VERBOSE_MAKEFILE=ON"]
 
 [tool.py-build-cmake.sdist]
 include = ["libnanousd/CMakeLists.txt", "libnanousd/*.cpp", "libnanousd/*.h", "libnanousd/tests"]
