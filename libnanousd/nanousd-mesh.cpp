@@ -72,4 +72,56 @@ nusd_result_t nusd_mesh_set_normals(nusd_stage_t stage,
     return NUSD_RESULT_OK;
 }
 
+
+NANOUSD_API
+nusd_result_t nusd_mesh_set_subdivision_scheme(nusd_stage_t stage,
+                                    char const* mesh_path,
+                                    nusd_subdivision_scheme_t subdivision_scheme,
+                                    nusd_triangle_subdivision_rule_t triangle_subdivision_rule) {
+    if (stage == nullptr || mesh_path == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdGeomMesh mesh(_stage->GetPrimAtPath(SdfPath(mesh_path)));
+    if (!mesh) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    TfToken tok_subdivision_scheme;
+    switch (subdivision_scheme) {
+        case NUSD_SUBDIVISION_SCHEME_NONE:
+            tok_subdivision_scheme = UsdGeomTokens->none;
+            break;
+        case NUSD_SUBDIVISION_SCHEME_CATMULL_CLARK:
+            tok_subdivision_scheme = UsdGeomTokens->catmullClark;
+            break;
+        case NUSD_SUBDIVISION_SCHEME_LOOP:
+            tok_subdivision_scheme = UsdGeomTokens->loop;
+            break;
+        case NUSD_SUBDIVISION_SCHEME_BILINEAR:
+            tok_subdivision_scheme = UsdGeomTokens->bilinear;
+            break;
+        default:
+            return NUSD_RESULT_INVALID_SUBDIVISION_SCHEME;
+    }
+
+    TfToken tok_triangle_subdivision_rule;
+    switch (triangle_subdivision_rule) {
+        case NUSD_TRIANGLE_SUBDIVISION_RULE_CATMULL_CLARK:
+            tok_triangle_subdivision_rule = UsdGeomTokens->catmullClark;
+            break;
+        case NUSD_TRIANGLE_SUBDIVISION_RULE_SMOOTH:
+            tok_triangle_subdivision_rule = UsdGeomTokens->smooth;
+            break;
+        default:
+            return NUSD_RESULT_INVALID_TRIANGLE_SUBDIVISION_RULE;
+    }
+
+    mesh.GetSubdivisionSchemeAttr().Set(tok_subdivision_scheme);
+    mesh.GetTriangleSubdivisionRuleAttr().Set(tok_triangle_subdivision_rule);
+
+    return NUSD_RESULT_OK;
+}
+
 }

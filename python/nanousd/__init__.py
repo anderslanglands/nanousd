@@ -1369,3 +1369,52 @@ class Stage:
             raise SetPropertyError(
                 f'failed to set normals for mesh "{mesh_path}": {result}'
             )
+
+    def mesh_set_subdivision_scheme(
+        self,
+        mesh_path: str,
+        subdivision_scheme: int,
+        triangle_subdivision_rule: int,
+    ):
+        """Set the subdivision scheme and triangle subdivision rule for an existing mesh.
+
+        Args:
+            mesh_path: USD path to an existing mesh prim
+            subdivision_scheme: The subdivision scheme to apply. Use one of:
+                - SUBDIVISION_SCHEME_NONE: Simple polygonal mesh (no subdivision)
+                - SUBDIVISION_SCHEME_CATMULL_CLARK: Catmull-Clark (default, good for quad meshes)
+                - SUBDIVISION_SCHEME_LOOP: Loop subdivision (for triangular meshes)
+                - SUBDIVISION_SCHEME_BILINEAR: Bilinear subdivision
+            triangle_subdivision_rule: The triangle subdivision rule. Use one of:
+                - TRIANGLE_SUBDIVISION_RULE_CATMULL_CLARK: Standard Catmull-Clark rule
+                - TRIANGLE_SUBDIVISION_RULE_SMOOTH: Smooth rule for better triangle handling
+
+        Raises:
+            SetPropertyError: If mesh_path is invalid
+            ValueError: If subdivision_scheme or triangle_subdivision_rule is invalid
+
+        Note:
+            - SUBDIVISION_SCHEME_NONE creates a simple polygonal mesh with linear interpolation
+            - SUBDIVISION_SCHEME_CATMULL_CLARK is preferred for quad-dominant meshes
+            - SUBDIVISION_SCHEME_LOOP is preferred for purely triangular meshes
+            - SUBDIVISION_SCHEME_BILINEAR provides bilinear interpolation
+            - The mesh prim must already exist before calling this function
+        """
+        result = _lib.nusd_mesh_set_subdivision_scheme(
+            self._stage,
+            mesh_path.encode("ascii"),
+            c_int(subdivision_scheme),
+            c_int(triangle_subdivision_rule),
+        )
+        if result == _lib.NUSD_RESULT_NULL_PARAMETER:
+            raise SetPropertyError(f'invalid parameters for mesh "{mesh_path}"')
+        elif result == _lib.NUSD_RESULT_INVALID_PRIM_PATH:
+            raise SetPropertyError(f'mesh not found at "{mesh_path}"')
+        elif result == _lib.NUSD_RESULT_INVALID_SUBDIVISION_SCHEME:
+            raise ValueError(f'invalid subdivision scheme: {subdivision_scheme}')
+        elif result == _lib.NUSD_RESULT_INVALID_TRIANGLE_SUBDIVISION_RULE:
+            raise ValueError(f'invalid triangle subdivision rule: {triangle_subdivision_rule}')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(
+                f'failed to set subdivision scheme for mesh "{mesh_path}": {result}'
+            )

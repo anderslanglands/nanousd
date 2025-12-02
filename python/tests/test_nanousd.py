@@ -1519,3 +1519,147 @@ def test_get_meters_per_unit_multiple_stages():
     
     assert stage1.get_meters_per_unit() == new_value1
     assert stage2.get_meters_per_unit() == value2  # Should be unchanged
+
+
+def test_mesh_set_subdivision_scheme_basic():
+    """Test basic subdivision scheme setting"""
+    stage = nusd.Stage.create_in_memory("test_mesh_set_subdivision_scheme_basic")
+    stage.define_prim("/World", "Xform")
+    
+    # Create a simple triangle mesh
+    face_vertex_counts = np.array([3], dtype=np.int32)
+    face_vertex_indices = np.array([0, 1, 2], dtype=np.int32)
+    vertices = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, 1.0, 0.0]], dtype=np.float32)
+    stage.mesh_define("/World/Mesh", face_vertex_counts, face_vertex_indices, vertices)
+    
+    # Test setting Catmull-Clark subdivision
+    stage.mesh_set_subdivision_scheme(
+        "/World/Mesh",
+        nusd.SUBDIVISION_SCHEME_CATMULL_CLARK,
+        nusd.TRIANGLE_SUBDIVISION_RULE_CATMULL_CLARK
+    )
+
+
+def test_mesh_set_subdivision_scheme_all_schemes():
+    """Test all subdivision schemes"""
+    stage = nusd.Stage.create_in_memory("test_mesh_set_subdivision_scheme_all")
+    stage.define_prim("/World", "Xform")
+    
+    # Create a simple quad mesh
+    face_vertex_counts = np.array([4], dtype=np.int32)
+    face_vertex_indices = np.array([0, 1, 2, 3], dtype=np.int32)
+    vertices = np.array([
+        [0.0, 0.0, 0.0], 
+        [1.0, 0.0, 0.0], 
+        [1.0, 1.0, 0.0], 
+        [0.0, 1.0, 0.0]
+    ], dtype=np.float32)
+    stage.mesh_define("/World/Quad", face_vertex_counts, face_vertex_indices, vertices)
+    
+    # Test SUBDIVISION_SCHEME_NONE (polygonal mesh)
+    stage.mesh_set_subdivision_scheme(
+        "/World/Quad",
+        nusd.SUBDIVISION_SCHEME_NONE,
+        nusd.TRIANGLE_SUBDIVISION_RULE_CATMULL_CLARK
+    )
+    
+    # Test SUBDIVISION_SCHEME_CATMULL_CLARK
+    stage.mesh_set_subdivision_scheme(
+        "/World/Quad",
+        nusd.SUBDIVISION_SCHEME_CATMULL_CLARK,
+        nusd.TRIANGLE_SUBDIVISION_RULE_CATMULL_CLARK
+    )
+    
+    # Test SUBDIVISION_SCHEME_LOOP
+    stage.mesh_set_subdivision_scheme(
+        "/World/Quad",
+        nusd.SUBDIVISION_SCHEME_LOOP,
+        nusd.TRIANGLE_SUBDIVISION_RULE_SMOOTH
+    )
+    
+    # Test SUBDIVISION_SCHEME_BILINEAR
+    stage.mesh_set_subdivision_scheme(
+        "/World/Quad",
+        nusd.SUBDIVISION_SCHEME_BILINEAR,
+        nusd.TRIANGLE_SUBDIVISION_RULE_CATMULL_CLARK
+    )
+
+
+def test_mesh_set_subdivision_scheme_triangle_rules():
+    """Test both triangle subdivision rules"""
+    stage = nusd.Stage.create_in_memory("test_mesh_set_subdivision_scheme_rules")
+    stage.define_prim("/World", "Xform")
+    
+    # Create a triangle mesh
+    face_vertex_counts = np.array([3], dtype=np.int32)
+    face_vertex_indices = np.array([0, 1, 2], dtype=np.int32)
+    vertices = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, 1.0, 0.0]], dtype=np.float32)
+    stage.mesh_define("/World/Triangle", face_vertex_counts, face_vertex_indices, vertices)
+    
+    # Test TRIANGLE_SUBDIVISION_RULE_CATMULL_CLARK
+    stage.mesh_set_subdivision_scheme(
+        "/World/Triangle",
+        nusd.SUBDIVISION_SCHEME_CATMULL_CLARK,
+        nusd.TRIANGLE_SUBDIVISION_RULE_CATMULL_CLARK
+    )
+    
+    # Test TRIANGLE_SUBDIVISION_RULE_SMOOTH
+    stage.mesh_set_subdivision_scheme(
+        "/World/Triangle",
+        nusd.SUBDIVISION_SCHEME_CATMULL_CLARK,
+        nusd.TRIANGLE_SUBDIVISION_RULE_SMOOTH
+    )
+
+
+def test_mesh_set_subdivision_scheme_invalid_mesh_path():
+    """Test error handling for invalid mesh path"""
+    stage = nusd.Stage.create_in_memory("test_mesh_set_subdivision_scheme_invalid")
+    stage.define_prim("/World", "Xform")
+    
+    # Test with non-existent mesh
+    with pytest.raises(nusd.SetPropertyError, match='mesh not found'):
+        stage.mesh_set_subdivision_scheme(
+            "/World/NonExistentMesh",
+            nusd.SUBDIVISION_SCHEME_NONE,
+            nusd.TRIANGLE_SUBDIVISION_RULE_CATMULL_CLARK
+        )
+
+
+def test_mesh_set_subdivision_scheme_invalid_scheme():
+    """Test error handling for invalid subdivision scheme"""
+    stage = nusd.Stage.create_in_memory("test_mesh_set_subdivision_scheme_invalid_scheme")
+    stage.define_prim("/World", "Xform")
+    
+    # Create a mesh
+    face_vertex_counts = np.array([3], dtype=np.int32)
+    face_vertex_indices = np.array([0, 1, 2], dtype=np.int32)
+    vertices = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, 1.0, 0.0]], dtype=np.float32)
+    stage.mesh_define("/World/Mesh", face_vertex_counts, face_vertex_indices, vertices)
+    
+    # Test with invalid subdivision scheme
+    with pytest.raises(ValueError, match='invalid subdivision scheme'):
+        stage.mesh_set_subdivision_scheme(
+            "/World/Mesh",
+            99,  # Invalid scheme
+            nusd.TRIANGLE_SUBDIVISION_RULE_CATMULL_CLARK
+        )
+
+
+def test_mesh_set_subdivision_scheme_invalid_rule():
+    """Test error handling for invalid triangle subdivision rule"""
+    stage = nusd.Stage.create_in_memory("test_mesh_set_subdivision_scheme_invalid_rule")
+    stage.define_prim("/World", "Xform")
+    
+    # Create a mesh
+    face_vertex_counts = np.array([3], dtype=np.int32)
+    face_vertex_indices = np.array([0, 1, 2], dtype=np.int32)
+    vertices = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, 1.0, 0.0]], dtype=np.float32)
+    stage.mesh_define("/World/Mesh", face_vertex_counts, face_vertex_indices, vertices)
+    
+    # Test with invalid triangle subdivision rule
+    with pytest.raises(ValueError, match='invalid triangle subdivision rule'):
+        stage.mesh_set_subdivision_scheme(
+            "/World/Mesh",
+            nusd.SUBDIVISION_SCHEME_CATMULL_CLARK,
+            99  # Invalid rule
+        )

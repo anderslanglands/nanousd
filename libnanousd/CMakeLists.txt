@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.24)
 project(nanousd VERSION 0.1.0)
 
+option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
+
 option(ENABLE_DOCS "Enable buliding the API docs using Doxygen and Sphinx" OFF)
 option(ENABLE_TESTS "Enable the ctest-based tests" ON)
 
