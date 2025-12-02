@@ -80,6 +80,7 @@ nusd_result_t nusd_stage_create_new(char const* identifier,
 /// @note stage must not be null.
 /// @note On failure, stage is set to nullptr.
 /// @note This creates no files on disk, unlike nusd_stage_create_new().
+/// @note This function is NOT thread-safe.
 NANOUSD_API
 nusd_result_t nusd_stage_create_in_memory(char const* identifier,
                                           nusd_stage_t* stage);
