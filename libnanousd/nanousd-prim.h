@@ -146,7 +146,7 @@ nusd_result_t nusd_prim_create_property(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_prim_set_transform(nusd_stage_t stage,
                                       char const* xformable_path,
-                                      double* local_to_parent,
+                                      double const* local_to_parent,
                                       double time_code);
 
 
@@ -178,7 +178,7 @@ NANOUSD_API
 nusd_result_t nusd_prim_add_translate_op(nusd_stage_t stage,
                                       char const* xformable_path,
                                       char const* op_suffix,
-                                      double* translation,
+                                      double const* translation,
                                       double time_code);
                                     
 
@@ -294,7 +294,7 @@ nusd_result_t nusd_prim_create_primvar(nusd_stage_t stage,
 /// @note For meshes, the extent should encompass all vertex positions.
 /// @note For primitives like cubes and spheres, the extent should match their geometric bounds.
 NANOUSD_API
-nusd_result_t nusd_prim_set_extent(nusd_stage_t stage, char const* prim_path, float* extent);
+nusd_result_t nusd_prim_set_extent(nusd_stage_t stage, char const* prim_path, float const* extent);
 
 
 /// @}

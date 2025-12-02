@@ -45,7 +45,7 @@ nusd_result_t nusd_rect_light_define(nusd_stage_t stage,
                                      float width,
                                      float height,
                                      float intensity,
-                                     float* color);
+                                     float const* color);
 
 /// Defines a new USD disk light prim at the specified path with light parameters.
 ///
@@ -76,7 +76,7 @@ nusd_result_t nusd_disk_light_define(nusd_stage_t stage,
                                      char const* light_path,
                                      float radius,
                                      float intensity,
-                                     float* color);
+                                     float const* color);
 
 /// Defines a new USD sphere light prim at the specified path with light parameters.
 ///
@@ -107,7 +107,7 @@ nusd_result_t nusd_sphere_light_define(nusd_stage_t stage,
                                      char const* light_path,
                                      float radius,
                                      float intensity,
-                                     float* color);
+                                     float const* color);
 
 /// Defines a new USD dome light prim at the specified path with environment lighting parameters.
 ///
@@ -144,7 +144,7 @@ nusd_result_t nusd_dome_light_define(nusd_stage_t stage,
                                      char const* light_path,
                                      char const* texture_file,
                                      float intensity,
-                                     float* color);
+                                     float const* color);
 /// @}
 
 #ifdef __cplusplus

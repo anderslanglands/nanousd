@@ -529,7 +529,7 @@ nusd_result_t nusd_attribute_get_matrix4d(nusd_stage_t stage,
 // matrix2d setters
 nusd_result_t nusd_attribute_set_matrix2d(nusd_stage_t stage,
                                           char const* attribute_path,
-                                          double* value,
+                                          double const* value,
                                           double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -547,7 +547,7 @@ nusd_result_t nusd_attribute_set_matrix2d(nusd_stage_t stage,
 // matrix3d setters
 nusd_result_t nusd_attribute_set_matrix3d(nusd_stage_t stage,
                                           char const* attribute_path,
-                                          double* value,
+                                          double const* value,
                                           double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -573,7 +573,7 @@ nusd_result_t nusd_attribute_set_matrix3d(nusd_stage_t stage,
 // matrix4d setters
 nusd_result_t nusd_attribute_set_matrix4d(nusd_stage_t stage,
                                           char const* attribute_path,
-                                          double* value,
+                                          double const* value,
                                           double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -646,7 +646,7 @@ nusd_result_t nusd_attribute_set_float(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_float2(nusd_stage_t stage,
                                         char const* attribute_path,
-                                        float* value,
+                                        float const* value,
                                         double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -667,7 +667,7 @@ nusd_result_t nusd_attribute_set_float2(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_float3(nusd_stage_t stage,
                                         char const* attribute_path,
-                                        float* value,
+                                        float const* value,
                                         double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -690,7 +690,7 @@ nusd_result_t nusd_attribute_set_float3(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_float4(nusd_stage_t stage,
                                         char const* attribute_path,
-                                        float* value,
+                                        float const* value,
                                         double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -731,7 +731,7 @@ nusd_result_t nusd_attribute_set_int(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_int2(nusd_stage_t stage,
                                       char const* attribute_path,
-                                      int* value,
+                                      int const* value,
                                       double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -751,7 +751,7 @@ nusd_result_t nusd_attribute_set_int2(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_int3(nusd_stage_t stage,
                                       char const* attribute_path,
-                                      int* value,
+                                      int const* value,
                                       double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -771,7 +771,7 @@ nusd_result_t nusd_attribute_set_int3(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_int4(nusd_stage_t stage,
                                       char const* attribute_path,
-                                      int* value,
+                                      int const* value,
                                       double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -949,7 +949,7 @@ nusd_result_t nusd_attribute_set_double(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_double2(nusd_stage_t stage,
                                          char const* attribute_path,
-                                         double* value,
+                                         double const* value,
                                          double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -969,7 +969,7 @@ nusd_result_t nusd_attribute_set_double2(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_double3(nusd_stage_t stage,
                                          char const* attribute_path,
-                                         double* value,
+                                         double const* value,
                                          double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));
@@ -989,7 +989,7 @@ nusd_result_t nusd_attribute_set_double3(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_double4(nusd_stage_t stage,
                                          char const* attribute_path,
-                                         double* value,
+                                         double const* value,
                                          double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     UsdAttribute attr = _stage->GetAttributeAtPath(SdfPath(attribute_path));

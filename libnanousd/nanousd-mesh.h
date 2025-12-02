@@ -89,11 +89,11 @@ typedef int nusd_triangle_subdivision_rule_t;
 NANOUSD_API
 nusd_result_t nusd_mesh_define(nusd_stage_t stage,
                                char const* mesh_path,
-                               int* face_vertex_counts,
+                               int const* face_vertex_counts,
                                size_t num_faces,
-                               int* face_vertex_indices,
+                               int const* face_vertex_indices,
                                size_t num_face_vertex_indices,
-                               float* vertices,
+                               float const* vertices,
                                size_t num_vertices);
 
 /// Sets vertex normals for an existing mesh with specified interpolation mode.
@@ -128,7 +128,7 @@ nusd_result_t nusd_mesh_define(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_mesh_set_normals(nusd_stage_t stage,
                                     char const* mesh_path,
-                                    float* normals,
+                                    float const* normals,
                                     size_t num_normals,
                                     nusd_interpolation_t interpolation);
 

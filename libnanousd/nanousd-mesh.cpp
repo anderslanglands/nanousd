@@ -14,11 +14,11 @@ extern "C" {
 
 nusd_result_t nusd_mesh_define(nusd_stage_t stage,
                                char const* mesh_path,
-                               int* face_vertex_counts,
+                               int const* face_vertex_counts,
                                size_t num_faces,
-                               int* face_vertex_indices,
+                               int const* face_vertex_indices,
                                size_t num_face_vertex_indices,
-                               float* vertices,
+                               float const* vertices,
                                size_t num_vertices) {
     
     if (stage == nullptr || mesh_path == nullptr || face_vertex_counts == nullptr || face_vertex_indices == nullptr || vertices == nullptr) {
@@ -32,7 +32,7 @@ nusd_result_t nusd_mesh_define(nusd_stage_t stage,
         return NUSD_RESULT_DEFINE_PRIM_FAILED;
     }
 
-    GfVec3f* _vertices = reinterpret_cast<GfVec3f*>(vertices);
+    GfVec3f const* _vertices = reinterpret_cast<GfVec3f const*>(vertices);
     VtVec3fArray points(_vertices, _vertices+num_vertices);
     mesh.GetPointsAttr().Set(points);
 
@@ -52,7 +52,7 @@ nusd_result_t nusd_mesh_define(nusd_stage_t stage,
 
 nusd_result_t nusd_mesh_set_normals(nusd_stage_t stage,
                                     char const* mesh_path,
-                                    float* normals,
+                                    float const* normals,
                                     size_t num_normals,
                                     nusd_interpolation_t interpolation) {
     if (stage == nullptr || mesh_path == nullptr || normals == nullptr) {
@@ -86,7 +86,7 @@ nusd_result_t nusd_mesh_set_normals(nusd_stage_t stage,
             return NUSD_RESULT_INVALID_INTERPOLATION;
     }
 
-    GfVec3f* _normals = reinterpret_cast<GfVec3f*>(normals);
+    GfVec3f const* _normals = reinterpret_cast<GfVec3f const*>(normals);
     VtVec3fArray normal_array(_normals, _normals+num_normals);
     mesh.GetNormalsAttr().Set(normal_array);
     mesh.SetNormalsInterpolation(tok_interpolation);

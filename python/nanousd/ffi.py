@@ -3217,85 +3217,85 @@ if _libs["nanousd"].has("nusd_stage_create_new", "cdecl"):
     nusd_stage_create_new.argtypes = [String, POINTER(nusd_stage_t)]
     nusd_stage_create_new.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 84
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 85
 if _libs["nanousd"].has("nusd_stage_create_in_memory", "cdecl"):
     nusd_stage_create_in_memory = _libs["nanousd"].get("nusd_stage_create_in_memory", "cdecl")
     nusd_stage_create_in_memory.argtypes = [String, POINTER(nusd_stage_t)]
     nusd_stage_create_in_memory.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 100
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 101
 if _libs["nanousd"].has("nusd_stage_save", "cdecl"):
     nusd_stage_save = _libs["nanousd"].get("nusd_stage_save", "cdecl")
     nusd_stage_save.argtypes = [nusd_stage_t]
     nusd_stage_save.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 114
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 115
 if _libs["nanousd"].has("nusd_stage_save_as", "cdecl"):
     nusd_stage_save_as = _libs["nanousd"].get("nusd_stage_save_as", "cdecl")
     nusd_stage_save_as.argtypes = [nusd_stage_t, String]
     nusd_stage_save_as.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 127
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 128
 if _libs["nanousd"].has("nusd_stage_destroy", "cdecl"):
     nusd_stage_destroy = _libs["nanousd"].get("nusd_stage_destroy", "cdecl")
     nusd_stage_destroy.argtypes = [nusd_stage_t]
     nusd_stage_destroy.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 146
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 147
 if _libs["nanousd"].has("nusd_stage_traverse", "cdecl"):
     nusd_stage_traverse = _libs["nanousd"].get("nusd_stage_traverse", "cdecl")
     nusd_stage_traverse.argtypes = [nusd_stage_t, POINTER(nusd_prim_iterator_t)]
     nusd_stage_traverse.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 165
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 166
 if _libs["nanousd"].has("nusd_stage_define_prim", "cdecl"):
     nusd_stage_define_prim = _libs["nanousd"].get("nusd_stage_define_prim", "cdecl")
     nusd_stage_define_prim.argtypes = [nusd_stage_t, String, String]
     nusd_stage_define_prim.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 181
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 182
 if _libs["nanousd"].has("nusd_stage_path_is_valid_prim", "cdecl"):
     nusd_stage_path_is_valid_prim = _libs["nanousd"].get("nusd_stage_path_is_valid_prim", "cdecl")
     nusd_stage_path_is_valid_prim.argtypes = [nusd_stage_t, String]
     nusd_stage_path_is_valid_prim.restype = c_bool
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 212
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 213
 if _libs["nanousd"].has("nusd_stage_set_meters_per_unit", "cdecl"):
     nusd_stage_set_meters_per_unit = _libs["nanousd"].get("nusd_stage_set_meters_per_unit", "cdecl")
     nusd_stage_set_meters_per_unit.argtypes = [nusd_stage_t, c_double]
     nusd_stage_set_meters_per_unit.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 240
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 241
 if _libs["nanousd"].has("nusd_stage_get_meters_per_unit", "cdecl"):
     nusd_stage_get_meters_per_unit = _libs["nanousd"].get("nusd_stage_get_meters_per_unit", "cdecl")
     nusd_stage_get_meters_per_unit.argtypes = [nusd_stage_t, POINTER(c_double)]
     nusd_stage_get_meters_per_unit.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 259
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 260
 if _libs["nanousd"].has("nusd_path_get_name", "cdecl"):
     nusd_path_get_name = _libs["nanousd"].get("nusd_path_get_name", "cdecl")
     nusd_path_get_name.argtypes = [String]
     nusd_path_get_name.restype = c_char_p
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 273
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 274
 if _libs["nanousd"].has("nusd_asset_path_get_asset_path", "cdecl"):
     nusd_asset_path_get_asset_path = _libs["nanousd"].get("nusd_asset_path_get_asset_path", "cdecl")
     nusd_asset_path_get_asset_path.argtypes = [nusd_asset_path_t]
     nusd_asset_path_get_asset_path.restype = c_char_p
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 283
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 284
 if _libs["nanousd"].has("nusd_asset_path_destroy", "cdecl"):
     nusd_asset_path_destroy = _libs["nanousd"].get("nusd_asset_path_destroy", "cdecl")
     nusd_asset_path_destroy.argtypes = [nusd_asset_path_t]
     nusd_asset_path_destroy.restype = None
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 296
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 297
 if _libs["nanousd"].has("nusd_string_get_string", "cdecl"):
     nusd_string_get_string = _libs["nanousd"].get("nusd_string_get_string", "cdecl")
     nusd_string_get_string.argtypes = [nusd_string_t]
     nusd_string_get_string.restype = c_char_p
 
-# /home/anders/code/nanousd/libnanousd/nanousd.h: 306
+# /home/anders/code/nanousd/libnanousd/nanousd.h: 307
 if _libs["nanousd"].has("nusd_string_destroy", "cdecl"):
     nusd_string_destroy = _libs["nanousd"].get("nusd_string_destroy", "cdecl")
     nusd_string_destroy.argtypes = [nusd_string_t]

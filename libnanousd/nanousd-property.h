@@ -361,7 +361,7 @@ nusd_result_t nusd_attribute_set_float(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_float_array(nusd_stage_t stage,
                                              char const* attribute_path,
-                                             float* data,
+                                             float const* data,
                                              size_t num_elements,
                                              double time_code);
 
@@ -388,7 +388,7 @@ nusd_result_t nusd_attribute_set_float_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_float2(nusd_stage_t stage,
                                         char const* attribute_path,
-                                        float* value,
+                                        float const* value,
                                         double time_code);
 
 /// Sets the value of the given attribute to a float2 array, if the attribute is
@@ -415,7 +415,7 @@ nusd_result_t nusd_attribute_set_float2(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_float2_array(nusd_stage_t stage,
                                               char const* attribute_path,
-                                              float* data,
+                                              float const* data,
                                               size_t num_elements,
                                               double time_code);
 
@@ -442,7 +442,7 @@ nusd_result_t nusd_attribute_set_float2_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_float3(nusd_stage_t stage,
                                         char const* attribute_path,
-                                        float* value,
+                                        float const* value,
                                         double time_code);
 
 /// Sets the value of the given attribute to a float3 array, if the attribute is
@@ -470,7 +470,7 @@ nusd_result_t nusd_attribute_set_float3(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_float3_array(nusd_stage_t stage,
                                               char const* attribute_path,
-                                              float* data,
+                                              float const* data,
                                               size_t num_elements,
                                               double time_code);
 
@@ -497,7 +497,7 @@ nusd_result_t nusd_attribute_set_float3_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_float4(nusd_stage_t stage,
                                         char const* attribute_path,
-                                        float* value,
+                                        float const* value,
                                         double time_code);
 
 /// Sets the value of the given attribute to a float4 array, if the attribute is
@@ -525,7 +525,7 @@ nusd_result_t nusd_attribute_set_float4(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_float4_array(nusd_stage_t stage,
                                               char const* attribute_path,
-                                              float* data,
+                                              float const* data,
                                               size_t num_elements,
                                               double time_code);
 
@@ -809,7 +809,7 @@ nusd_result_t nusd_attribute_set_double(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_double_array(nusd_stage_t stage,
                                               char const* attribute_path,
-                                              double* data,
+                                              double const* data,
                                               size_t num_elements,
                                               double time_code);
 
@@ -838,7 +838,7 @@ nusd_result_t nusd_attribute_set_double_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_double2(nusd_stage_t stage,
                                          char const* attribute_path,
-                                         double* value,
+                                         double const* value,
                                          double time_code);
 
 /// Sets the value of the given attribute to a double2 array, if the attribute
@@ -867,7 +867,7 @@ nusd_result_t nusd_attribute_set_double2(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_double2_array(nusd_stage_t stage,
                                                char const* attribute_path,
-                                               double* data,
+                                               double const* data,
                                                size_t num_elements,
                                                double time_code);
 
@@ -896,7 +896,7 @@ nusd_result_t nusd_attribute_set_double2_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_double3(nusd_stage_t stage,
                                          char const* attribute_path,
-                                         double* value,
+                                         double const* value,
                                          double time_code);
 
 /// Sets the value of the given attribute to a double3 array, if the attribute
@@ -926,7 +926,7 @@ nusd_result_t nusd_attribute_set_double3(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_double3_array(nusd_stage_t stage,
                                                char const* attribute_path,
-                                               double* data,
+                                               double const* data,
                                                size_t num_elements,
                                                double time_code);
 
@@ -955,7 +955,7 @@ nusd_result_t nusd_attribute_set_double3_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_double4(nusd_stage_t stage,
                                          char const* attribute_path,
-                                         double* value,
+                                         double const* value,
                                          double time_code);
 
 /// Sets the value of the given attribute to a double4 array, if the attribute
@@ -985,7 +985,7 @@ nusd_result_t nusd_attribute_set_double4(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_double4_array(nusd_stage_t stage,
                                                char const* attribute_path,
-                                               double* data,
+                                               double const* data,
                                                size_t num_elements,
                                                double time_code);
 
@@ -1322,7 +1322,7 @@ nusd_result_t nusd_attribute_set_int(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_int_array(nusd_stage_t stage,
                                            char const* attribute_path,
-                                           int* data,
+                                           int const* data,
                                            size_t num_elements,
                                            double time_code);
 
@@ -1350,7 +1350,7 @@ nusd_result_t nusd_attribute_set_int_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_int2(nusd_stage_t stage,
                                       char const* attribute_path,
-                                      int* value,
+                                      int const* value,
                                       double time_code);
 
 /// Sets the value of the given attribute to an int2 array, if the attribute is
@@ -1379,7 +1379,7 @@ nusd_result_t nusd_attribute_set_int2(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_int2_array(nusd_stage_t stage,
                                             char const* attribute_path,
-                                            int* data,
+                                            int const* data,
                                             size_t num_elements,
                                             double time_code);
 
@@ -1407,7 +1407,7 @@ nusd_result_t nusd_attribute_set_int2_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_int3(nusd_stage_t stage,
                                       char const* attribute_path,
-                                      int* value,
+                                      int const* value,
                                       double time_code);
 
 /// Sets the value of the given attribute to an int3 array, if the attribute is
@@ -1437,7 +1437,7 @@ nusd_result_t nusd_attribute_set_int3(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_int3_array(nusd_stage_t stage,
                                             char const* attribute_path,
-                                            int* data,
+                                            int const* data,
                                             size_t num_elements,
                                             double time_code);
 
@@ -1465,7 +1465,7 @@ nusd_result_t nusd_attribute_set_int3_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_int4(nusd_stage_t stage,
                                       char const* attribute_path,
-                                      int* value,
+                                      int const* value,
                                       double time_code);
 
 /// Sets the value of the given attribute to an int4 array, if the attribute is
@@ -1495,7 +1495,7 @@ nusd_result_t nusd_attribute_set_int4(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_int4_array(nusd_stage_t stage,
                                             char const* attribute_path,
-                                            int* data,
+                                            int const* data,
                                             size_t num_elements,
                                             double time_code);
 
@@ -1552,7 +1552,7 @@ nusd_result_t nusd_attribute_set_int64(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_int64_array(nusd_stage_t stage,
                                              char const* attribute_path,
-                                             int64_t* data,
+                                             int64_t const* data,
                                              size_t num_elements,
                                              double time_code);
 
@@ -1839,7 +1839,7 @@ nusd_result_t nusd_attribute_set_bool(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_bool_array(nusd_stage_t stage,
                                             char const* attribute_path,
-                                            bool* data,
+                                            bool const* data,
                                             size_t num_elements,
                                             double time_code);
 
@@ -1869,7 +1869,7 @@ nusd_result_t nusd_attribute_set_bool_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_matrix2d(nusd_stage_t stage,
                                           char const* attribute_path,
-                                          double* value,
+                                          double const* value,
                                           double time_code);
 
 /// Sets the value of the given attribute to a matrix2d array, if the attribute
@@ -1901,7 +1901,7 @@ nusd_result_t nusd_attribute_set_matrix2d(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_matrix2d_array(nusd_stage_t stage,
                                                 char const* attribute_path,
-                                                double* data,
+                                                double const* data,
                                                 size_t num_elements,
                                                 double time_code);
 
@@ -1931,7 +1931,7 @@ nusd_result_t nusd_attribute_set_matrix2d_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_matrix3d(nusd_stage_t stage,
                                           char const* attribute_path,
-                                          double* value,
+                                          double const* value,
                                           double time_code);
 
 /// Sets the value of the given attribute to a matrix3d array, if the attribute
@@ -1963,7 +1963,7 @@ nusd_result_t nusd_attribute_set_matrix3d(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_matrix3d_array(nusd_stage_t stage,
                                                 char const* attribute_path,
-                                                double* data,
+                                                double const* data,
                                                 size_t num_elements,
                                                 double time_code);
 
@@ -1993,7 +1993,7 @@ nusd_result_t nusd_attribute_set_matrix3d_array(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_matrix4d(nusd_stage_t stage,
                                           char const* attribute_path,
-                                          double* value,
+                                          double const* value,
                                           double time_code);
 
 /// Sets the value of the given attribute to a matrix4d array, if the attribute
@@ -2025,7 +2025,7 @@ nusd_result_t nusd_attribute_set_matrix4d(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_matrix4d_array(nusd_stage_t stage,
                                                 char const* attribute_path,
-                                                double* data,
+                                                double const* data,
                                                 size_t num_elements,
                                                 double time_code);
 
@@ -2248,7 +2248,7 @@ nusd_result_t nusd_attribute_set_uint(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_uint_array(nusd_stage_t stage,
                                             char const* attribute_path,
-                                            unsigned int* data,
+                                            unsigned int const* data,
                                             size_t num_elements,
                                             double time_code);
 
@@ -2305,7 +2305,7 @@ nusd_result_t nusd_attribute_set_uint64(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_uint64_array(nusd_stage_t stage,
                                               char const* attribute_path,
-                                              uint64_t* data,
+                                              uint64_t const* data,
                                               size_t num_elements,
                                               double time_code);
 
@@ -2362,7 +2362,7 @@ nusd_result_t nusd_attribute_set_uchar(nusd_stage_t stage,
 NANOUSD_API
 nusd_result_t nusd_attribute_set_uchar_array(nusd_stage_t stage,
                                              char const* attribute_path,
-                                             unsigned char* data,
+                                             unsigned char const* data,
                                              size_t num_elements,
                                              double time_code);
 

@@ -22,7 +22,7 @@ extern "C" {
 nusd_result_t nusd_prim_add_translate_op(nusd_stage_t stage,
                                          char const* xformable_path,
                                          char const* op_suffix,
-                                         double* translation,
+                                         double const* translation,
                                          double time_code) {
     if (stage == nullptr || xformable_path == nullptr) {
         return NUSD_RESULT_NULL_PARAMETER;
@@ -97,7 +97,7 @@ nusd_result_t nusd_prim_create_primvar(nusd_stage_t stage,
 }
 
 nusd_result_t
-nusd_prim_set_extent(nusd_stage_t stage, char const* prim_path, float* extent) {
+nusd_prim_set_extent(nusd_stage_t stage, char const* prim_path, float const* extent) {
     if (stage == nullptr || prim_path == nullptr || extent == nullptr) {
         return NUSD_RESULT_NULL_PARAMETER;
     }
@@ -110,7 +110,7 @@ nusd_prim_set_extent(nusd_stage_t stage, char const* prim_path, float* extent) {
         return NUSD_RESULT_INVALID_PRIM_PATH;
     }
 
-    GfVec3f* _extent = reinterpret_cast<GfVec3f*>(extent);
+    GfVec3f const* _extent = reinterpret_cast<GfVec3f const*>(extent);
     VtVec3fArray value(_extent, _extent + 2);
     boundable.GetExtentAttr().Set(value);
 

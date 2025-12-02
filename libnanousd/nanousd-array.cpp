@@ -822,7 +822,7 @@ nusd_result_t nusd_attribute_get_bool_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_bool_array(nusd_stage_t stage,
                                             char const* attribute_path,
-                                            bool* data,
+                                            bool const* data,
                                             size_t num_elements,
                                             double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -906,7 +906,7 @@ nusd_attribute_get_matrix4d_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_matrix2d_array(nusd_stage_t stage,
                                                 char const* attribute_path,
-                                                double* _data,
+                                                double const* _data,
                                                 size_t num_elements,
                                                 double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -918,7 +918,7 @@ nusd_result_t nusd_attribute_set_matrix2d_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfMatrix2d* data = reinterpret_cast<GfMatrix2d*>(_data);
+    GfMatrix2d const* data = reinterpret_cast<GfMatrix2d const*>(_data);
     VtArray<GfMatrix2d> value(data, data + num_elements);
     attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
@@ -926,7 +926,7 @@ nusd_result_t nusd_attribute_set_matrix2d_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_matrix3d_array(nusd_stage_t stage,
                                                 char const* attribute_path,
-                                                double* _data,
+                                                double const* _data,
                                                 size_t num_elements,
                                                 double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -938,7 +938,7 @@ nusd_result_t nusd_attribute_set_matrix3d_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfMatrix3d* data = reinterpret_cast<GfMatrix3d*>(_data);
+    GfMatrix3d const* data = reinterpret_cast<GfMatrix3d const*>(_data);
     VtArray<GfMatrix3d> value(data, data + num_elements);
     attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
@@ -946,7 +946,7 @@ nusd_result_t nusd_attribute_set_matrix3d_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_matrix4d_array(nusd_stage_t stage,
                                                 char const* attribute_path,
-                                                double* _data,
+                                                double const* _data,
                                                 size_t num_elements,
                                                 double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -958,7 +958,7 @@ nusd_result_t nusd_attribute_set_matrix4d_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfMatrix4d* data = reinterpret_cast<GfMatrix4d*>(_data);
+    GfMatrix4d const* data = reinterpret_cast<GfMatrix4d const*>(_data);
     VtArray<GfMatrix4d> value(data, data + num_elements);
     attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
@@ -966,7 +966,7 @@ nusd_result_t nusd_attribute_set_matrix4d_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_float_array(nusd_stage_t stage,
                                              char const* attribute_path,
-                                             float* data,
+                                             float const* data,
                                              size_t num_elements,
                                              double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -989,7 +989,7 @@ nusd_result_t nusd_attribute_set_float_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_float2_array(nusd_stage_t stage,
                                               char const* attribute_path,
-                                              float* _data,
+                                              float const* _data,
                                               size_t num_elements,
                                               double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1005,7 +1005,7 @@ nusd_result_t nusd_attribute_set_float2_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfVec2f* data = reinterpret_cast<GfVec2f*>(_data);
+    GfVec2f const* data = reinterpret_cast<GfVec2f const*>(_data);
     VtArray<GfVec2f> value(data, data + num_elements);
 
     attr.Set(std::move(value), time_code);
@@ -1015,7 +1015,7 @@ nusd_result_t nusd_attribute_set_float2_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_float3_array(nusd_stage_t stage,
                                               char const* attribute_path,
-                                              float* _data,
+                                              float const* _data,
                                               size_t num_elements,
                                               double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1035,7 +1035,7 @@ nusd_result_t nusd_attribute_set_float3_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfVec3f* data = reinterpret_cast<GfVec3f*>(_data);
+    GfVec3f const* data = reinterpret_cast<GfVec3f const*>(_data);
     VtArray<GfVec3f> value(data, data + num_elements);
 
     attr.Set(std::move(value), time_code);
@@ -1045,7 +1045,7 @@ nusd_result_t nusd_attribute_set_float3_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_float4_array(nusd_stage_t stage,
                                               char const* attribute_path,
-                                              float* _data,
+                                              float const* _data,
                                               size_t num_elements,
                                               double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1061,7 +1061,7 @@ nusd_result_t nusd_attribute_set_float4_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfVec4f* data = reinterpret_cast<GfVec4f*>(_data);
+    GfVec4f const* data = reinterpret_cast<GfVec4f const*>(_data);
     VtArray<GfVec4f> value(data, data + num_elements);
 
     attr.Set(std::move(value), time_code);
@@ -1071,7 +1071,7 @@ nusd_result_t nusd_attribute_set_float4_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_int_array(nusd_stage_t stage,
                                            char const* attribute_path,
-                                           int* data,
+                                           int const* data,
                                            size_t num_elements,
                                            double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1092,7 +1092,7 @@ nusd_result_t nusd_attribute_set_int_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_int2_array(nusd_stage_t stage,
                                             char const* attribute_path,
-                                            int* _data,
+                                            int const* _data,
                                             size_t num_elements,
                                             double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1106,7 +1106,7 @@ nusd_result_t nusd_attribute_set_int2_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfVec2i* data = reinterpret_cast<GfVec2i*>(_data);
+    GfVec2i const* data = reinterpret_cast<GfVec2i const*>(_data);
     VtArray<GfVec2i> value(data, data + num_elements);
     attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
@@ -1114,7 +1114,7 @@ nusd_result_t nusd_attribute_set_int2_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_int3_array(nusd_stage_t stage,
                                             char const* attribute_path,
-                                            int* _data,
+                                            int const* _data,
                                             size_t num_elements,
                                             double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1128,7 +1128,7 @@ nusd_result_t nusd_attribute_set_int3_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfVec3i* data = reinterpret_cast<GfVec3i*>(_data);
+    GfVec3i const* data = reinterpret_cast<GfVec3i const*>(_data);
     VtArray<GfVec3i> value(data, data + num_elements);
     attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
@@ -1136,7 +1136,7 @@ nusd_result_t nusd_attribute_set_int3_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_int4_array(nusd_stage_t stage,
                                             char const* attribute_path,
-                                            int* _data,
+                                            int const* _data,
                                             size_t num_elements,
                                             double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1150,7 +1150,7 @@ nusd_result_t nusd_attribute_set_int4_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfVec4i* data = reinterpret_cast<GfVec4i*>(_data);
+    GfVec4i const* data = reinterpret_cast<GfVec4i const*>(_data);
     VtArray<GfVec4i> value(data, data + num_elements);
     attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
@@ -1235,7 +1235,7 @@ nusd_result_t nusd_attribute_get_uchar_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_int64_array(nusd_stage_t stage,
                                              char const* attribute_path,
-                                             int64_t* data,
+                                             int64_t const* data,
                                              size_t num_elements,
                                              double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1256,7 +1256,7 @@ nusd_result_t nusd_attribute_set_int64_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_uint_array(nusd_stage_t stage,
                                             char const* attribute_path,
-                                            unsigned int* data,
+                                            unsigned int const* data,
                                             size_t num_elements,
                                             double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1274,7 +1274,7 @@ nusd_result_t nusd_attribute_set_uint_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_uint64_array(nusd_stage_t stage,
                                               char const* attribute_path,
-                                              uint64_t* data,
+                                              uint64_t const* data,
                                               size_t num_elements,
                                               double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1292,7 +1292,7 @@ nusd_result_t nusd_attribute_set_uint64_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_uchar_array(nusd_stage_t stage,
                                              char const* attribute_path,
-                                             unsigned char* data,
+                                             unsigned char const* data,
                                              size_t num_elements,
                                              double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1310,7 +1310,7 @@ nusd_result_t nusd_attribute_set_uchar_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_double_array(nusd_stage_t stage,
                                               char const* attribute_path,
-                                              double* data,
+                                              double const* data,
                                               size_t num_elements,
                                               double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1331,7 +1331,7 @@ nusd_result_t nusd_attribute_set_double_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_double2_array(nusd_stage_t stage,
                                                char const* attribute_path,
-                                               double* _data,
+                                               double const* _data,
                                                size_t num_elements,
                                                double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1345,7 +1345,7 @@ nusd_result_t nusd_attribute_set_double2_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfVec2d* data = reinterpret_cast<GfVec2d*>(_data);
+    GfVec2d const* data = reinterpret_cast<GfVec2d const*>(_data);
     VtArray<GfVec2d> value(data, data + num_elements);
     attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
@@ -1353,7 +1353,7 @@ nusd_result_t nusd_attribute_set_double2_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_double3_array(nusd_stage_t stage,
                                                char const* attribute_path,
-                                               double* _data,
+                                               double const* _data,
                                                size_t num_elements,
                                                double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1367,7 +1367,7 @@ nusd_result_t nusd_attribute_set_double3_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfVec3d* data = reinterpret_cast<GfVec3d*>(_data);
+    GfVec3d const* data = reinterpret_cast<GfVec3d const*>(_data);
     VtArray<GfVec3d> value(data, data + num_elements);
     attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;
@@ -1375,7 +1375,7 @@ nusd_result_t nusd_attribute_set_double3_array(nusd_stage_t stage,
 
 nusd_result_t nusd_attribute_set_double4_array(nusd_stage_t stage,
                                                char const* attribute_path,
-                                               double* _data,
+                                               double const* _data,
                                                size_t num_elements,
                                                double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -1389,7 +1389,7 @@ nusd_result_t nusd_attribute_set_double4_array(nusd_stage_t stage,
         return NUSD_RESULT_WRONG_TYPE;
     }
 
-    GfVec4d* data = reinterpret_cast<GfVec4d*>(_data);
+    GfVec4d const* data = reinterpret_cast<GfVec4d const*>(_data);
     VtArray<GfVec4d> value(data, data + num_elements);
     attr.Set(std::move(value), time_code);
     return NUSD_RESULT_OK;

@@ -804,7 +804,7 @@ nusd_result_t nusd_camera_define(nusd_stage_t stage, char const* camera_path) {
 
 nusd_result_t nusd_prim_set_transform(nusd_stage_t stage,
                                       char const* xformable_path,
-                                      double* local_to_parent_matrix,
+                                      double const* local_to_parent_matrix,
                                       double time_code) {
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
 
@@ -816,7 +816,7 @@ nusd_result_t nusd_prim_set_transform(nusd_stage_t stage,
 
     if (local_to_parent_matrix) {
         UsdGeomXformOp op = xformable.AddTransformOp();
-        op.Set(*reinterpret_cast<GfMatrix4d*>(local_to_parent_matrix),
+        op.Set(*reinterpret_cast<GfMatrix4d const*>(local_to_parent_matrix),
                time_code);
     } else {
         return NUSD_RESULT_NULL_PARAMETER;
