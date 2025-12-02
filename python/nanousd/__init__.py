@@ -485,7 +485,7 @@ class Stage:
         prim_path: str,
         primvar_name: str,
         primvar_type: str,
-        primvar_interpolation: str,
+        primvar_interpolation: int,
         value=None,
         time_code: float = TIMECODE_DEFAULT,
     ):
@@ -502,6 +502,7 @@ class Stage:
         Raises:
             CreatePropertyError: If the primvar cannot be created
             SetPropertyError: If value is provided but cannot be set
+            ValueError: If primvar_interpolation is not a valid interpolation enum value
             
         Note:
             Primvars store per-vertex, per-face, or per-primitive data such as colors, texture coordinates, and normals.
@@ -516,9 +517,11 @@ class Stage:
             (e.g., "/World/Mesh.primvars:displayColor").
         """
         result = _lib.nusd_prim_create_primvar(
-            self._stage, prim_path, primvar_name, primvar_type, primvar_interpolation
+            self._stage, prim_path, primvar_name, primvar_type, c_int(primvar_interpolation)
         )
-        if result != _lib.NUSD_RESULT_OK:
+        if result == _lib.NUSD_RESULT_INVALID_INTERPOLATION:
+            raise ValueError(f'invalid interpolation value: {primvar_interpolation}')
+        elif result != _lib.NUSD_RESULT_OK:
             raise CreatePropertyError(
                 f'failed to create primvar "{primvar_name}" on prim <{prim_path}>: {result}'
             )
@@ -1322,27 +1325,27 @@ class Stage:
         self,
         mesh_path: str,
         normals: np.ndarray,
-        interpolation,
+        interpolation: int,
     ):
         """Set vertex normals for an existing mesh with specified interpolation mode.
 
         Args:
             mesh_path: USD path to an existing mesh prim
             normals: Array of normal vectors as float triplets (x, y, z)
-            interpolation: Interpolation mode for the normals (default: "vertex")
+            interpolation: Interpolation mode for the normals (use INTERPOLATION_* constants)
 
         Raises:
             SetPropertyError: If mesh_path is invalid or normals cannot be set
-            ValueError: If normals array has incorrect type or shape
+            ValueError: If normals array has incorrect type or shape, or interpolation is invalid
 
         Note:
-            - normals must be 1D array of floats with length divisible by 3 (x,y,z triplets)
+            - normals must be an (N, 3) float ndarray
             - Normal vectors should be unit length for proper shading results
             - Common interpolation modes:
-              * "vertex": One normal per vertex
-              * "faceVarying": One normal per face-vertex (allows discontinuities)
-              * "uniform": One normal per face
-              * "constant": One normal for entire mesh
+              * INTERPOLATION_VERTEX: One normal per vertex
+              * INTERPOLATION_FACEVARYING: One normal per face-vertex (allows discontinuities)
+              * INTERPOLATION_UNIFORM: One normal per face
+              * INTERPOLATION_CONSTANT: One normal for entire mesh
             - The mesh prim must already exist before calling this function
         """
         # Validate normals
@@ -1361,10 +1364,12 @@ class Stage:
             mesh_path.encode("ascii"),
             normals.ctypes.data_as(POINTER(c_float)),
             len(normals),
-            interpolation,
+            c_int(interpolation),
         )
         if result == _lib.NUSD_RESULT_INVALID_PRIM_PATH:
             raise SetPropertyError(f'mesh not found at "{mesh_path}"')
+        elif result == _lib.NUSD_RESULT_INVALID_INTERPOLATION:
+            raise ValueError(f'invalid interpolation value: {interpolation}')
         elif result != _lib.NUSD_RESULT_OK:
             raise SetPropertyError(
                 f'failed to set normals for mesh "{mesh_path}": {result}'

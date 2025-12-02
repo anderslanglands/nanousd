@@ -9,6 +9,15 @@
 extern "C" {
 #endif
 
+enum nusd_interpolation_e {
+    NUSD_INTERPOLATION_CONSTANT = 0,
+    NUSD_INTERPOLATION_UNIFORM = 1,
+    NUSD_INTERPOLATION_VERTEX = 2,
+    NUSD_INTERPOLATION_VARYING = 3,
+    NUSD_INTERPOLATION_FACEVARYING = 4,
+};
+typedef int nusd_interpolation_t;
+
 /// @defgroup PrimFunctions Prims Functions
 ///
 /// @brief Functions related to managing prims
@@ -230,6 +239,8 @@ nusd_prim_compute_local_to_world_transform(nusd_stage_t stage,
 /// @return NUSD_RESULT_INVALID_PRIM_PATH if no prim exists at the specified
 /// path
 /// @return NUSD_RESULT_CREATE_ATTRIBUTE_FAILED if the primvar cannot be created
+/// @return NUSD_RESULT_INVALID_INTERPOLATION if the interpolation is not a
+/// member of the nusd_interpolation_e enum
 ///
 /// @note stage must not be null.
 /// @note prim_path must not be null and should point to an existing prim.
@@ -259,7 +270,7 @@ nusd_result_t nusd_prim_create_primvar(nusd_stage_t stage,
                                        char const* prim_path,
                                        char const* primvar_name,
                                        nusd_type_t primvar_type,
-                                       char const* primvar_interpolation);
+                                       nusd_interpolation_t primvar_interpolation);
 
 /// Sets the extent (bounding box) attribute on a UsdGeomBoundable prim.
 ///

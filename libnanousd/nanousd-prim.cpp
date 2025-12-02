@@ -52,10 +52,31 @@ nusd_result_t nusd_prim_create_primvar(nusd_stage_t stage,
                                        char const* prim_path,
                                        char const* primvar_name,
                                        nusd_type_t primvar_type,
-                                       char const* primvar_interpolation) {
+                                       nusd_interpolation_t primvar_interpolation) {
     if (stage == nullptr || prim_path == nullptr || primvar_name == nullptr ||
-        primvar_type == nullptr || primvar_interpolation == nullptr) {
+        primvar_type == nullptr) {
         return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    TfToken tok_interpolation;
+    switch (primvar_interpolation) {
+        case NUSD_INTERPOLATION_CONSTANT:
+            tok_interpolation = UsdGeomTokens->constant;
+            break;
+        case NUSD_INTERPOLATION_UNIFORM:
+            tok_interpolation = UsdGeomTokens->uniform;
+            break;
+        case NUSD_INTERPOLATION_VERTEX:
+            tok_interpolation = UsdGeomTokens->vertex;
+            break;
+        case NUSD_INTERPOLATION_VARYING:
+            tok_interpolation = UsdGeomTokens->varying;
+            break;
+        case NUSD_INTERPOLATION_FACEVARYING:
+            tok_interpolation = UsdGeomTokens->faceVarying;
+            break;
+        default:
+                return NUSD_RESULT_INVALID_INTERPOLATION;
     }
 
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
@@ -67,7 +88,7 @@ nusd_result_t nusd_prim_create_primvar(nusd_stage_t stage,
 
     UsdGeomPrimvar pv = pv_api.CreatePrimvar(TfToken(primvar_name),
                                              TOKEN_TO_TYPENAME[primvar_type],
-                                             TfToken(primvar_interpolation));
+                                             tok_interpolation);
     if (!pv) {
         return NUSD_RESULT_CREATE_ATTRIBUTE_FAILED;
     }

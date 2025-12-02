@@ -1,5 +1,6 @@
 #include "nanousd.h"
 
+#include <pxr/base/tf/token.h>
 #include <pxr/usd/usd/attribute.h>
 #include <pxr/usd/usd/property.h>
 #include <pxr/usd/usd/relationship.h>
@@ -53,7 +54,7 @@ nusd_result_t nusd_mesh_set_normals(nusd_stage_t stage,
                                     char const* mesh_path,
                                     float* normals,
                                     size_t num_normals,
-                                    char const* interpolation) {
+                                    nusd_interpolation_t interpolation) {
     if (stage == nullptr || mesh_path == nullptr || normals == nullptr) {
         return NUSD_RESULT_NULL_PARAMETER;
     }
@@ -64,10 +65,31 @@ nusd_result_t nusd_mesh_set_normals(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_PRIM_PATH;
     }
 
+    TfToken tok_interpolation;
+    switch (interpolation) {
+        case NUSD_INTERPOLATION_CONSTANT:
+            tok_interpolation = UsdGeomTokens->constant;
+            break;
+        case NUSD_INTERPOLATION_UNIFORM:
+            tok_interpolation = UsdGeomTokens->uniform;
+            break;
+        case NUSD_INTERPOLATION_VERTEX:
+            tok_interpolation = UsdGeomTokens->vertex;
+            break;
+        case NUSD_INTERPOLATION_VARYING:
+            tok_interpolation = UsdGeomTokens->varying;
+            break;
+        case NUSD_INTERPOLATION_FACEVARYING:
+            tok_interpolation = UsdGeomTokens->faceVarying;
+            break;
+        default:
+            return NUSD_RESULT_INVALID_INTERPOLATION;
+    }
+
     GfVec3f* _normals = reinterpret_cast<GfVec3f*>(normals);
     VtVec3fArray normal_array(_normals, _normals+num_normals);
     mesh.GetNormalsAttr().Set(normal_array);
-    mesh.SetNormalsInterpolation(TfToken(interpolation));
+    mesh.SetNormalsInterpolation(tok_interpolation);
 
     return NUSD_RESULT_OK;
 }

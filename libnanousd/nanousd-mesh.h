@@ -1,8 +1,8 @@
 #ifndef NANOUSD_MESH_H
 #define NANOUSD_MESH_H
 
-#include "nanousd-array.h"
 #include "nanousd-types.h"
+#include "nanousd-prim.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -110,6 +110,8 @@ nusd_result_t nusd_mesh_define(nusd_stage_t stage,
 /// @return NUSD_RESULT_NULL_PARAMETER if stage, mesh_path, or normals is null
 /// @return NUSD_RESULT_INVALID_PRIM_PATH if no mesh exists at the specified
 /// path
+/// @return NUSD_RESULT_INVALID_INTERPOLATION if the interpolation is not a
+/// member of the nusd_interpolation_e enum
 ///
 /// @note stage must not be null.
 /// @note mesh_path must not be null and should point to an existing UsdGeomMesh
@@ -128,7 +130,7 @@ nusd_result_t nusd_mesh_set_normals(nusd_stage_t stage,
                                     char const* mesh_path,
                                     float* normals,
                                     size_t num_normals,
-                                    char const* interpolation);
+                                    nusd_interpolation_t interpolation);
 
 /// @brief Sets the subdivision scheme and triangle subdivision rule for an
 /// existing mesh.

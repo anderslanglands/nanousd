@@ -182,7 +182,7 @@ TEST(nusd, mesh_set_normals_vertex_interpolation) {
 
     result = nusd_mesh_set_normals(stage, "/World/Triangle",
                                   normals, 3,
-                                  "vertex");
+                                  NUSD_INTERPOLATION_VERTEX);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_stage_destroy(stage);
@@ -219,7 +219,7 @@ TEST(nusd, mesh_set_normals_facevarying_interpolation) {
 
     result = nusd_mesh_set_normals(stage, "/World/Triangle",
                                   normals, 3,
-                                  "faceVarying");
+                                  NUSD_INTERPOLATION_FACEVARYING);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_stage_destroy(stage);
@@ -254,7 +254,7 @@ TEST(nusd, mesh_set_normals_uniform_interpolation) {
 
     result = nusd_mesh_set_normals(stage, "/World/Triangle",
                                   normals, 1,
-                                  "uniform");
+                                  NUSD_INTERPOLATION_UNIFORM);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_stage_destroy(stage);
@@ -289,7 +289,7 @@ TEST(nusd, mesh_set_normals_constant_interpolation) {
 
     result = nusd_mesh_set_normals(stage, "/World/Triangle",
                                   normals, 1,
-                                  "constant");
+                                  NUSD_INTERPOLATION_CONSTANT);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     nusd_stage_destroy(stage);
@@ -317,22 +317,23 @@ TEST(nusd, mesh_set_normals_null_parameters) {
 
     // Test null stage
     EXPECT_EQ(nusd_mesh_set_normals(nullptr, "/World/Triangle",
-                                   normals, 3, "vertex"), 
+                                   normals, 3, NUSD_INTERPOLATION_VERTEX), 
               NUSD_RESULT_NULL_PARAMETER);
 
     // Test null mesh_path
     EXPECT_EQ(nusd_mesh_set_normals(stage, nullptr,
-                                   normals, 3, "vertex"), 
+                                   normals, 3, NUSD_INTERPOLATION_VERTEX), 
               NUSD_RESULT_NULL_PARAMETER);
 
     // Test null normals
     EXPECT_EQ(nusd_mesh_set_normals(stage, "/World/Triangle",
-                                   nullptr, 3, "vertex"), 
+                                   nullptr, 3, NUSD_INTERPOLATION_VERTEX), 
               NUSD_RESULT_NULL_PARAMETER);
 
-    // Test null interpolation (will be caught by implementation)
-    // Note: The current implementation doesn't check for null interpolation,
-    // but this test documents expected behavior
+    // Test invalid interpolation
+    EXPECT_EQ(nusd_mesh_set_normals(stage, "/World/Triangle",
+                                   normals, 3, (nusd_interpolation_t)99), 
+              NUSD_RESULT_INVALID_INTERPOLATION);
 
     nusd_stage_destroy(stage);
 }
@@ -348,12 +349,12 @@ TEST(nusd, mesh_set_normals_invalid_mesh_path) {
 
     // Try to set normals on non-existent mesh
     EXPECT_EQ(nusd_mesh_set_normals(stage, "/World/NonExistentMesh",
-                                   normals, 1, "constant"), 
+                                   normals, 1, NUSD_INTERPOLATION_CONSTANT), 
               NUSD_RESULT_INVALID_PRIM_PATH);
 
     // Try with completely invalid path
     EXPECT_EQ(nusd_mesh_set_normals(stage, "/InvalidPath",
-                                   normals, 1, "constant"), 
+                                   normals, 1, NUSD_INTERPOLATION_CONSTANT), 
               NUSD_RESULT_INVALID_PRIM_PATH);
 
     nusd_stage_destroy(stage);
@@ -419,7 +420,7 @@ TEST(nusd, mesh_complex_workflow) {
 
     result = nusd_mesh_set_normals(stage, "/World/Pyramid",
                                   normals, 12,
-                                  "faceVarying");
+                                  NUSD_INTERPOLATION_FACEVARYING);
     EXPECT_EQ(result, NUSD_RESULT_OK);
 
     // Verify the mesh exists
