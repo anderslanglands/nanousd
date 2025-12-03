@@ -38,6 +38,7 @@ enum nusd_result_e {
     NUSD_RESULT_INVALID_SUBDIVISION_SCHEME,
     NUSD_RESULT_INVALID_TRIANGLE_SUBDIVISION_RULE,
     NUSD_RESULT_INVALID_INTERPOLATION,
+    NUSD_RESULT_INVALID_UP_AXIS,
 };
 typedef int nusd_result_t;
 
@@ -191,6 +192,15 @@ extern nusd_colorspace_t NUSD_COLORSPACE_UNKNOWN;
 extern nusd_colorspace_t NUSD_COLORSPACE_CIEXYZ;
 
 extern double NUSD_TIMECODE_DEFAULT;
+
+/// Up axis values for stage metadata.
+/// @see nusd_stage_set_up_axis()
+/// @see nusd_stage_get_up_axis()
+enum nusd_up_axis_e {
+    NUSD_UP_AXIS_Y = 0, ///< Y-axis is up (default for many applications)
+    NUSD_UP_AXIS_Z = 1, ///< Z-axis is up (common in CAD and some game engines)
+};
+typedef int nusd_up_axis_t;
 
 #define NUSD_UNIT_METERS 1.0
 #define NUSD_UNIT_DECIMETERS 0.1

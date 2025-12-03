@@ -1521,6 +1521,68 @@ def test_get_meters_per_unit_multiple_stages():
     assert stage2.get_meters_per_unit() == value2  # Should be unchanged
 
 
+def test_set_up_axis_basic():
+    """Test basic up axis setting"""
+    stage = nusd.Stage.create_in_memory("test_set_up_axis_basic")
+    
+    # Test setting Y-up axis
+    stage.set_up_axis(nusd.UP_AXIS_Y)
+    
+    # Test setting Z-up axis
+    stage.set_up_axis(nusd.UP_AXIS_Z)
+
+
+def test_set_up_axis_invalid():
+    """Test that invalid up axis values raise errors"""
+    stage = nusd.Stage.create_in_memory("test_set_up_axis_invalid")
+    
+    # Test invalid up axis value
+    with pytest.raises(nusd.SetPropertyError):
+        stage.set_up_axis(99)
+
+
+def test_get_up_axis_basic():
+    """Test basic up axis getting"""
+    stage = nusd.Stage.create_in_memory("test_get_up_axis_basic")
+    
+    # Test setting and getting Y-up axis
+    stage.set_up_axis(nusd.UP_AXIS_Y)
+    assert stage.get_up_axis() == nusd.UP_AXIS_Y
+    
+    # Test setting and getting Z-up axis
+    stage.set_up_axis(nusd.UP_AXIS_Z)
+    assert stage.get_up_axis() == nusd.UP_AXIS_Z
+
+
+def test_get_set_up_axis_round_trip():
+    """Test that set/get up axis round trips correctly"""
+    stage = nusd.Stage.create_in_memory("test_get_set_up_axis_round_trip")
+    
+    for up_axis in [nusd.UP_AXIS_Y, nusd.UP_AXIS_Z]:
+        stage.set_up_axis(up_axis)
+        assert stage.get_up_axis() == up_axis
+
+
+def test_get_up_axis_multiple_stages():
+    """Test up axis on multiple independent stages"""
+    stage1 = nusd.Stage.create_in_memory("test_get_up_axis_stage1")
+    stage2 = nusd.Stage.create_in_memory("test_get_up_axis_stage2")
+    
+    # Set different up axes
+    stage1.set_up_axis(nusd.UP_AXIS_Y)
+    stage2.set_up_axis(nusd.UP_AXIS_Z)
+    
+    # Verify each stage has correct value
+    assert stage1.get_up_axis() == nusd.UP_AXIS_Y
+    assert stage2.get_up_axis() == nusd.UP_AXIS_Z
+    
+    # Modify one and verify the other is unchanged
+    stage1.set_up_axis(nusd.UP_AXIS_Z)
+    
+    assert stage1.get_up_axis() == nusd.UP_AXIS_Z
+    assert stage2.get_up_axis() == nusd.UP_AXIS_Z  # Both should be Z now
+
+
 def test_mesh_set_subdivision_scheme_basic():
     """Test basic subdivision scheme setting"""
     stage = nusd.Stage.create_in_memory("test_mesh_set_subdivision_scheme_basic")

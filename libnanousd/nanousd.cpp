@@ -16,6 +16,7 @@
 #include <pxr/usd/usdGeom/camera.h>
 #include <pxr/usd/usdGeom/mesh.h>
 #include <pxr/usd/usdGeom/metrics.h>
+#include <pxr/usd/usdGeom/tokens.h>
 #include <pxr/usd/usdGeom/xformable.h>
 
 #include <pxr/usd/usdShade/material.h>
@@ -361,6 +362,51 @@ nusd_result_t nusd_stage_get_meters_per_unit(nusd_stage_t stage, double* meters_
 
     UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
     *meters_per_unit = UsdGeomGetStageMetersPerUnit(UsdStageWeakPtr(_stage));
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_stage_set_up_axis(nusd_stage_t stage, nusd_up_axis_t up_axis) {
+    if (stage == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    TfToken tok_up_axis;
+    switch (up_axis) {
+        case NUSD_UP_AXIS_Y:
+            tok_up_axis = UsdGeomTokens->y;
+            break;
+        case NUSD_UP_AXIS_Z:
+            tok_up_axis = UsdGeomTokens->z;
+            break;
+        default:
+            return NUSD_RESULT_INVALID_UP_AXIS;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    if (!UsdGeomSetStageUpAxis(UsdStageWeakPtr(_stage), tok_up_axis)) {
+        return NUSD_RESULT_SET_METADATA_FAILED;
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_stage_get_up_axis(nusd_stage_t stage, nusd_up_axis_t* up_axis) {
+    if (stage == nullptr || up_axis == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    TfToken tok_up_axis = UsdGeomGetStageUpAxis(UsdStageWeakPtr(_stage));
+
+    if (tok_up_axis == UsdGeomTokens->y) {
+        *up_axis = NUSD_UP_AXIS_Y;
+    } else if (tok_up_axis == UsdGeomTokens->z) {
+        *up_axis = NUSD_UP_AXIS_Z;
+    } else {
+        // Default to Y if unknown (should not happen with valid USD data)
+        *up_axis = NUSD_UP_AXIS_Y;
+    }
 
     return NUSD_RESULT_OK;
 }

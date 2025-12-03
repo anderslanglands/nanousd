@@ -528,3 +528,62 @@ TEST(nusd, stage_get_meters_per_unit) {
 
     nusd_stage_destroy(stage);
 }
+
+TEST(nusd, stage_set_up_axis) {
+    nusd_stage_t stage;
+    nusd_result_t result =
+        nusd_stage_create_in_memory("test-stage_set_up_axis", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test setting Y-up axis
+    result = nusd_stage_set_up_axis(stage, NUSD_UP_AXIS_Y);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test setting Z-up axis
+    result = nusd_stage_set_up_axis(stage, NUSD_UP_AXIS_Z);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test null stage parameter
+    result = nusd_stage_set_up_axis(nullptr, NUSD_UP_AXIS_Y);
+    EXPECT_EQ(result, NUSD_RESULT_NULL_PARAMETER);
+
+    // Test invalid up axis value
+    result = nusd_stage_set_up_axis(stage, (nusd_up_axis_t)99);
+    EXPECT_EQ(result, NUSD_RESULT_INVALID_UP_AXIS);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, stage_get_up_axis) {
+    nusd_stage_t stage;
+    nusd_result_t result =
+        nusd_stage_create_in_memory("test-stage_get_up_axis", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Test setting and getting Y-up axis
+    result = nusd_stage_set_up_axis(stage, NUSD_UP_AXIS_Y);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_up_axis_t up_axis;
+    result = nusd_stage_get_up_axis(stage, &up_axis);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(up_axis, NUSD_UP_AXIS_Y);
+
+    // Test setting and getting Z-up axis
+    result = nusd_stage_set_up_axis(stage, NUSD_UP_AXIS_Z);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_get_up_axis(stage, &up_axis);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    EXPECT_EQ(up_axis, NUSD_UP_AXIS_Z);
+
+    // Test null stage parameter
+    result = nusd_stage_get_up_axis(nullptr, &up_axis);
+    EXPECT_EQ(result, NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null output parameter
+    result = nusd_stage_get_up_axis(stage, nullptr);
+    EXPECT_EQ(result, NUSD_RESULT_NULL_PARAMETER);
+
+    nusd_stage_destroy(stage);
+}

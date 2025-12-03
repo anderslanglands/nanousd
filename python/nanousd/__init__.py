@@ -259,6 +259,62 @@ class Stage:
             raise GetPropertyError(f'failed to get meters per unit: {result}')
         return value.value
 
+    def set_up_axis(self, up_axis: int):
+        """Set the stage's up axis by authoring the upAxis metadata.
+
+        The up axis determines the orientation of the stage's coordinate system.
+        Different applications use different conventions:
+        - Y-up is common in many DCC applications and game engines
+        - Z-up is common in CAD applications and some simulation software
+
+        Args:
+            up_axis: The up axis to set. Use the constants from nanousd.tokens:
+                    - UP_AXIS_Y (0): Y-axis is up
+                    - UP_AXIS_Z (1): Z-axis is up
+
+        Raises:
+            SetPropertyError: If the up_axis value is invalid, or if the metadata 
+                            cannot be set (e.g., edit target is not root layer or 
+                            session layer)
+
+        Note:
+            USD stipulates a right-handed coordinate system. When viewing a stage
+            with Y-up, the Z axis points out of the screen. When viewing with Z-up,
+            the Y axis points into the screen.
+
+        See Also:
+            https://openusd.org/dev/api/group___usd_geom_up_axis__group.html
+        """
+        result = _lib.nusd_stage_set_up_axis(self._stage, c_int(up_axis))
+        if result == _lib.NUSD_RESULT_INVALID_UP_AXIS:
+            raise SetPropertyError(f'invalid up axis value: {up_axis}')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(f'failed to set up axis to {up_axis}: {result}')
+
+    def get_up_axis(self) -> int:
+        """Get the stage's up axis from the upAxis metadata.
+
+        Returns:
+            The up axis value. Compare against constants from nanousd.tokens:
+            - UP_AXIS_Y (0): Y-axis is up
+            - UP_AXIS_Z (1): Z-axis is up
+
+        Raises:
+            GetPropertyError: If the metadata cannot be retrieved or if stage is null
+
+        Note:
+            If no upAxis metadata has been explicitly set, USD defaults to Y-up.
+            This default can be overridden via plugInfo.json configuration.
+
+        See Also:
+            https://openusd.org/dev/api/group___usd_geom_up_axis__group.html
+        """
+        value = c_int(0)
+        result = _lib.nusd_stage_get_up_axis(self._stage, byref(value))
+        if result != _lib.NUSD_RESULT_OK:
+            raise GetPropertyError(f'failed to get up axis: {result}')
+        return value.value
+
     def prim_set_transform(
         self,
         xformable_path: str,

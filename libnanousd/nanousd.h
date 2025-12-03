@@ -240,6 +240,57 @@ nusd_result_t nusd_stage_set_meters_per_unit(nusd_stage_t stage, double meters_p
 NANOUSD_API
 nusd_result_t nusd_stage_get_meters_per_unit(nusd_stage_t stage, double* meters_per_unit);
 
+/// Sets the stage's up axis by authoring the upAxis metadata.
+///
+/// The up axis determines the orientation of the stage's coordinate system.
+/// Different applications use different conventions:
+/// - Y-up is common in many DCC applications and game engines
+/// - Z-up is common in CAD applications and some simulation software
+///
+/// @param stage Valid stage handle.
+/// @param up_axis The up axis to set. Must be one of:
+///                - NUSD_UP_AXIS_Y (0): Y-axis is up
+///                - NUSD_UP_AXIS_Z (1): Z-axis is up
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage is null
+/// @return NUSD_RESULT_INVALID_UP_AXIS if up_axis is not a valid enum value
+/// @return NUSD_RESULT_SET_METADATA_FAILED if the metadata cannot be set (e.g.,
+/// edit target is not root layer or session layer)
+///
+/// @note stage must not be null.
+/// @note The stage's edit target must be either its root layer or session layer
+/// for this operation to succeed.
+/// @note USD stipulates a right-handed coordinate system. When viewing a stage
+/// with Y-up, the Z axis points out of the screen. When viewing with Z-up,
+/// the Y axis points into the screen.
+/// @note This function uses UsdGeomSetStageUpAxis() internally.
+///
+/// @see https://openusd.org/dev/api/group___usd_geom_up_axis__group.html
+NANOUSD_API
+nusd_result_t nusd_stage_set_up_axis(nusd_stage_t stage, nusd_up_axis_t up_axis);
+
+/// Gets the stage's up axis from the upAxis metadata.
+///
+/// @param stage Valid stage handle.
+/// @param up_axis Output pointer that will receive the up axis value:
+///                - NUSD_UP_AXIS_Y (0): Y-axis is up
+///                - NUSD_UP_AXIS_Z (1): Z-axis is up
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage or up_axis is null
+///
+/// @note stage must not be null.
+/// @note up_axis must not be null.
+/// @note If no upAxis metadata has been explicitly set, USD defaults to Y-up.
+/// This default can be overridden via plugInfo.json configuration.
+/// @note This function uses UsdGeomGetStageUpAxis() internally.
+/// @note This is the inverse operation of nusd_stage_set_up_axis().
+///
+/// @see https://openusd.org/dev/api/group___usd_geom_up_axis__group.html
+NANOUSD_API
+nusd_result_t nusd_stage_get_up_axis(nusd_stage_t stage, nusd_up_axis_t* up_axis);
+
 /// @}
 
 
