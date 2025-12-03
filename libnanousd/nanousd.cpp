@@ -1,4 +1,5 @@
 #include "nanousd.h"
+#include "nanousd-types.h"
 
 #include <pxr/usd/sdf/assetPath.h>
 
@@ -59,130 +60,47 @@ bool TOKENS_INITIALIZED = false;
 
 extern "C" {
 
-char const* NUSD_TYPE_ASSET;
-char const* NUSD_TYPE_ASSETARRAY;
-char const* NUSD_TYPE_BOOL;
-char const* NUSD_TYPE_BOOLARRAY;
-char const* NUSD_TYPE_COLOR3D;
-char const* NUSD_TYPE_COLOR3DARRAY;
-char const* NUSD_TYPE_COLOR3F;
-char const* NUSD_TYPE_COLOR3FARRAY;
-char const* NUSD_TYPE_COLOR3H;
-char const* NUSD_TYPE_COLOR3HARRAY;
-char const* NUSD_TYPE_COLOR4D;
-char const* NUSD_TYPE_COLOR4DARRAY;
-char const* NUSD_TYPE_COLOR4F;
-char const* NUSD_TYPE_COLOR4FARRAY;
-char const* NUSD_TYPE_COLOR4H;
-char const* NUSD_TYPE_COLOR4HARRAY;
-char const* NUSD_TYPE_DOUBLE;
-char const* NUSD_TYPE_DOUBLE2;
-char const* NUSD_TYPE_DOUBLE2ARRAY;
-char const* NUSD_TYPE_DOUBLE3;
-char const* NUSD_TYPE_DOUBLE3ARRAY;
-char const* NUSD_TYPE_DOUBLE4;
-char const* NUSD_TYPE_DOUBLE4ARRAY;
-char const* NUSD_TYPE_DOUBLEARRAY;
-char const* NUSD_TYPE_FIND;
-char const* NUSD_TYPE_FLOAT;
-char const* NUSD_TYPE_FLOAT2;
-char const* NUSD_TYPE_FLOAT2ARRAY;
-char const* NUSD_TYPE_FLOAT3;
-char const* NUSD_TYPE_FLOAT3ARRAY;
-char const* NUSD_TYPE_FLOAT4;
-char const* NUSD_TYPE_FLOAT4ARRAY;
-char const* NUSD_TYPE_FLOATARRAY;
-char const* NUSD_TYPE_FRAME4D;
-char const* NUSD_TYPE_FRAME4DARRAY;
-char const* NUSD_TYPE_GROUP;
-char const* NUSD_TYPE_HALF;
-char const* NUSD_TYPE_HALF2;
-char const* NUSD_TYPE_HALF2ARRAY;
-char const* NUSD_TYPE_HALF3;
-char const* NUSD_TYPE_HALF3ARRAY;
-char const* NUSD_TYPE_HALF4;
-char const* NUSD_TYPE_HALF4ARRAY;
-char const* NUSD_TYPE_HALFARRAY;
-char const* NUSD_TYPE_INT;
-char const* NUSD_TYPE_INT2;
-char const* NUSD_TYPE_INT2ARRAY;
-char const* NUSD_TYPE_INT3;
-char const* NUSD_TYPE_INT3ARRAY;
-char const* NUSD_TYPE_INT4;
-char const* NUSD_TYPE_INT4ARRAY;
-char const* NUSD_TYPE_INT64;
-char const* NUSD_TYPE_INT64ARRAY;
-char const* NUSD_TYPE_INTARRAY;
-char const* NUSD_TYPE_MATRIX2D;
-char const* NUSD_TYPE_MATRIX2DARRAY;
-char const* NUSD_TYPE_MATRIX3D;
-char const* NUSD_TYPE_MATRIX3DARRAY;
-char const* NUSD_TYPE_MATRIX4D;
-char const* NUSD_TYPE_MATRIX4DARRAY;
-char const* NUSD_TYPE_NORMAL3D;
-char const* NUSD_TYPE_NORMAL3DARRAY;
-char const* NUSD_TYPE_NORMAL3F;
-char const* NUSD_TYPE_NORMAL3FARRAY;
-char const* NUSD_TYPE_NORMAL3H;
-char const* NUSD_TYPE_NORMAL3HARRAY;
-char const* NUSD_TYPE_OPAQUE;
-char const* NUSD_TYPE_PATHEXPRESSION;
-char const* NUSD_TYPE_PATHEXPRESSIONARRAY;
-char const* NUSD_TYPE_POINT3D;
-char const* NUSD_TYPE_POINT3DARRAY;
-char const* NUSD_TYPE_POINT3F;
-char const* NUSD_TYPE_POINT3FARRAY;
-char const* NUSD_TYPE_POINT3H;
-char const* NUSD_TYPE_POINT3HARRAY;
-char const* NUSD_TYPE_QUATD;
-char const* NUSD_TYPE_QUATDARRAY;
-char const* NUSD_TYPE_QUATF;
-char const* NUSD_TYPE_QUATFARRAY;
-char const* NUSD_TYPE_QUATH;
-char const* NUSD_TYPE_QUATHARRAY;
-char const* NUSD_TYPE_STRING;
-char const* NUSD_TYPE_STRINGARRAY;
-char const* NUSD_TYPE_TEXCOORD2D;
-char const* NUSD_TYPE_TEXCOORD2DARRAY;
-char const* NUSD_TYPE_TEXCOORD2F;
-char const* NUSD_TYPE_TEXCOORD2FARRAY;
-char const* NUSD_TYPE_TEXCOORD2H;
-char const* NUSD_TYPE_TEXCOORD2HARRAY;
-char const* NUSD_TYPE_TEXCOORD3D;
-char const* NUSD_TYPE_TEXCOORD3DARRAY;
-char const* NUSD_TYPE_TEXCOORD3F;
-char const* NUSD_TYPE_TEXCOORD3FARRAY;
-char const* NUSD_TYPE_TEXCOORD3H;
-char const* NUSD_TYPE_TEXCOORD3HARRAY;
-char const* NUSD_TYPE_TIMECODE;
-char const* NUSD_TYPE_TIMECODEARRAY;
-char const* NUSD_TYPE_TOKEN;
-char const* NUSD_TYPE_TOKENARRAY;
-char const* NUSD_TYPE_UCHAR;
-char const* NUSD_TYPE_UCHARARRAY;
-char const* NUSD_TYPE_UINT;
-char const* NUSD_TYPE_UINT64;
-char const* NUSD_TYPE_UINT64ARRAY;
-char const* NUSD_TYPE_UINTARRAY;
-char const* NUSD_TYPE_VECTOR3D;
-char const* NUSD_TYPE_VECTOR3DARRAY;
-char const* NUSD_TYPE_VECTOR3F;
-char const* NUSD_TYPE_VECTOR3FARRAY;
-char const* NUSD_TYPE_VECTOR3H;
-char const* NUSD_TYPE_VECTOR3HARRAY;
-
-char const* NUSD_TYPE_RELATIONSHIP = "rel";
-
-char const* NUSD_COLORSPACE_SRGB;
-char const* NUSD_COLORSPACE_LINEAR_AP1;
-char const* NUSD_COLORSPACE_LINEAR_AP0;
-char const* NUSD_COLORSPACE_SRGB_AP1;
+nusd_colorspace_t NUSD_COLORSPACE_LINEAR_AP1;
+nusd_colorspace_t NUSD_COLORSPACE_LINEAR_AP0;
+nusd_colorspace_t NUSD_COLORSPACE_LINEAR_REC709;
+nusd_colorspace_t NUSD_COLORSPACE_LINEAR_P3D65;
+nusd_colorspace_t NUSD_COLORSPACE_LINEAR_REC2020;
+nusd_colorspace_t NUSD_COLORSPACE_LINEAR_ADOBERGB;
+nusd_colorspace_t NUSD_COLORSPACE_LINEAR_CIEXYZD65;
+nusd_colorspace_t NUSD_COLORSPACE_LINEAR_DISPLAYP3;
+nusd_colorspace_t NUSD_COLORSPACE_SRGB_REC709;
+nusd_colorspace_t NUSD_COLORSPACE_G22_REC709;
+nusd_colorspace_t NUSD_COLORSPACE_G18_REC709;
+nusd_colorspace_t NUSD_COLORSPACE_SRGB_AP1;
+nusd_colorspace_t NUSD_COLORSPACE_G22_AP1;
+nusd_colorspace_t NUSD_COLORSPACE_G22_ADOBERGB;
+nusd_colorspace_t NUSD_COLORSPACE_IDENTITY;
+nusd_colorspace_t NUSD_COLORSPACE_DATA;
+nusd_colorspace_t NUSD_COLORSPACE_RAW;
+nusd_colorspace_t NUSD_COLORSPACE_SRGB;
+nusd_colorspace_t NUSD_COLORSPACE_UNKNOWN;
+nusd_colorspace_t NUSD_COLORSPACE_CIEXYZ;
 
 double NUSD_TIMECODE_DEFAULT = NAN;
 
-using TokenTypeNameMap =
-    std::unordered_map<char const*, PXR_NS::SdfValueTypeName>;
-TokenTypeNameMap TOKEN_TO_TYPENAME;
+using TypeToTypeNameMap =
+    std::unordered_map<nusd_type_t, PXR_NS::SdfValueTypeName>;
+TypeToTypeNameMap TYPE_TO_TYPENAME;
+std::unordered_map<char const*, nusd_type_t> TYPENAME_TO_TYPE;
+std::unordered_map<nusd_type_t, char const*> TYPE_TO_STRING;
+
+
+char const* nusd_type_to_string(nusd_type_t type) {
+    if (type < 0 || type > NUSD_TYPE_RELATIONSHIP) {
+        return "INVALID";
+    }
+
+    if (type == NUSD_TYPE_RELATIONSHIP) {
+        return "rel";
+    }
+
+    return TYPE_TO_STRING[type];
+}
 
 using namespace PXR_NS;
 
@@ -196,310 +114,130 @@ static float radians(float degrees) { return degrees * C_PI / 180.0f; }
 static void initialize_tokens() {
     std::lock_guard<std::mutex> lock(MTX_TOKEN_INIT);
     if (TOKENS_INITIALIZED == false) {
-        NUSD_TYPE_ASSET = SdfValueTypeNames->Asset.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_ASSET] = SdfValueTypeNames->Asset;
-        NUSD_TYPE_ASSETARRAY =
-            SdfValueTypeNames->AssetArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_ASSETARRAY] = SdfValueTypeNames->AssetArray;
-        NUSD_TYPE_BOOL = SdfValueTypeNames->Bool.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_BOOL] = SdfValueTypeNames->Bool;
-        NUSD_TYPE_BOOLARRAY =
-            SdfValueTypeNames->BoolArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_BOOLARRAY] = SdfValueTypeNames->BoolArray;
-        NUSD_TYPE_COLOR3D = SdfValueTypeNames->Color3d.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR3D] = SdfValueTypeNames->Color3d;
-        NUSD_TYPE_COLOR3DARRAY =
-            SdfValueTypeNames->Color3dArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR3DARRAY] =
-            SdfValueTypeNames->Color3dArray;
-        NUSD_TYPE_COLOR3F = SdfValueTypeNames->Color3f.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR3F] = SdfValueTypeNames->Color3f;
-        NUSD_TYPE_COLOR3FARRAY =
-            SdfValueTypeNames->Color3fArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR3FARRAY] =
-            SdfValueTypeNames->Color3fArray;
-        NUSD_TYPE_COLOR3H = SdfValueTypeNames->Color3h.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR3H] = SdfValueTypeNames->Color3h;
-        NUSD_TYPE_COLOR3HARRAY =
-            SdfValueTypeNames->Color3hArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR3HARRAY] =
-            SdfValueTypeNames->Color3hArray;
-        NUSD_TYPE_COLOR4D = SdfValueTypeNames->Color4d.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR4D] = SdfValueTypeNames->Color4d;
-        NUSD_TYPE_COLOR4DARRAY =
-            SdfValueTypeNames->Color4dArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR4DARRAY] =
-            SdfValueTypeNames->Color4dArray;
-        NUSD_TYPE_COLOR4F = SdfValueTypeNames->Color4f.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR4F] = SdfValueTypeNames->Color4f;
-        NUSD_TYPE_COLOR4FARRAY =
-            SdfValueTypeNames->Color4fArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR4FARRAY] =
-            SdfValueTypeNames->Color4fArray;
-        NUSD_TYPE_COLOR4H = SdfValueTypeNames->Color4h.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR4H] = SdfValueTypeNames->Color4h;
-        NUSD_TYPE_COLOR4HARRAY =
-            SdfValueTypeNames->Color4hArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_COLOR4HARRAY] =
-            SdfValueTypeNames->Color4hArray;
-        NUSD_TYPE_DOUBLE = SdfValueTypeNames->Double.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_DOUBLE] = SdfValueTypeNames->Double;
-        NUSD_TYPE_DOUBLEARRAY =
-            SdfValueTypeNames->DoubleArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_DOUBLEARRAY] =
-            SdfValueTypeNames->DoubleArray;
-        NUSD_TYPE_DOUBLE2 = SdfValueTypeNames->Double2.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_DOUBLE2] = SdfValueTypeNames->Double2;
-        NUSD_TYPE_DOUBLE2ARRAY =
-            SdfValueTypeNames->Double2Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_DOUBLE2ARRAY] =
-            SdfValueTypeNames->Double2Array;
-        NUSD_TYPE_DOUBLE3 = SdfValueTypeNames->Double3.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_DOUBLE3] = SdfValueTypeNames->Double3;
-        NUSD_TYPE_DOUBLE3ARRAY =
-            SdfValueTypeNames->Double3Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_DOUBLE3ARRAY] =
-            SdfValueTypeNames->Double3Array;
-        NUSD_TYPE_DOUBLE4 = SdfValueTypeNames->Double4.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_DOUBLE4] = SdfValueTypeNames->Double4;
-        NUSD_TYPE_DOUBLE4ARRAY =
-            SdfValueTypeNames->Double4Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_DOUBLE4ARRAY] =
-            SdfValueTypeNames->Double4Array;
-        NUSD_TYPE_FLOAT = SdfValueTypeNames->Float.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_FLOAT] = SdfValueTypeNames->Float;
-        NUSD_TYPE_FLOATARRAY =
-            SdfValueTypeNames->FloatArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_FLOATARRAY] = SdfValueTypeNames->FloatArray;
-        NUSD_TYPE_FLOAT2 = SdfValueTypeNames->Float2.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_FLOAT2] = SdfValueTypeNames->Float2;
-        NUSD_TYPE_FLOAT2ARRAY =
-            SdfValueTypeNames->Float2Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_FLOAT2ARRAY] =
-            SdfValueTypeNames->Float2Array;
-        NUSD_TYPE_FLOAT3 = SdfValueTypeNames->Float3.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_FLOAT3] = SdfValueTypeNames->Float3;
-        NUSD_TYPE_FLOAT3ARRAY =
-            SdfValueTypeNames->Float3Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_FLOAT3ARRAY] =
-            SdfValueTypeNames->Float3Array;
-        NUSD_TYPE_FLOAT4 = SdfValueTypeNames->Float4.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_FLOAT4] = SdfValueTypeNames->Float4;
-        NUSD_TYPE_FLOAT4ARRAY =
-            SdfValueTypeNames->Float4Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_FLOAT4ARRAY] =
-            SdfValueTypeNames->Float4Array;
-        NUSD_TYPE_HALF = SdfValueTypeNames->Half.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_HALF] = SdfValueTypeNames->Half;
-        NUSD_TYPE_HALFARRAY =
-            SdfValueTypeNames->HalfArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_HALFARRAY] = SdfValueTypeNames->HalfArray;
-        NUSD_TYPE_HALF2 = SdfValueTypeNames->Half2.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_HALF2] = SdfValueTypeNames->Half2;
-        NUSD_TYPE_HALF2ARRAY =
-            SdfValueTypeNames->Half2Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_HALF2ARRAY] = SdfValueTypeNames->Half2Array;
-        NUSD_TYPE_HALF3 = SdfValueTypeNames->Half3.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_HALF3] = SdfValueTypeNames->Half3;
-        NUSD_TYPE_HALF3ARRAY =
-            SdfValueTypeNames->Half3Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_HALF3ARRAY] = SdfValueTypeNames->Half3Array;
-        NUSD_TYPE_HALF4 = SdfValueTypeNames->Half4.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_HALF4] = SdfValueTypeNames->Half4;
-        NUSD_TYPE_HALF4ARRAY =
-            SdfValueTypeNames->Half4Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_HALF4ARRAY] = SdfValueTypeNames->Half4Array;
-        NUSD_TYPE_INT = SdfValueTypeNames->Int.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_INT] = SdfValueTypeNames->Int;
-        NUSD_TYPE_INTARRAY = SdfValueTypeNames->IntArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_INTARRAY] = SdfValueTypeNames->IntArray;
-        NUSD_TYPE_INT2 = SdfValueTypeNames->Int2.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_INT2] = SdfValueTypeNames->Int2;
-        NUSD_TYPE_INT2ARRAY =
-            SdfValueTypeNames->Int2Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_INT2ARRAY] = SdfValueTypeNames->Int2Array;
-        NUSD_TYPE_INT3 = SdfValueTypeNames->Int3.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_INT3] = SdfValueTypeNames->Int3;
-        NUSD_TYPE_INT3ARRAY =
-            SdfValueTypeNames->Int3Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_INT3ARRAY] = SdfValueTypeNames->Int3Array;
-        NUSD_TYPE_INT4 = SdfValueTypeNames->Int4.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_INT4] = SdfValueTypeNames->Int4;
-        NUSD_TYPE_INT4ARRAY =
-            SdfValueTypeNames->Int4Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_INT4ARRAY] = SdfValueTypeNames->Int4Array;
-        NUSD_TYPE_INT64 = SdfValueTypeNames->Int64.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_INT64] = SdfValueTypeNames->Int64;
-        NUSD_TYPE_INT64ARRAY =
-            SdfValueTypeNames->Int64Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_INT64ARRAY] = SdfValueTypeNames->Int64Array;
-        NUSD_TYPE_MATRIX2D = SdfValueTypeNames->Matrix2d.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_MATRIX2D] = SdfValueTypeNames->Matrix2d;
-        NUSD_TYPE_MATRIX2DARRAY =
-            SdfValueTypeNames->Matrix2dArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_MATRIX2DARRAY] =
-            SdfValueTypeNames->Matrix2dArray;
-        NUSD_TYPE_MATRIX3D = SdfValueTypeNames->Matrix3d.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_MATRIX3D] = SdfValueTypeNames->Matrix3d;
-        NUSD_TYPE_MATRIX3DARRAY =
-            SdfValueTypeNames->Matrix3dArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_MATRIX3DARRAY] =
-            SdfValueTypeNames->Matrix3dArray;
-        NUSD_TYPE_MATRIX4D = SdfValueTypeNames->Matrix4d.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_MATRIX4D] = SdfValueTypeNames->Matrix4d;
-        NUSD_TYPE_MATRIX4DARRAY =
-            SdfValueTypeNames->Matrix4dArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_MATRIX4DARRAY] =
-            SdfValueTypeNames->Matrix4dArray;
-        NUSD_TYPE_NORMAL3D = SdfValueTypeNames->Normal3d.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_NORMAL3D] = SdfValueTypeNames->Normal3d;
-        NUSD_TYPE_NORMAL3DARRAY =
-            SdfValueTypeNames->Normal3dArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_NORMAL3DARRAY] =
-            SdfValueTypeNames->Normal3dArray;
-        NUSD_TYPE_NORMAL3F = SdfValueTypeNames->Normal3f.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_NORMAL3F] = SdfValueTypeNames->Normal3f;
-        NUSD_TYPE_NORMAL3FARRAY =
-            SdfValueTypeNames->Normal3fArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_NORMAL3FARRAY] =
-            SdfValueTypeNames->Normal3fArray;
-        NUSD_TYPE_NORMAL3H = SdfValueTypeNames->Normal3h.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_NORMAL3H] = SdfValueTypeNames->Normal3h;
-        NUSD_TYPE_NORMAL3HARRAY =
-            SdfValueTypeNames->Normal3hArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_NORMAL3HARRAY] =
-            SdfValueTypeNames->Normal3hArray;
-        NUSD_TYPE_POINT3D = SdfValueTypeNames->Point3d.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_POINT3D] = SdfValueTypeNames->Point3d;
-        NUSD_TYPE_POINT3DARRAY =
-            SdfValueTypeNames->Point3dArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_POINT3DARRAY] =
-            SdfValueTypeNames->Point3dArray;
-        NUSD_TYPE_POINT3F = SdfValueTypeNames->Point3f.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_POINT3F] = SdfValueTypeNames->Point3f;
-        NUSD_TYPE_POINT3FARRAY =
-            SdfValueTypeNames->Point3fArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_POINT3FARRAY] =
-            SdfValueTypeNames->Point3fArray;
-        NUSD_TYPE_POINT3H = SdfValueTypeNames->Point3h.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_POINT3H] = SdfValueTypeNames->Point3h;
-        NUSD_TYPE_POINT3HARRAY =
-            SdfValueTypeNames->Point3hArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_POINT3HARRAY] =
-            SdfValueTypeNames->Point3hArray;
-        NUSD_TYPE_QUATD = SdfValueTypeNames->Quatd.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_QUATD] = SdfValueTypeNames->Quatd;
-        NUSD_TYPE_QUATDARRAY =
-            SdfValueTypeNames->QuatdArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_QUATDARRAY] = SdfValueTypeNames->QuatdArray;
-        NUSD_TYPE_QUATF = SdfValueTypeNames->Quatf.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_QUATF] = SdfValueTypeNames->Quatf;
-        NUSD_TYPE_QUATFARRAY =
-            SdfValueTypeNames->QuatfArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_QUATFARRAY] = SdfValueTypeNames->QuatfArray;
-        NUSD_TYPE_QUATH = SdfValueTypeNames->Quath.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_QUATH] = SdfValueTypeNames->Quath;
-        NUSD_TYPE_QUATHARRAY =
-            SdfValueTypeNames->QuathArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_QUATHARRAY] = SdfValueTypeNames->QuathArray;
-        NUSD_TYPE_STRING =
-            SdfValueTypeNames->String.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_STRING] = SdfValueTypeNames->String;
-        NUSD_TYPE_STRINGARRAY =
-            SdfValueTypeNames->StringArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_STRINGARRAY] = SdfValueTypeNames->StringArray;
-        NUSD_TYPE_TEXCOORD2D =
-            SdfValueTypeNames->TexCoord2d.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD2D] = SdfValueTypeNames->TexCoord2d;
-        NUSD_TYPE_TEXCOORD2DARRAY =
-            SdfValueTypeNames->TexCoord2dArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD2DARRAY] =
-            SdfValueTypeNames->TexCoord2dArray;
-        NUSD_TYPE_TEXCOORD2F =
-            SdfValueTypeNames->TexCoord2f.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD2F] = SdfValueTypeNames->TexCoord2f;
-        NUSD_TYPE_TEXCOORD2FARRAY =
-            SdfValueTypeNames->TexCoord2fArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD2FARRAY] =
-            SdfValueTypeNames->TexCoord2fArray;
-        NUSD_TYPE_TEXCOORD2H =
-            SdfValueTypeNames->TexCoord2h.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD2H] = SdfValueTypeNames->TexCoord2h;
-        NUSD_TYPE_TEXCOORD2HARRAY =
-            SdfValueTypeNames->TexCoord2hArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD2HARRAY] =
-            SdfValueTypeNames->TexCoord2hArray;
-        NUSD_TYPE_TEXCOORD3D =
-            SdfValueTypeNames->TexCoord3d.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD3D] = SdfValueTypeNames->TexCoord3d;
-        NUSD_TYPE_TEXCOORD3DARRAY =
-            SdfValueTypeNames->TexCoord3dArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD3DARRAY] =
-            SdfValueTypeNames->TexCoord3dArray;
-        NUSD_TYPE_TEXCOORD3F =
-            SdfValueTypeNames->TexCoord3f.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD3F] = SdfValueTypeNames->TexCoord3f;
-        NUSD_TYPE_TEXCOORD3FARRAY =
-            SdfValueTypeNames->TexCoord3fArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD3FARRAY] =
-            SdfValueTypeNames->TexCoord3fArray;
-        NUSD_TYPE_TEXCOORD3H =
-            SdfValueTypeNames->TexCoord3h.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD3H] = SdfValueTypeNames->TexCoord3h;
-        NUSD_TYPE_TEXCOORD3HARRAY =
-            SdfValueTypeNames->TexCoord3hArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TEXCOORD3HARRAY] =
-            SdfValueTypeNames->TexCoord3hArray;
-        NUSD_TYPE_TIMECODE = SdfValueTypeNames->TimeCode.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TIMECODE] = SdfValueTypeNames->TimeCode;
-        NUSD_TYPE_TIMECODEARRAY =
-            SdfValueTypeNames->TimeCodeArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TIMECODEARRAY] =
-            SdfValueTypeNames->TimeCodeArray;
-        NUSD_TYPE_TOKEN = SdfValueTypeNames->Token.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TOKEN] = SdfValueTypeNames->Token;
-        NUSD_TYPE_TOKENARRAY =
-            SdfValueTypeNames->TokenArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_TOKENARRAY] = SdfValueTypeNames->TokenArray;
-        NUSD_TYPE_UCHAR = SdfValueTypeNames->UChar.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_UCHAR] = SdfValueTypeNames->UChar;
-        NUSD_TYPE_UCHARARRAY =
-            SdfValueTypeNames->UCharArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_UCHARARRAY] = SdfValueTypeNames->UCharArray;
-        NUSD_TYPE_UINT = SdfValueTypeNames->UInt.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_UINT] = SdfValueTypeNames->UInt;
-        NUSD_TYPE_UINTARRAY =
-            SdfValueTypeNames->UIntArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_UINTARRAY] = SdfValueTypeNames->UIntArray;
-        NUSD_TYPE_UINT64 = SdfValueTypeNames->UInt64.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_UINT64] = SdfValueTypeNames->UInt64;
-        NUSD_TYPE_UINT64ARRAY =
-            SdfValueTypeNames->UInt64Array.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_UINT64ARRAY] =
-            SdfValueTypeNames->UInt64Array;
-        NUSD_TYPE_VECTOR3D = SdfValueTypeNames->Vector3d.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_VECTOR3D] = SdfValueTypeNames->Vector3d;
-        NUSD_TYPE_VECTOR3DARRAY =
-            SdfValueTypeNames->Vector3dArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_VECTOR3DARRAY] =
-            SdfValueTypeNames->Vector3dArray;
-        NUSD_TYPE_VECTOR3F = SdfValueTypeNames->Vector3f.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_VECTOR3F] = SdfValueTypeNames->Vector3f;
-        NUSD_TYPE_VECTOR3FARRAY =
-            SdfValueTypeNames->Vector3fArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_VECTOR3FARRAY] =
-            SdfValueTypeNames->Vector3fArray;
-        NUSD_TYPE_VECTOR3H = SdfValueTypeNames->Vector3h.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_VECTOR3H] = SdfValueTypeNames->Vector3h;
-        NUSD_TYPE_VECTOR3HARRAY =
-            SdfValueTypeNames->Vector3hArray.GetAsToken().GetText();
-        TOKEN_TO_TYPENAME[NUSD_TYPE_VECTOR3HARRAY] =
-            SdfValueTypeNames->Vector3hArray;
+
+#define REGISTER_TYPE(NUSD_TYPE, SDF_TYPE) \
+    TYPE_TO_TYPENAME[NUSD_TYPE] = SdfValueTypeNames->SDF_TYPE; \
+    TYPENAME_TO_TYPE[SdfValueTypeNames->SDF_TYPE.GetAsToken().GetText()] = NUSD_TYPE; \
+    TYPE_TO_STRING[NUSD_TYPE] = SdfValueTypeNames->SDF_TYPE.GetAsToken().GetText();
+
+    REGISTER_TYPE(NUSD_TYPE_ASSET, Asset);
+    REGISTER_TYPE(NUSD_TYPE_ASSETARRAY, AssetArray);
+    REGISTER_TYPE(NUSD_TYPE_BOOL, Bool);
+    REGISTER_TYPE(NUSD_TYPE_BOOLARRAY, BoolArray);
+    REGISTER_TYPE(NUSD_TYPE_COLOR3D, Color3d);
+    REGISTER_TYPE(NUSD_TYPE_COLOR3DARRAY, Color3dArray);
+    REGISTER_TYPE(NUSD_TYPE_COLOR3F, Color3f);
+    REGISTER_TYPE(NUSD_TYPE_COLOR3FARRAY, Color3fArray);
+    REGISTER_TYPE(NUSD_TYPE_COLOR3H, Color3h);
+    REGISTER_TYPE(NUSD_TYPE_COLOR3HARRAY, Color3hArray);
+    REGISTER_TYPE(NUSD_TYPE_COLOR4D, Color4d);
+    REGISTER_TYPE(NUSD_TYPE_COLOR4DARRAY, Color4dArray);
+    REGISTER_TYPE(NUSD_TYPE_COLOR4F, Color4f);
+    REGISTER_TYPE(NUSD_TYPE_COLOR4FARRAY, Color4fArray);
+    REGISTER_TYPE(NUSD_TYPE_COLOR4H, Color4h);
+    REGISTER_TYPE(NUSD_TYPE_COLOR4HARRAY, Color4hArray);
+    REGISTER_TYPE(NUSD_TYPE_DOUBLE, Double);
+    REGISTER_TYPE(NUSD_TYPE_DOUBLE2, Double2);
+    REGISTER_TYPE(NUSD_TYPE_DOUBLE2ARRAY, Double2Array);
+    REGISTER_TYPE(NUSD_TYPE_DOUBLE3, Double3);
+    REGISTER_TYPE(NUSD_TYPE_DOUBLE3ARRAY, Double3Array);
+    REGISTER_TYPE(NUSD_TYPE_DOUBLE4, Double4);
+    REGISTER_TYPE(NUSD_TYPE_DOUBLE4ARRAY, Double4Array);
+    REGISTER_TYPE(NUSD_TYPE_DOUBLEARRAY, DoubleArray);
+    REGISTER_TYPE(NUSD_TYPE_FLOAT, Float);
+    REGISTER_TYPE(NUSD_TYPE_FLOAT2, Float2);
+    REGISTER_TYPE(NUSD_TYPE_FLOAT2ARRAY, Float2Array);
+    REGISTER_TYPE(NUSD_TYPE_FLOAT3, Float3);
+    REGISTER_TYPE(NUSD_TYPE_FLOAT3ARRAY, Float3Array);
+    REGISTER_TYPE(NUSD_TYPE_FLOAT4, Float4);
+    REGISTER_TYPE(NUSD_TYPE_FLOAT4ARRAY, Float4Array);
+    REGISTER_TYPE(NUSD_TYPE_FLOATARRAY, FloatArray);
+    REGISTER_TYPE(NUSD_TYPE_FRAME4D, Frame4d);
+    REGISTER_TYPE(NUSD_TYPE_FRAME4DARRAY, Frame4dArray);
+    REGISTER_TYPE(NUSD_TYPE_GROUP, Group);
+    REGISTER_TYPE(NUSD_TYPE_HALF, Half);
+    REGISTER_TYPE(NUSD_TYPE_HALF2, Half2);
+    REGISTER_TYPE(NUSD_TYPE_HALF2ARRAY, Half2Array);
+    REGISTER_TYPE(NUSD_TYPE_HALF3, Half3);
+    REGISTER_TYPE(NUSD_TYPE_HALF3ARRAY, Half3Array);
+    REGISTER_TYPE(NUSD_TYPE_HALF4, Half4);
+    REGISTER_TYPE(NUSD_TYPE_HALF4ARRAY, Half4Array);
+    REGISTER_TYPE(NUSD_TYPE_HALFARRAY, HalfArray);
+    REGISTER_TYPE(NUSD_TYPE_INT, Int);
+    REGISTER_TYPE(NUSD_TYPE_INT2, Int2);
+    REGISTER_TYPE(NUSD_TYPE_INT2ARRAY, Int2Array);
+    REGISTER_TYPE(NUSD_TYPE_INT3, Int3);
+    REGISTER_TYPE(NUSD_TYPE_INT3ARRAY, Int3Array);
+    REGISTER_TYPE(NUSD_TYPE_INT4, Int4);
+    REGISTER_TYPE(NUSD_TYPE_INT4ARRAY, Int4Array);
+    REGISTER_TYPE(NUSD_TYPE_INT64, Int64);
+    REGISTER_TYPE(NUSD_TYPE_INT64ARRAY, Int64Array);
+    REGISTER_TYPE(NUSD_TYPE_INTARRAY, IntArray);
+    REGISTER_TYPE(NUSD_TYPE_MATRIX2D, Matrix2d);
+    REGISTER_TYPE(NUSD_TYPE_MATRIX2DARRAY, Matrix2dArray);
+    REGISTER_TYPE(NUSD_TYPE_MATRIX3D, Matrix3d);
+    REGISTER_TYPE(NUSD_TYPE_MATRIX3DARRAY, Matrix3dArray);
+    REGISTER_TYPE(NUSD_TYPE_MATRIX4D, Matrix4d);
+    REGISTER_TYPE(NUSD_TYPE_MATRIX4DARRAY, Matrix4dArray);
+    REGISTER_TYPE(NUSD_TYPE_NORMAL3D, Normal3d);
+    REGISTER_TYPE(NUSD_TYPE_NORMAL3DARRAY, Normal3dArray);
+    REGISTER_TYPE(NUSD_TYPE_NORMAL3F, Normal3f);
+    REGISTER_TYPE(NUSD_TYPE_NORMAL3FARRAY, Normal3fArray);
+    REGISTER_TYPE(NUSD_TYPE_NORMAL3H, Normal3h);
+    REGISTER_TYPE(NUSD_TYPE_NORMAL3HARRAY, Normal3hArray);
+    REGISTER_TYPE(NUSD_TYPE_OPAQUE, Opaque);
+    REGISTER_TYPE(NUSD_TYPE_PATHEXPRESSION, PathExpression);
+    REGISTER_TYPE(NUSD_TYPE_PATHEXPRESSIONARRAY, PathExpressionArray);
+    REGISTER_TYPE(NUSD_TYPE_POINT3D, Point3d);
+    REGISTER_TYPE(NUSD_TYPE_POINT3DARRAY, Point3dArray);
+    REGISTER_TYPE(NUSD_TYPE_POINT3F, Point3f);
+    REGISTER_TYPE(NUSD_TYPE_POINT3FARRAY, Point3fArray);
+    REGISTER_TYPE(NUSD_TYPE_POINT3H, Point3h);
+    REGISTER_TYPE(NUSD_TYPE_POINT3HARRAY, Point3hArray);
+    REGISTER_TYPE(NUSD_TYPE_QUATD, Quatd);
+    REGISTER_TYPE(NUSD_TYPE_QUATDARRAY, QuatdArray);
+    REGISTER_TYPE(NUSD_TYPE_QUATF, Quatf);
+    REGISTER_TYPE(NUSD_TYPE_QUATFARRAY, QuatfArray);
+    REGISTER_TYPE(NUSD_TYPE_QUATH, Quath);
+    REGISTER_TYPE(NUSD_TYPE_QUATHARRAY, QuathArray);
+    REGISTER_TYPE(NUSD_TYPE_STRING, String);
+    REGISTER_TYPE(NUSD_TYPE_STRINGARRAY, StringArray);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD2D, TexCoord2d);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD2DARRAY, TexCoord2dArray);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD2F, TexCoord2f);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD2FARRAY, TexCoord2fArray);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD2H, TexCoord2h);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD2HARRAY, TexCoord2hArray);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD3D, TexCoord3d);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD3DARRAY, TexCoord3dArray);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD3F, TexCoord3f);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD3FARRAY, TexCoord3fArray);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD3H, TexCoord3h);
+    REGISTER_TYPE(NUSD_TYPE_TEXCOORD3HARRAY, TexCoord3hArray);
+    REGISTER_TYPE(NUSD_TYPE_TIMECODE, TimeCode);
+    REGISTER_TYPE(NUSD_TYPE_TIMECODEARRAY, TimeCodeArray);
+    REGISTER_TYPE(NUSD_TYPE_TOKEN, Token);
+    REGISTER_TYPE(NUSD_TYPE_TOKENARRAY, TokenArray);
+    REGISTER_TYPE(NUSD_TYPE_UCHAR, UChar);
+    REGISTER_TYPE(NUSD_TYPE_UCHARARRAY, UCharArray);
+    REGISTER_TYPE(NUSD_TYPE_UINT, UInt);
+    REGISTER_TYPE(NUSD_TYPE_UINT64, UInt64);
+    REGISTER_TYPE(NUSD_TYPE_UINT64ARRAY, UInt64Array);
+    REGISTER_TYPE(NUSD_TYPE_UINTARRAY, UIntArray);
+    REGISTER_TYPE(NUSD_TYPE_VECTOR3D, Vector3d);
+    REGISTER_TYPE(NUSD_TYPE_VECTOR3DARRAY, Vector3dArray);
+    REGISTER_TYPE(NUSD_TYPE_VECTOR3F, Vector3f);
+    REGISTER_TYPE(NUSD_TYPE_VECTOR3FARRAY, Vector3fArray);
+    REGISTER_TYPE(NUSD_TYPE_VECTOR3H, Vector3h);
+    REGISTER_TYPE(NUSD_TYPE_VECTOR3HARRAY, Vector3hArray);
+
+#undef REGISTER_TYPE
 
         NUSD_COLORSPACE_SRGB = "sRGB";
         NUSD_COLORSPACE_LINEAR_AP1 = GfColorSpaceNames->LinearAP1.GetText();
         NUSD_COLORSPACE_LINEAR_AP0 = GfColorSpaceNames->LinearAP0.GetText();
         NUSD_COLORSPACE_SRGB_AP1 = GfColorSpaceNames->SRGBAP1.GetText();
+
 
         TOKENS_INITIALIZED = true;
     }
@@ -705,12 +443,12 @@ nusd_result_t nusd_prim_create_property(nusd_stage_t stage,
         }
 
     } else {
-        if (TOKEN_TO_TYPENAME.find(property_type) == TOKEN_TO_TYPENAME.end()) {
+        if (property_type < 0 || property_type > NUSD_TYPE_RELATIONSHIP) {
             return NUSD_RESULT_INVALID_PROPERTY_TYPE;
         }
 
         UsdAttribute attr = prim.CreateAttribute(
-            TfToken(property_name), TOKEN_TO_TYPENAME[property_type]);
+            TfToken(property_name), TYPE_TO_TYPENAME[property_type]);
         if (!attr) {
             return NUSD_RESULT_CREATE_ATTRIBUTE_FAILED;
         } else {
@@ -730,7 +468,7 @@ bool nusd_property_iterator_next(nusd_property_iterator_t iterator,
     if (property.Is<UsdAttribute>()) {
         UsdAttribute const& attr = property.As<UsdAttribute>();
         SdfValueTypeName type_name = attr.GetTypeName();
-        *property_type = type_name.GetAsToken().GetText();
+        *property_type = TYPENAME_TO_TYPE[type_name.GetAsToken().GetText()];
     } else {
         *property_type = NUSD_TYPE_RELATIONSHIP;
     }
@@ -988,7 +726,7 @@ nusd_result_t nusd_shader_create_input(nusd_stage_t stage,
     }
 
     UsdShadeInput input =
-        shader.CreateInput(TfToken(input_name), TOKEN_TO_TYPENAME[input_type]);
+        shader.CreateInput(TfToken(input_name), TYPE_TO_TYPENAME[input_type]);
     if (!input) {
         return NUSD_RESULT_CREATE_ATTRIBUTE_FAILED;
     }
@@ -1016,7 +754,7 @@ nusd_result_t nusd_shader_create_output(nusd_stage_t stage,
     }
 
     UsdShadeOutput output = shader.CreateOutput(TfToken(output_name),
-                                                TOKEN_TO_TYPENAME[output_type]);
+                                                TYPE_TO_TYPENAME[output_type]);
     if (!output) {
         return NUSD_RESULT_CREATE_ATTRIBUTE_FAILED;
     }
@@ -1079,7 +817,7 @@ nusd_result_t nusd_material_create_input(nusd_stage_t stage,
     }
 
     UsdShadeInput input = material.CreateInput(TfToken(input_name),
-                                              TOKEN_TO_TYPENAME[input_type]);
+                                              TYPE_TO_TYPENAME[input_type]);
     if (!input) {
         return NUSD_RESULT_CREATE_INPUT_FAILED;
     }
@@ -1107,7 +845,7 @@ nusd_result_t nusd_material_create_output(nusd_stage_t stage,
     }
 
     UsdShadeOutput output = material.CreateOutput(TfToken(output_name),
-                                                 TOKEN_TO_TYPENAME[output_type]);
+                                                 TYPE_TO_TYPENAME[output_type]);
     if (!output) {
         return NUSD_RESULT_CREATE_OUTPUT_FAILED;
     }

@@ -13,9 +13,10 @@
 
 using namespace PXR_NS;
 
-using TokenTypeNameMap =
-    std::unordered_map<char const*, PXR_NS::SdfValueTypeName>;
-extern TokenTypeNameMap TOKEN_TO_TYPENAME;
+using TypeToTypeNameMap =
+    std::unordered_map<nusd_type_t, PXR_NS::SdfValueTypeName>;
+extern TypeToTypeNameMap TYPE_TO_TYPENAME;
+extern std::unordered_map<char const*, nusd_type_t> TYPENAME_TO_TYPE;
 
 extern "C" {
 
@@ -53,8 +54,7 @@ nusd_result_t nusd_prim_create_primvar(nusd_stage_t stage,
                                        char const* primvar_name,
                                        nusd_type_t primvar_type,
                                        nusd_interpolation_t primvar_interpolation) {
-    if (stage == nullptr || prim_path == nullptr || primvar_name == nullptr ||
-        primvar_type == nullptr) {
+    if (stage == nullptr || prim_path == nullptr || primvar_name == nullptr) {
         return NUSD_RESULT_NULL_PARAMETER;
     }
 
@@ -87,7 +87,7 @@ nusd_result_t nusd_prim_create_primvar(nusd_stage_t stage,
     }
 
     UsdGeomPrimvar pv = pv_api.CreatePrimvar(TfToken(primvar_name),
-                                             TOKEN_TO_TYPENAME[primvar_type],
+                                             TYPE_TO_TYPENAME[primvar_type],
                                              tok_interpolation);
     if (!pv) {
         return NUSD_RESULT_CREATE_ATTRIBUTE_FAILED;

@@ -17,15 +17,17 @@ class GetPropertyError(RuntimeError):
 
 
 def _get_property(stage, property_path: str, time_code: float = TIMECODE_DEFAULT):
-    property_type = _lib.nusd_type_t()
+    property_type_out = _lib.nusd_type_t()
     result = _lib.nusd_property_get_type(
-        stage._stage, property_path, byref(property_type)
+        stage._stage, property_path, byref(property_type_out)
     )
 
     if result != _lib.NUSD_RESULT_OK:
         raise GetPropertyError(
             f'failed to get property type for "{property_path}": {result}'
         )
+
+    property_type = property_type_out.value  # Extract int from c_int
 
     if property_type == _lib.NUSD_TYPE_FLOAT:
         value = c_float(0.0)

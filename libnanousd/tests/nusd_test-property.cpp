@@ -1283,7 +1283,6 @@ TEST(nusd, prim_create_primvar_null_parameters) {
     EXPECT_EQ(nusd_prim_create_primvar(nullptr, "/World/Mesh", "displayColor", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_NULL_PARAMETER);
     EXPECT_EQ(nusd_prim_create_primvar(stage, nullptr, "displayColor", NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_NULL_PARAMETER);
     EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", nullptr, NUSD_TYPE_FLOAT3, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_NULL_PARAMETER);
-    EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "displayColor", nullptr, NUSD_INTERPOLATION_VERTEX), NUSD_RESULT_NULL_PARAMETER);
     // Test invalid interpolation
     EXPECT_EQ(nusd_prim_create_primvar(stage, "/World/Mesh", "displayColor", NUSD_TYPE_FLOAT3, (nusd_interpolation_t)99), NUSD_RESULT_INVALID_INTERPOLATION);
 

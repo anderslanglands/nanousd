@@ -25,6 +25,12 @@ struct nusd_relationship_targets_iterator_s {
     PXR_NS::SdfPathVector::iterator current;
 };
 
+using TypeToTypeNameMap =
+    std::unordered_map<nusd_type_t, PXR_NS::SdfValueTypeName>;
+extern TypeToTypeNameMap TYPE_TO_TYPENAME;
+extern std::unordered_map<char const*, nusd_type_t> TYPENAME_TO_TYPE;
+
+
 extern "C" {
 
 nusd_result_t nusd_property_get_type(nusd_stage_t stage,
@@ -41,7 +47,7 @@ nusd_result_t nusd_property_get_type(nusd_stage_t stage,
     if (property.Is<UsdAttribute>()) {
         UsdAttribute const& attr = property.As<UsdAttribute>();
         SdfValueTypeName type_name = attr.GetTypeName();
-        *property_type = type_name.GetAsToken().GetText();
+        *property_type = TYPENAME_TO_TYPE[type_name.GetAsToken().GetText()];
     } else {
         *property_type = NUSD_TYPE_RELATIONSHIP;
     }
@@ -59,7 +65,7 @@ nusd_result_t nusd_attribute_get_token(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_TOKEN) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Token) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -114,7 +120,7 @@ nusd_result_t nusd_attribute_get_asset(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_ASSET) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Asset) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -140,7 +146,7 @@ nusd_result_t nusd_attribute_get_string(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_STRING) {
+    if (attr.GetTypeName() != SdfValueTypeNames->String) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -162,7 +168,7 @@ nusd_result_t nusd_attribute_get_float(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_FLOAT) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Float) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -182,8 +188,8 @@ nusd_result_t nusd_attribute_get_float2(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_FLOAT2 &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_TEXCOORD2F) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Float2 &&
+        attr.GetTypeName() != SdfValueTypeNames->TexCoord2f) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -203,12 +209,12 @@ nusd_result_t nusd_attribute_get_float3(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_FLOAT3 &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_TEXCOORD3F &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_VECTOR3F &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_POINT3F &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_NORMAL3F &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_COLOR3F) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Float3 &&
+        attr.GetTypeName() != SdfValueTypeNames->TexCoord3f &&
+        attr.GetTypeName() != SdfValueTypeNames->Vector3f &&
+        attr.GetTypeName() != SdfValueTypeNames->Point3f &&
+        attr.GetTypeName() != SdfValueTypeNames->Normal3f &&
+        attr.GetTypeName() != SdfValueTypeNames->Color3f) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -228,8 +234,8 @@ nusd_result_t nusd_attribute_get_float4(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_FLOAT4 &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_COLOR4F) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Float4 &&
+        attr.GetTypeName() != SdfValueTypeNames->Color4f) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -250,7 +256,7 @@ nusd_result_t nusd_attribute_get_double(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_DOUBLE) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Double) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -270,8 +276,8 @@ nusd_result_t nusd_attribute_get_double2(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_DOUBLE2 &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_TEXCOORD2D) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Double2 &&
+        attr.GetTypeName() != SdfValueTypeNames->TexCoord2d) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -291,12 +297,12 @@ nusd_result_t nusd_attribute_get_double3(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_DOUBLE3 &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_TEXCOORD3D &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_VECTOR3D &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_POINT3D &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_NORMAL3D &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_COLOR3D) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Double3 &&
+        attr.GetTypeName() != SdfValueTypeNames->TexCoord3d &&
+        attr.GetTypeName() != SdfValueTypeNames->Vector3d &&
+        attr.GetTypeName() != SdfValueTypeNames->Point3d &&
+        attr.GetTypeName() != SdfValueTypeNames->Normal3d &&
+        attr.GetTypeName() != SdfValueTypeNames->Color3d) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -316,8 +322,8 @@ nusd_result_t nusd_attribute_get_double4(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_DOUBLE4 &&
-        attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_COLOR4D) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Double4 &&
+        attr.GetTypeName() != SdfValueTypeNames->Color4d) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -338,7 +344,7 @@ nusd_result_t nusd_attribute_get_int(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Int) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -358,7 +364,7 @@ nusd_result_t nusd_attribute_get_int2(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT2) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Int2) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -378,7 +384,7 @@ nusd_result_t nusd_attribute_get_int3(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT3) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Int3) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -398,7 +404,7 @@ nusd_result_t nusd_attribute_get_int4(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT4) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Int4) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -419,7 +425,7 @@ nusd_result_t nusd_attribute_get_bool(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_BOOL) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Bool) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -438,7 +444,7 @@ nusd_result_t nusd_attribute_set_bool(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_BOOL) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Bool) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     attr.Set(value, time_code);
@@ -456,7 +462,7 @@ nusd_result_t nusd_attribute_get_matrix2d(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX2D) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Matrix2d) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -483,7 +489,7 @@ nusd_result_t nusd_attribute_get_matrix3d(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX3D) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Matrix3d) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -510,7 +516,7 @@ nusd_result_t nusd_attribute_get_matrix4d(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX4D) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Matrix4d) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -536,7 +542,7 @@ nusd_result_t nusd_attribute_set_matrix2d(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX2D) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Matrix2d) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     GfMatrix2d matrix(value[0], value[1], value[2], value[3]);
@@ -554,7 +560,7 @@ nusd_result_t nusd_attribute_set_matrix3d(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX3D) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Matrix3d) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     GfMatrix3d matrix(value[0],
@@ -580,7 +586,7 @@ nusd_result_t nusd_attribute_set_matrix4d(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_MATRIX4D) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Matrix4d) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     GfMatrix4d matrix(value[0],
@@ -635,7 +641,7 @@ nusd_result_t nusd_attribute_set_float(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_FLOAT) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Float) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -655,8 +661,8 @@ nusd_result_t nusd_attribute_set_float2(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    char const* attr_type = attr.GetTypeName().GetAsToken().GetText();
-    if (attr_type != NUSD_TYPE_FLOAT2 && attr_type != NUSD_TYPE_TEXCOORD2F) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Float2 &&
+        attr.GetTypeName() != SdfValueTypeNames->TexCoord2f) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -676,10 +682,12 @@ nusd_result_t nusd_attribute_set_float3(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    char const* attr_type = attr.GetTypeName().GetAsToken().GetText();
-    if (attr_type != NUSD_TYPE_FLOAT3 && attr_type != NUSD_TYPE_COLOR3F &&
-        attr_type != NUSD_TYPE_VECTOR3F && attr_type != NUSD_TYPE_POINT3F &&
-        attr_type != NUSD_TYPE_NORMAL3F && attr_type != NUSD_TYPE_TEXCOORD3F) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Float3 &&
+        attr.GetTypeName() != SdfValueTypeNames->Color3f &&
+        attr.GetTypeName() != SdfValueTypeNames->Vector3f &&
+        attr.GetTypeName() != SdfValueTypeNames->Point3f &&
+        attr.GetTypeName() != SdfValueTypeNames->Normal3f &&
+        attr.GetTypeName() != SdfValueTypeNames->TexCoord3f) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -699,8 +707,8 @@ nusd_result_t nusd_attribute_set_float4(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    char const* attr_type = attr.GetTypeName().GetAsToken().GetText();
-    if (attr_type != NUSD_TYPE_FLOAT4 && attr_type != NUSD_TYPE_COLOR4F) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Float4 &&
+        attr.GetTypeName() != SdfValueTypeNames->Color4f) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -721,7 +729,7 @@ nusd_result_t nusd_attribute_set_int(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Int) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -740,7 +748,7 @@ nusd_result_t nusd_attribute_set_int2(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT2) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Int2) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -760,7 +768,7 @@ nusd_result_t nusd_attribute_set_int3(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT3) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Int3) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -780,7 +788,7 @@ nusd_result_t nusd_attribute_set_int4(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT4) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Int4) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -801,7 +809,7 @@ nusd_result_t nusd_attribute_get_int64(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT64) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Int64) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -819,7 +827,7 @@ nusd_result_t nusd_attribute_get_uint(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT) {
+    if (attr.GetTypeName() != SdfValueTypeNames->UInt) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     attr.Get(value, time_code);
@@ -835,7 +843,7 @@ nusd_result_t nusd_attribute_get_uint64(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT64) {
+    if (attr.GetTypeName() != SdfValueTypeNames->UInt64) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     attr.Get(value, time_code);
@@ -851,7 +859,7 @@ nusd_result_t nusd_attribute_get_uchar(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UCHAR) {
+    if (attr.GetTypeName() != SdfValueTypeNames->UChar) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     attr.Get(value, time_code);
@@ -870,7 +878,7 @@ nusd_result_t nusd_attribute_set_int64(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_INT64) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Int64) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -888,7 +896,7 @@ nusd_result_t nusd_attribute_set_uint(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT) {
+    if (attr.GetTypeName() != SdfValueTypeNames->UInt) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     attr.Set(value, time_code);
@@ -904,7 +912,7 @@ nusd_result_t nusd_attribute_set_uint64(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UINT64) {
+    if (attr.GetTypeName() != SdfValueTypeNames->UInt64) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     attr.Set(value, time_code);
@@ -920,7 +928,7 @@ nusd_result_t nusd_attribute_set_uchar(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_UCHAR) {
+    if (attr.GetTypeName() != SdfValueTypeNames->UChar) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     attr.Set(value, time_code);
@@ -939,7 +947,7 @@ nusd_result_t nusd_attribute_set_double(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_DOUBLE) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Double) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -958,7 +966,7 @@ nusd_result_t nusd_attribute_set_double2(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_DOUBLE2) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Double2) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -978,7 +986,7 @@ nusd_result_t nusd_attribute_set_double3(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_DOUBLE3) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Double3) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -998,7 +1006,7 @@ nusd_result_t nusd_attribute_set_double4(nusd_stage_t stage,
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
 
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_DOUBLE4) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Double4) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -1085,7 +1093,7 @@ nusd_result_t nusd_attribute_set_asset(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_ASSET) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Asset) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     attr.Set(SdfAssetPath(value), time_code);
@@ -1105,7 +1113,7 @@ nusd_result_t nusd_attribute_set_string(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_STRING) {
+    if (attr.GetTypeName() != SdfValueTypeNames->String) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     attr.Set(std::string(value), time_code);
@@ -1126,7 +1134,7 @@ nusd_result_t nusd_attribute_set_asset_array(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_ASSETARRAY) {
+    if (attr.GetTypeName() != SdfValueTypeNames->AssetArray) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -1153,7 +1161,7 @@ nusd_result_t nusd_attribute_set_string_array(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_STRINGARRAY) {
+    if (attr.GetTypeName() != SdfValueTypeNames->StringArray) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 
@@ -1217,7 +1225,7 @@ nusd_result_t nusd_attribute_set_token(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_TOKEN) {
+    if (attr.GetTypeName() != SdfValueTypeNames->Token) {
         return NUSD_RESULT_WRONG_TYPE;
     }
     attr.Set(TfToken(value), time_code);
@@ -1238,7 +1246,7 @@ nusd_result_t nusd_attribute_set_token_array(nusd_stage_t stage,
     if (!attr) {
         return NUSD_RESULT_INVALID_ATTRIBUTE_PATH;
     }
-    if (attr.GetTypeName().GetAsToken().GetText() != NUSD_TYPE_TOKENARRAY) {
+    if (attr.GetTypeName() != SdfValueTypeNames->TokenArray) {
         return NUSD_RESULT_WRONG_TYPE;
     }
 

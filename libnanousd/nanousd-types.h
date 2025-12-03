@@ -41,146 +41,154 @@ enum nusd_result_e {
 };
 typedef int nusd_result_t;
 
-typedef char const* nusd_type_t;
 typedef char const* nusd_colorspace_t;
 typedef void* nusd_stage_t;
 typedef struct nusd_asset_path_s* nusd_asset_path_t;
 typedef struct nusd_string_s* nusd_string_t;
 
-extern nusd_type_t NUSD_TYPE_ASSET;
-extern nusd_type_t NUSD_TYPE_ASSETARRAY;
-extern nusd_type_t NUSD_TYPE_BOOL;
-extern nusd_type_t NUSD_TYPE_BOOLARRAY;
-extern nusd_type_t NUSD_TYPE_COLOR3D;
-extern nusd_type_t NUSD_TYPE_COLOR3DARRAY;
-extern nusd_type_t NUSD_TYPE_COLOR3F;
-extern nusd_type_t NUSD_TYPE_COLOR3FARRAY;
-extern nusd_type_t NUSD_TYPE_COLOR3H;
-extern nusd_type_t NUSD_TYPE_COLOR3HARRAY;
-extern nusd_type_t NUSD_TYPE_COLOR4D;
-extern nusd_type_t NUSD_TYPE_COLOR4DARRAY;
-extern nusd_type_t NUSD_TYPE_COLOR4F;
-extern nusd_type_t NUSD_TYPE_COLOR4FARRAY;
-extern nusd_type_t NUSD_TYPE_COLOR4H;
-extern nusd_type_t NUSD_TYPE_COLOR4HARRAY;
-extern nusd_type_t NUSD_TYPE_DOUBLE;
-extern nusd_type_t NUSD_TYPE_DOUBLE2;
-extern nusd_type_t NUSD_TYPE_DOUBLE2ARRAY;
-extern nusd_type_t NUSD_TYPE_DOUBLE3;
-extern nusd_type_t NUSD_TYPE_DOUBLE3ARRAY;
-extern nusd_type_t NUSD_TYPE_DOUBLE4;
-extern nusd_type_t NUSD_TYPE_DOUBLE4ARRAY;
-extern nusd_type_t NUSD_TYPE_DOUBLEARRAY;
-extern nusd_type_t NUSD_TYPE_FIND;
-extern nusd_type_t NUSD_TYPE_FLOAT;
-extern nusd_type_t NUSD_TYPE_FLOAT2;
-extern nusd_type_t NUSD_TYPE_FLOAT2ARRAY;
-extern nusd_type_t NUSD_TYPE_FLOAT3;
-extern nusd_type_t NUSD_TYPE_FLOAT3ARRAY;
-extern nusd_type_t NUSD_TYPE_FLOAT4;
-extern nusd_type_t NUSD_TYPE_FLOAT4ARRAY;
-extern nusd_type_t NUSD_TYPE_FLOATARRAY;
-extern nusd_type_t NUSD_TYPE_FRAME4D;
-extern nusd_type_t NUSD_TYPE_FRAME4DARRAY;
-extern nusd_type_t NUSD_TYPE_GROUP;
-extern nusd_type_t NUSD_TYPE_HALF;
-extern nusd_type_t NUSD_TYPE_HALF2;
-extern nusd_type_t NUSD_TYPE_HALF2ARRAY;
-extern nusd_type_t NUSD_TYPE_HALF3;
-extern nusd_type_t NUSD_TYPE_HALF3ARRAY;
-extern nusd_type_t NUSD_TYPE_HALF4;
-extern nusd_type_t NUSD_TYPE_HALF4ARRAY;
-extern nusd_type_t NUSD_TYPE_HALFARRAY;
-extern nusd_type_t NUSD_TYPE_INT;
-extern nusd_type_t NUSD_TYPE_INT2;
-extern nusd_type_t NUSD_TYPE_INT2ARRAY;
-extern nusd_type_t NUSD_TYPE_INT3;
-extern nusd_type_t NUSD_TYPE_INT3ARRAY;
-extern nusd_type_t NUSD_TYPE_INT4;
-extern nusd_type_t NUSD_TYPE_INT4ARRAY;
-extern nusd_type_t NUSD_TYPE_INT64;
-extern nusd_type_t NUSD_TYPE_INT64ARRAY;
-extern nusd_type_t NUSD_TYPE_INTARRAY;
-extern nusd_type_t NUSD_TYPE_MATRIX2D;
-extern nusd_type_t NUSD_TYPE_MATRIX2DARRAY;
-extern nusd_type_t NUSD_TYPE_MATRIX3D;
-extern nusd_type_t NUSD_TYPE_MATRIX3DARRAY;
-extern nusd_type_t NUSD_TYPE_MATRIX4D;
-extern nusd_type_t NUSD_TYPE_MATRIX4DARRAY;
-extern nusd_type_t NUSD_TYPE_NORMAL3D;
-extern nusd_type_t NUSD_TYPE_NORMAL3DARRAY;
-extern nusd_type_t NUSD_TYPE_NORMAL3F;
-extern nusd_type_t NUSD_TYPE_NORMAL3FARRAY;
-extern nusd_type_t NUSD_TYPE_NORMAL3H;
-extern nusd_type_t NUSD_TYPE_NORMAL3HARRAY;
-extern nusd_type_t NUSD_TYPE_OPAQUE;
-extern nusd_type_t NUSD_TYPE_PATHEXPRESSION;
-extern nusd_type_t NUSD_TYPE_PATHEXPRESSIONARRAY;
-extern nusd_type_t NUSD_TYPE_POINT3D;
-extern nusd_type_t NUSD_TYPE_POINT3DARRAY;
-extern nusd_type_t NUSD_TYPE_POINT3F;
-extern nusd_type_t NUSD_TYPE_POINT3FARRAY;
-extern nusd_type_t NUSD_TYPE_POINT3H;
-extern nusd_type_t NUSD_TYPE_POINT3HARRAY;
-extern nusd_type_t NUSD_TYPE_QUATD;
-extern nusd_type_t NUSD_TYPE_QUATDARRAY;
-extern nusd_type_t NUSD_TYPE_QUATF;
-extern nusd_type_t NUSD_TYPE_QUATFARRAY;
-extern nusd_type_t NUSD_TYPE_QUATH;
-extern nusd_type_t NUSD_TYPE_QUATHARRAY;
-extern nusd_type_t NUSD_TYPE_STRING;
-extern nusd_type_t NUSD_TYPE_STRINGARRAY;
-extern nusd_type_t NUSD_TYPE_TEXCOORD2D;
-extern nusd_type_t NUSD_TYPE_TEXCOORD2DARRAY;
-extern nusd_type_t NUSD_TYPE_TEXCOORD2F;
-extern nusd_type_t NUSD_TYPE_TEXCOORD2FARRAY;
-extern nusd_type_t NUSD_TYPE_TEXCOORD2H;
-extern nusd_type_t NUSD_TYPE_TEXCOORD2HARRAY;
-extern nusd_type_t NUSD_TYPE_TEXCOORD3D;
-extern nusd_type_t NUSD_TYPE_TEXCOORD3DARRAY;
-extern nusd_type_t NUSD_TYPE_TEXCOORD3F;
-extern nusd_type_t NUSD_TYPE_TEXCOORD3FARRAY;
-extern nusd_type_t NUSD_TYPE_TEXCOORD3H;
-extern nusd_type_t NUSD_TYPE_TEXCOORD3HARRAY;
-extern nusd_type_t NUSD_TYPE_TIMECODE;
-extern nusd_type_t NUSD_TYPE_TIMECODEARRAY;
-extern nusd_type_t NUSD_TYPE_TOKEN;
-extern nusd_type_t NUSD_TYPE_TOKENARRAY;
-extern nusd_type_t NUSD_TYPE_UCHAR;
-extern nusd_type_t NUSD_TYPE_UCHARARRAY;
-extern nusd_type_t NUSD_TYPE_UINT;
-extern nusd_type_t NUSD_TYPE_UINT64;
-extern nusd_type_t NUSD_TYPE_UINT64ARRAY;
-extern nusd_type_t NUSD_TYPE_UINTARRAY;
-extern nusd_type_t NUSD_TYPE_VECTOR3D;
-extern nusd_type_t NUSD_TYPE_VECTOR3DARRAY;
-extern nusd_type_t NUSD_TYPE_VECTOR3F;
-extern nusd_type_t NUSD_TYPE_VECTOR3FARRAY;
-extern nusd_type_t NUSD_TYPE_VECTOR3H;
-extern nusd_type_t NUSD_TYPE_VECTOR3HARRAY;
+enum nusd_type_e {
+    NUSD_TYPE_ASSET,
+    NUSD_TYPE_ASSETARRAY,
+    NUSD_TYPE_BOOL,
+    NUSD_TYPE_BOOLARRAY,
+    NUSD_TYPE_COLOR3D,
+    NUSD_TYPE_COLOR3DARRAY,
+    NUSD_TYPE_COLOR3F,
+    NUSD_TYPE_COLOR3FARRAY,
+    NUSD_TYPE_COLOR3H,
+    NUSD_TYPE_COLOR3HARRAY,
+    NUSD_TYPE_COLOR4D,
+    NUSD_TYPE_COLOR4DARRAY,
+    NUSD_TYPE_COLOR4F,
+    NUSD_TYPE_COLOR4FARRAY,
+    NUSD_TYPE_COLOR4H,
+    NUSD_TYPE_COLOR4HARRAY,
+    NUSD_TYPE_DOUBLE,
+    NUSD_TYPE_DOUBLE2,
+    NUSD_TYPE_DOUBLE2ARRAY,
+    NUSD_TYPE_DOUBLE3,
+    NUSD_TYPE_DOUBLE3ARRAY,
+    NUSD_TYPE_DOUBLE4,
+    NUSD_TYPE_DOUBLE4ARRAY,
+    NUSD_TYPE_DOUBLEARRAY,
+    NUSD_TYPE_FIND,
+    NUSD_TYPE_FLOAT,
+    NUSD_TYPE_FLOAT2,
+    NUSD_TYPE_FLOAT2ARRAY,
+    NUSD_TYPE_FLOAT3,
+    NUSD_TYPE_FLOAT3ARRAY,
+    NUSD_TYPE_FLOAT4,
+    NUSD_TYPE_FLOAT4ARRAY,
+    NUSD_TYPE_FLOATARRAY,
+    NUSD_TYPE_FRAME4D,
+    NUSD_TYPE_FRAME4DARRAY,
+    NUSD_TYPE_GROUP,
+    NUSD_TYPE_HALF,
+    NUSD_TYPE_HALF2,
+    NUSD_TYPE_HALF2ARRAY,
+    NUSD_TYPE_HALF3,
+    NUSD_TYPE_HALF3ARRAY,
+    NUSD_TYPE_HALF4,
+    NUSD_TYPE_HALF4ARRAY,
+    NUSD_TYPE_HALFARRAY,
+    NUSD_TYPE_INT,
+    NUSD_TYPE_INT2,
+    NUSD_TYPE_INT2ARRAY,
+    NUSD_TYPE_INT3,
+    NUSD_TYPE_INT3ARRAY,
+    NUSD_TYPE_INT4,
+    NUSD_TYPE_INT4ARRAY,
+    NUSD_TYPE_INT64,
+    NUSD_TYPE_INT64ARRAY,
+    NUSD_TYPE_INTARRAY,
+    NUSD_TYPE_MATRIX2D,
+    NUSD_TYPE_MATRIX2DARRAY,
+    NUSD_TYPE_MATRIX3D,
+    NUSD_TYPE_MATRIX3DARRAY,
+    NUSD_TYPE_MATRIX4D,
+    NUSD_TYPE_MATRIX4DARRAY,
+    NUSD_TYPE_NORMAL3D,
+    NUSD_TYPE_NORMAL3DARRAY,
+    NUSD_TYPE_NORMAL3F,
+    NUSD_TYPE_NORMAL3FARRAY,
+    NUSD_TYPE_NORMAL3H,
+    NUSD_TYPE_NORMAL3HARRAY,
+    NUSD_TYPE_OPAQUE,
+    NUSD_TYPE_PATHEXPRESSION,
+    NUSD_TYPE_PATHEXPRESSIONARRAY,
+    NUSD_TYPE_POINT3D,
+    NUSD_TYPE_POINT3DARRAY,
+    NUSD_TYPE_POINT3F,
+    NUSD_TYPE_POINT3FARRAY,
+    NUSD_TYPE_POINT3H,
+    NUSD_TYPE_POINT3HARRAY,
+    NUSD_TYPE_QUATD,
+    NUSD_TYPE_QUATDARRAY,
+    NUSD_TYPE_QUATF,
+    NUSD_TYPE_QUATFARRAY,
+    NUSD_TYPE_QUATH,
+    NUSD_TYPE_QUATHARRAY,
+    NUSD_TYPE_STRING,
+    NUSD_TYPE_STRINGARRAY,
+    NUSD_TYPE_TEXCOORD2D,
+    NUSD_TYPE_TEXCOORD2DARRAY,
+    NUSD_TYPE_TEXCOORD2F,
+    NUSD_TYPE_TEXCOORD2FARRAY,
+    NUSD_TYPE_TEXCOORD2H,
+    NUSD_TYPE_TEXCOORD2HARRAY,
+    NUSD_TYPE_TEXCOORD3D,
+    NUSD_TYPE_TEXCOORD3DARRAY,
+    NUSD_TYPE_TEXCOORD3F,
+    NUSD_TYPE_TEXCOORD3FARRAY,
+    NUSD_TYPE_TEXCOORD3H,
+    NUSD_TYPE_TEXCOORD3HARRAY,
+    NUSD_TYPE_TIMECODE,
+    NUSD_TYPE_TIMECODEARRAY,
+    NUSD_TYPE_TOKEN,
+    NUSD_TYPE_TOKENARRAY,
+    NUSD_TYPE_UCHAR,
+    NUSD_TYPE_UCHARARRAY,
+    NUSD_TYPE_UINT,
+    NUSD_TYPE_UINT64,
+    NUSD_TYPE_UINT64ARRAY,
+    NUSD_TYPE_UINTARRAY,
+    NUSD_TYPE_VECTOR3D,
+    NUSD_TYPE_VECTOR3DARRAY,
+    NUSD_TYPE_VECTOR3F,
+    NUSD_TYPE_VECTOR3FARRAY,
+    NUSD_TYPE_VECTOR3H,
+    NUSD_TYPE_VECTOR3HARRAY,
+    NUSD_TYPE_RELATIONSHIP
+};
+typedef int nusd_type_t;
 
-extern nusd_type_t NUSD_TYPE_RELATIONSHIP;
+/// Converts a nusd_type_t to a string.
+/// @param type The nusd_type_t to convert.
+/// @return A string representation of the nusd_type_t. "INVALID" if the type is not valid.
+NANOUSD_API 
+char const* nusd_type_to_string(nusd_type_t type);
 
-extern nusd_type_t NUSD_COLORSPACE_LINEAR_AP1;
-extern nusd_type_t NUSD_COLORSPACE_LINEAR_AP0;
-extern nusd_type_t NUSD_COLORSPACE_LINEAR_REC709;
-extern nusd_type_t NUSD_COLORSPACE_LINEAR_P3D65;
-extern nusd_type_t NUSD_COLORSPACE_LINEAR_REC2020;
-extern nusd_type_t NUSD_COLORSPACE_LINEAR_ADOBERGB;
-extern nusd_type_t NUSD_COLORSPACE_LINEAR_CIEXYZD65;
-extern nusd_type_t NUSD_COLORSPACE_LINEAR_DISPLAYP3;
-extern nusd_type_t NUSD_COLORSPACE_SRGB_REC709;
-extern nusd_type_t NUSD_COLORSPACE_G22_REC709;
-extern nusd_type_t NUSD_COLORSPACE_G18_REC709;
-extern nusd_type_t NUSD_COLORSPACE_SRGB_AP1;
-extern nusd_type_t NUSD_COLORSPACE_G22_AP1;
-extern nusd_type_t NUSD_COLORSPACE_G22_ADOBERGB;
-extern nusd_type_t NUSD_COLORSPACE_IDENTITY;
-extern nusd_type_t NUSD_COLORSPACE_DATA;
-extern nusd_type_t NUSD_COLORSPACE_RAW;
-extern nusd_type_t NUSD_COLORSPACE_SRGB;
-extern nusd_type_t NUSD_COLORSPACE_UNKNOWN;
-extern nusd_type_t NUSD_COLORSPACE_CIEXYZ;
+
+extern nusd_colorspace_t NUSD_COLORSPACE_LINEAR_AP1;
+extern nusd_colorspace_t NUSD_COLORSPACE_LINEAR_AP0;
+extern nusd_colorspace_t NUSD_COLORSPACE_LINEAR_REC709;
+extern nusd_colorspace_t NUSD_COLORSPACE_LINEAR_P3D65;
+extern nusd_colorspace_t NUSD_COLORSPACE_LINEAR_REC2020;
+extern nusd_colorspace_t NUSD_COLORSPACE_LINEAR_ADOBERGB;
+extern nusd_colorspace_t NUSD_COLORSPACE_LINEAR_CIEXYZD65;
+extern nusd_colorspace_t NUSD_COLORSPACE_LINEAR_DISPLAYP3;
+extern nusd_colorspace_t NUSD_COLORSPACE_SRGB_REC709;
+extern nusd_colorspace_t NUSD_COLORSPACE_G22_REC709;
+extern nusd_colorspace_t NUSD_COLORSPACE_G18_REC709;
+extern nusd_colorspace_t NUSD_COLORSPACE_SRGB_AP1;
+extern nusd_colorspace_t NUSD_COLORSPACE_G22_AP1;
+extern nusd_colorspace_t NUSD_COLORSPACE_G22_ADOBERGB;
+extern nusd_colorspace_t NUSD_COLORSPACE_IDENTITY;
+extern nusd_colorspace_t NUSD_COLORSPACE_DATA;
+extern nusd_colorspace_t NUSD_COLORSPACE_RAW;
+extern nusd_colorspace_t NUSD_COLORSPACE_SRGB;
+extern nusd_colorspace_t NUSD_COLORSPACE_UNKNOWN;
+extern nusd_colorspace_t NUSD_COLORSPACE_CIEXYZ;
 
 extern double NUSD_TIMECODE_DEFAULT;
 
