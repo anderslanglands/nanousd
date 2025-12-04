@@ -332,6 +332,411 @@ TEST(nusd, prim_add_translate_op_multiple_operations) {
     nusd_stage_destroy(stage);
 }
 
+TEST(nusd, prim_add_rotate_op_axis_angle_basic) {
+    nusd_stage_t stage;
+    nusd_result_t result =
+        nusd_stage_create_in_memory("test-prim_add_rotate_op_basic", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Rotate 90 degrees around the Y axis
+    double axis[] = {0.0, 1.0, 0.0};
+    result = nusd_prim_add_rotate_op_axis_angle(
+        stage, "/World", nullptr, axis, 90.0, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_rotate_op_axis_angle_with_suffix) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_rotate_op_suffix", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World/Camera", "Camera");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Rotate 45 degrees around the X axis with suffix
+    double axis[] = {1.0, 0.0, 0.0};
+    result = nusd_prim_add_rotate_op_axis_angle(
+        stage, "/World/Camera", "tilt", axis, 45.0, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_rotate_op_axis_angle_arbitrary_axis) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_rotate_op_arbitrary", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World/Mesh", "Mesh");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Rotate around an arbitrary axis (doesn't need to be normalized)
+    double axis[] = {1.0, 1.0, 1.0};
+    result = nusd_prim_add_rotate_op_axis_angle(
+        stage, "/World/Mesh", nullptr, axis, 120.0, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_rotate_op_axis_angle_null_parameters) {
+    nusd_stage_t stage;
+    nusd_result_t result =
+        nusd_stage_create_in_memory("test-prim_add_rotate_op_null", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double axis[] = {0.0, 1.0, 0.0};
+
+    // Test null stage
+    EXPECT_EQ(
+        nusd_prim_add_rotate_op_axis_angle(
+            nullptr, "/World", nullptr, axis, 90.0, NUSD_TIMECODE_DEFAULT),
+        NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null xformable_path
+    EXPECT_EQ(nusd_prim_add_rotate_op_axis_angle(
+                  stage, nullptr, nullptr, axis, 90.0, NUSD_TIMECODE_DEFAULT),
+              NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null axis
+    EXPECT_EQ(nusd_prim_add_rotate_op_axis_angle(
+                  stage, "/World", nullptr, nullptr, 90.0, NUSD_TIMECODE_DEFAULT),
+              NUSD_RESULT_NULL_PARAMETER);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_rotate_op_axis_angle_invalid_prim_path) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_rotate_op_invalid", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double axis[] = {0.0, 1.0, 0.0};
+
+    // Test non-existent prim
+    EXPECT_EQ(nusd_prim_add_rotate_op_axis_angle(stage,
+                                                  "/NonExistent/Prim",
+                                                  nullptr,
+                                                  axis,
+                                                  90.0,
+                                                  NUSD_TIMECODE_DEFAULT),
+              NUSD_RESULT_INVALID_PRIM_PATH);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_rotate_op_axis_angle_combined_with_translate) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_rotate_combined", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Add translate first
+    double translation[] = {5.0, 0.0, 0.0};
+    result = nusd_prim_add_translate_op(
+        stage, "/World", nullptr, translation, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Then add rotation
+    double axis[] = {0.0, 0.0, 1.0};
+    result = nusd_prim_add_rotate_op_axis_angle(
+        stage, "/World", nullptr, axis, 45.0, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_scale_op_basic) {
+    nusd_stage_t stage;
+    nusd_result_t result =
+        nusd_stage_create_in_memory("test-prim_add_scale_op_basic", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Add scale operation with initial scale
+    double scale[] = {2.0, 2.0, 2.0};
+    result = nusd_prim_add_scale_op(
+        stage, "/World", nullptr, scale, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_scale_op_with_suffix) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_scale_op_suffix", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    result = nusd_stage_define_prim(stage, "/World/Mesh", "Mesh");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Add scale operation with custom suffix
+    double scale[] = {1.5, 1.0, 0.5};
+    result = nusd_prim_add_scale_op(
+        stage, "/World/Mesh", "stretch", scale, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_scale_op_no_initial_value) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_scale_op_no_value", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Add scale operation without initial value
+    result = nusd_prim_add_scale_op(
+        stage, "/World", "size", nullptr, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_scale_op_null_parameters) {
+    nusd_stage_t stage;
+    nusd_result_t result =
+        nusd_stage_create_in_memory("test-prim_add_scale_op_null", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double scale[] = {1.0, 1.0, 1.0};
+
+    // Test null stage
+    EXPECT_EQ(
+        nusd_prim_add_scale_op(
+            nullptr, "/World", nullptr, scale, NUSD_TIMECODE_DEFAULT),
+        NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null xformable_path
+    EXPECT_EQ(nusd_prim_add_scale_op(
+                  stage, nullptr, nullptr, scale, NUSD_TIMECODE_DEFAULT),
+              NUSD_RESULT_NULL_PARAMETER);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_scale_op_invalid_prim_path) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_scale_op_invalid", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double scale[] = {1.0, 1.0, 1.0};
+
+    // Test non-existent prim
+    EXPECT_EQ(nusd_prim_add_scale_op(stage,
+                                     "/NonExistent/Prim",
+                                     nullptr,
+                                     scale,
+                                     NUSD_TIMECODE_DEFAULT),
+              NUSD_RESULT_INVALID_PRIM_PATH);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_scale_op_non_uniform) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_scale_op_non_uniform", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Non-uniform scale (different values for each axis)
+    double scale[] = {1.0, 2.0, 0.5};
+    result = nusd_prim_add_scale_op(
+        stage, "/World", nullptr, scale, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_scale_op_combined_with_transforms) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_scale_combined", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Add translate
+    double translation[] = {5.0, 0.0, 0.0};
+    result = nusd_prim_add_translate_op(
+        stage, "/World", nullptr, translation, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Add rotation
+    double axis[] = {0.0, 1.0, 0.0};
+    result = nusd_prim_add_rotate_op_axis_angle(
+        stage, "/World", nullptr, axis, 45.0, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Add scale
+    double scale[] = {2.0, 2.0, 2.0};
+    result = nusd_prim_add_scale_op(
+        stage, "/World", nullptr, scale, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_look_at_op_basic) {
+    nusd_stage_t stage;
+    nusd_result_t result =
+        nusd_stage_create_in_memory("test-prim_add_look_at_op_basic", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    result = nusd_camera_define(stage, "/World/Camera");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Camera at origin looking at target
+    double eye[] = {0.0, 0.0, 10.0};
+    double target[] = {0.0, 0.0, 0.0};
+    double up[] = {0.0, 1.0, 0.0};
+    result = nusd_prim_add_look_at_op(
+        stage, "/World/Camera", nullptr, eye, target, up, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_look_at_op_with_suffix) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_look_at_op_suffix", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    result = nusd_camera_define(stage, "/World/Camera");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double eye[] = {5.0, 5.0, 5.0};
+    double target[] = {0.0, 0.0, 0.0};
+    double up[] = {0.0, 1.0, 0.0};
+    result = nusd_prim_add_look_at_op(
+        stage, "/World/Camera", "view", eye, target, up, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_look_at_op_null_parameters) {
+    nusd_stage_t stage;
+    nusd_result_t result =
+        nusd_stage_create_in_memory("test-prim_add_look_at_op_null", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double eye[] = {0.0, 0.0, 10.0};
+    double target[] = {0.0, 0.0, 0.0};
+    double up[] = {0.0, 1.0, 0.0};
+
+    // Test null stage
+    EXPECT_EQ(
+        nusd_prim_add_look_at_op(
+            nullptr, "/World", nullptr, eye, target, up, NUSD_TIMECODE_DEFAULT),
+        NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null xformable_path
+    EXPECT_EQ(nusd_prim_add_look_at_op(
+                  stage, nullptr, nullptr, eye, target, up, NUSD_TIMECODE_DEFAULT),
+              NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null eye
+    EXPECT_EQ(nusd_prim_add_look_at_op(
+                  stage, "/World", nullptr, nullptr, target, up, NUSD_TIMECODE_DEFAULT),
+              NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null target
+    EXPECT_EQ(nusd_prim_add_look_at_op(
+                  stage, "/World", nullptr, eye, nullptr, up, NUSD_TIMECODE_DEFAULT),
+              NUSD_RESULT_NULL_PARAMETER);
+
+    // Test null up
+    EXPECT_EQ(nusd_prim_add_look_at_op(
+                  stage, "/World", nullptr, eye, target, nullptr, NUSD_TIMECODE_DEFAULT),
+              NUSD_RESULT_NULL_PARAMETER);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_look_at_op_invalid_prim_path) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_look_at_op_invalid", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    double eye[] = {0.0, 0.0, 10.0};
+    double target[] = {0.0, 0.0, 0.0};
+    double up[] = {0.0, 1.0, 0.0};
+
+    // Test non-existent prim
+    EXPECT_EQ(nusd_prim_add_look_at_op(stage,
+                                        "/NonExistent/Prim",
+                                        nullptr,
+                                        eye,
+                                        target,
+                                        up,
+                                        NUSD_TIMECODE_DEFAULT),
+              NUSD_RESULT_INVALID_PRIM_PATH);
+
+    nusd_stage_destroy(stage);
+}
+
+TEST(nusd, prim_add_look_at_op_various_positions) {
+    nusd_stage_t stage;
+    nusd_result_t result = nusd_stage_create_in_memory(
+        "test-prim_add_look_at_op_positions", &stage);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    result = nusd_stage_define_prim(stage, "/World", "Xform");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+    result = nusd_camera_define(stage, "/World/Camera");
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    // Looking from above
+    double eye1[] = {0.0, 10.0, 0.0};
+    double target1[] = {0.0, 0.0, 0.0};
+    double up1[] = {0.0, 0.0, -1.0};
+    result = nusd_prim_add_look_at_op(
+        stage, "/World/Camera", "topView", eye1, target1, up1, NUSD_TIMECODE_DEFAULT);
+    EXPECT_EQ(result, NUSD_RESULT_OK);
+
+    nusd_stage_destroy(stage);
+}
+
 TEST(nusd, stage_path_is_valid_prim_comprehensive) {
     nusd_stage_t stage;
     nusd_result_t result =

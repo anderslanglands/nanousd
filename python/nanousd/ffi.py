@@ -2111,19 +2111,37 @@ if _libs["nanousd"].has("nusd_prim_add_translate_op", "cdecl"):
     nusd_prim_add_translate_op.argtypes = [nusd_stage_t, String, String, POINTER(c_double), c_double]
     nusd_prim_add_translate_op.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd-prim.h: 220
+# /home/anders/code/nanousd/libnanousd/nanousd-prim.h: 217
+if _libs["nanousd"].has("nusd_prim_add_rotate_op_axis_angle", "cdecl"):
+    nusd_prim_add_rotate_op_axis_angle = _libs["nanousd"].get("nusd_prim_add_rotate_op_axis_angle", "cdecl")
+    nusd_prim_add_rotate_op_axis_angle.argtypes = [nusd_stage_t, String, String, POINTER(c_double), c_double, c_double]
+    nusd_prim_add_rotate_op_axis_angle.restype = nusd_result_t
+
+# /home/anders/code/nanousd/libnanousd/nanousd-prim.h: 252
+if _libs["nanousd"].has("nusd_prim_add_scale_op", "cdecl"):
+    nusd_prim_add_scale_op = _libs["nanousd"].get("nusd_prim_add_scale_op", "cdecl")
+    nusd_prim_add_scale_op.argtypes = [nusd_stage_t, String, String, POINTER(c_double), c_double]
+    nusd_prim_add_scale_op.restype = nusd_result_t
+
+# /home/anders/code/nanousd/libnanousd/nanousd-prim.h: 290
+if _libs["nanousd"].has("nusd_prim_add_look_at_op", "cdecl"):
+    nusd_prim_add_look_at_op = _libs["nanousd"].get("nusd_prim_add_look_at_op", "cdecl")
+    nusd_prim_add_look_at_op.argtypes = [nusd_stage_t, String, String, POINTER(c_double), POINTER(c_double), POINTER(c_double), c_double]
+    nusd_prim_add_look_at_op.restype = nusd_result_t
+
+# /home/anders/code/nanousd/libnanousd/nanousd-prim.h: 333
 if _libs["nanousd"].has("nusd_prim_compute_local_to_world_transform", "cdecl"):
     nusd_prim_compute_local_to_world_transform = _libs["nanousd"].get("nusd_prim_compute_local_to_world_transform", "cdecl")
     nusd_prim_compute_local_to_world_transform.argtypes = [nusd_stage_t, String, c_double, POINTER(c_double)]
     nusd_prim_compute_local_to_world_transform.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd-prim.h: 269
+# /home/anders/code/nanousd/libnanousd/nanousd-prim.h: 382
 if _libs["nanousd"].has("nusd_prim_create_primvar", "cdecl"):
     nusd_prim_create_primvar = _libs["nanousd"].get("nusd_prim_create_primvar", "cdecl")
     nusd_prim_create_primvar.argtypes = [nusd_stage_t, String, String, nusd_type_t, nusd_interpolation_t]
     nusd_prim_create_primvar.restype = nusd_result_t
 
-# /home/anders/code/nanousd/libnanousd/nanousd-prim.h: 297
+# /home/anders/code/nanousd/libnanousd/nanousd-prim.h: 410
 if _libs["nanousd"].has("nusd_prim_set_extent", "cdecl"):
     nusd_prim_set_extent = _libs["nanousd"].get("nusd_prim_set_extent", "cdecl")
     nusd_prim_set_extent.argtypes = [nusd_stage_t, String, POINTER(c_float)]

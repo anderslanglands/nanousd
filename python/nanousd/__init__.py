@@ -450,6 +450,241 @@ class Stage:
         elif result != _lib.NUSD_RESULT_OK:
             raise SetPropertyError(f'failed to add translate operation for "{xformable_path}": {result}')
 
+    def prim_add_rotate_op_axis_angle(
+        self,
+        xformable_path: str,
+        axis,
+        angle_degrees: float,
+        op_suffix: str = None,
+        time_code: float = TIMECODE_DEFAULT,
+    ):
+        """Add an orient (quaternion rotation) transform operation using axis-angle rotation input.
+
+        This function creates a TypeOrient xform operation, which stores rotation as a quaternion.
+        The axis-angle input is converted to a quaternion internally using GfRotation.
+
+        Args:
+            xformable_path: USD path to an existing xformable prim (e.g., "/World/Camera", "/World/Mesh")
+            axis: Array of 3 values representing the rotation axis as [x, y, z].
+                  Can be any 3-element array, tuple, or list of floats.
+                  The axis does not need to be normalized - it will be normalized internally.
+            angle_degrees: The rotation angle in degrees around the specified axis.
+            op_suffix: Optional suffix for the operation name. If None, USD will generate a default name.
+                      If provided, the operation will be named "xformOp:orient:{op_suffix}"
+            time_code: The time at which to set the rotation value (default: 0.0)
+
+        Raises:
+            SetPropertyError: If xformable_path is invalid or the prim is not xformable
+            ValueError: If axis is not a valid 3-element sequence of numbers
+
+        Note:
+            - The orient operation stores rotation as a quaternion (quatf precision)
+            - Multiple orient operations can be added to the same prim with different suffixes
+            - Transform operations are evaluated in the order they appear in the xformOpOrder attribute
+            - The resulting transform operation will be named "xformOp:orient" or "xformOp:orient:{op_suffix}"
+            - Rotation is applied in the prim's local coordinate space
+
+        See Also:
+            https://openusd.org/dev/api/class_usd_geom_xform_op.html
+            https://openusd.org/dev/api/class_gf_rotation.html
+        """
+        # Validate axis parameter
+        if axis is None:
+            raise ValueError("axis must be provided")
+
+        if not isinstance(axis, (list, tuple, np.ndarray)):
+            raise ValueError("axis must be a list, tuple, or array")
+
+        if len(axis) != 3:
+            raise ValueError("axis must contain exactly 3 values")
+
+        # Convert to double array
+        try:
+            if isinstance(axis, np.ndarray):
+                # Handle NumPy arrays - convert to double if needed
+                if axis.dtype == np.float32:
+                    axis = axis.astype(np.float64)
+                elif axis.dtype not in [np.float32, np.float64]:
+                    axis = axis.astype(np.float64)
+                axis_array = (c_double * 3)(float(axis[0]), float(axis[1]), float(axis[2]))
+            else:
+                # Handle lists and tuples
+                axis_array = (c_double * 3)(float(axis[0]), float(axis[1]), float(axis[2]))
+        except (ValueError, TypeError, IndexError):
+            raise ValueError("axis components must be numeric values")
+
+        # Call C function
+        result = _lib.nusd_prim_add_rotate_op_axis_angle(
+            self._stage,
+            xformable_path.encode("ascii"),
+            op_suffix.encode("ascii") if op_suffix is not None else None,
+            axis_array,
+            c_double(angle_degrees),
+            c_double(time_code),
+        )
+        if result == _lib.NUSD_RESULT_NULL_PARAMETER:
+            raise SetPropertyError(f'invalid parameters for rotate operation on "{xformable_path}"')
+        elif result == _lib.NUSD_RESULT_INVALID_PRIM_PATH:
+            raise SetPropertyError(f'prim "{xformable_path}" does not exist or is not xformable')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(f'failed to add rotate operation for "{xformable_path}": {result}')
+
+    def prim_add_scale_op(
+        self,
+        xformable_path: str,
+        op_suffix: str = None,
+        scale=None,
+        time_code: float = TIMECODE_DEFAULT,
+    ):
+        """Add a scale transform operation to a UsdGeomXformable prim.
+
+        Args:
+            xformable_path: USD path to an existing xformable prim (e.g., "/World/Camera", "/World/Mesh")
+            op_suffix: Optional suffix for the operation name. If None, USD will generate a default name.
+                      If provided, the operation will be named "xformOp:scale:{op_suffix}"
+            scale: Optional array of 3 values representing the scale as [x, y, z].
+                   Can be any 3-element array, tuple, or list of floats.
+                   If None, the operation is created but no initial value is set.
+                   Float32 values are automatically converted to double precision.
+            time_code: The time at which to set the scale value (default: 0.0)
+
+        Raises:
+            SetPropertyError: If xformable_path is invalid or the prim is not xformable
+            ValueError: If scale is provided but is not a valid 3-element sequence of numbers
+
+        Note:
+            - The scale operation uses double precision for maximum accuracy
+            - Multiple scale operations can be added to the same prim with different suffixes
+            - Transform operations are evaluated in the order they appear in the xformOpOrder attribute
+            - The resulting transform operation will be named "xformOp:scale" or "xformOp:scale:{op_suffix}"
+            - Scale values are applied in the prim's local coordinate space
+            - A scale of [1.0, 1.0, 1.0] represents no scaling (identity)
+
+        See Also:
+            https://openusd.org/dev/api/class_usd_geom_xform_op.html
+        """
+        # Handle optional scale parameter
+        scale_array = None
+        if scale is not None:
+            # Validate scale format
+            if not isinstance(scale, (list, tuple, np.ndarray)):
+                raise ValueError("scale must be a list, tuple, or array")
+
+            if len(scale) != 3:
+                raise ValueError("scale must contain exactly 3 values")
+
+            # Convert to double array, handling float32 to double conversion
+            try:
+                if isinstance(scale, np.ndarray):
+                    # Handle NumPy arrays - convert to double if needed
+                    if scale.dtype == np.float32:
+                        scale = scale.astype(np.float64)
+                    elif scale.dtype not in [np.float32, np.float64]:
+                        scale = scale.astype(np.float64)
+                    scale_array = (c_double * 3)(float(scale[0]), float(scale[1]), float(scale[2]))
+                else:
+                    # Handle lists and tuples
+                    scale_array = (c_double * 3)(float(scale[0]), float(scale[1]), float(scale[2]))
+            except (ValueError, TypeError, IndexError):
+                raise ValueError("scale components must be numeric values")
+
+        # Call C function
+        result = _lib.nusd_prim_add_scale_op(
+            self._stage,
+            xformable_path.encode("ascii"),
+            op_suffix.encode("ascii") if op_suffix is not None else None,
+            scale_array,
+            c_double(time_code),
+        )
+        if result == _lib.NUSD_RESULT_NULL_PARAMETER:
+            raise SetPropertyError(f'invalid parameters for scale operation on "{xformable_path}"')
+        elif result == _lib.NUSD_RESULT_INVALID_PRIM_PATH:
+            raise SetPropertyError(f'prim "{xformable_path}" does not exist or is not xformable')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(f'failed to add scale operation for "{xformable_path}": {result}')
+
+    def prim_add_look_at_op(
+        self,
+        xformable_path: str,
+        eye,
+        target,
+        up,
+        op_suffix: str = None,
+        time_code: float = TIMECODE_DEFAULT,
+    ):
+        """Add a look-at transform operation to a UsdGeomXformable prim.
+
+        This function creates a TypeTransform xform operation containing a 4x4 matrix
+        computed from eye position, target position, and up vector using GfMatrix4d::SetLookAt.
+        This is useful for positioning cameras or objects to look at a specific target.
+
+        Args:
+            xformable_path: USD path to an existing xformable prim (e.g., "/World/Camera")
+            eye: Array of 3 values representing the eye/camera position as [x, y, z].
+                 Can be any 3-element array, tuple, or list of floats.
+            target: Array of 3 values representing the target/look-at position as [x, y, z].
+                    Can be any 3-element array, tuple, or list of floats.
+            up: Array of 3 values representing the up direction as [x, y, z].
+                Can be any 3-element array, tuple, or list of floats.
+                This does not need to be normalized.
+            op_suffix: Optional suffix for the operation name. If None, USD will generate a default name.
+                      If provided, the operation will be named "xformOp:transform:{op_suffix}"
+            time_code: The time at which to set the transform value (default: 0.0)
+
+        Raises:
+            SetPropertyError: If xformable_path is invalid or the prim is not xformable
+            ValueError: If eye, target, or up is not a valid 3-element sequence of numbers
+
+        Note:
+            - The look-at matrix orients the prim so its local -Z axis points from eye toward target
+            - The transform operation uses double precision (Matrix4d) for maximum accuracy
+            - Multiple transform operations can be added to the same prim with different suffixes
+            - Transform operations are evaluated in the order they appear in the xformOpOrder attribute
+
+        See Also:
+            https://openusd.org/dev/api/class_gf_matrix4d.html
+            https://openusd.org/dev/api/class_usd_geom_xform_op.html
+        """
+        def _validate_vec3(value, name):
+            if value is None:
+                raise ValueError(f"{name} must be provided")
+            if not isinstance(value, (list, tuple, np.ndarray)):
+                raise ValueError(f"{name} must be a list, tuple, or array")
+            if len(value) != 3:
+                raise ValueError(f"{name} must contain exactly 3 values")
+            try:
+                if isinstance(value, np.ndarray):
+                    if value.dtype == np.float32:
+                        value = value.astype(np.float64)
+                    elif value.dtype not in [np.float32, np.float64]:
+                        value = value.astype(np.float64)
+                    return (c_double * 3)(float(value[0]), float(value[1]), float(value[2]))
+                else:
+                    return (c_double * 3)(float(value[0]), float(value[1]), float(value[2]))
+            except (ValueError, TypeError, IndexError):
+                raise ValueError(f"{name} components must be numeric values")
+
+        eye_array = _validate_vec3(eye, "eye")
+        target_array = _validate_vec3(target, "target")
+        up_array = _validate_vec3(up, "up")
+
+        # Call C function
+        result = _lib.nusd_prim_add_look_at_op(
+            self._stage,
+            xformable_path.encode("ascii"),
+            op_suffix.encode("ascii") if op_suffix is not None else None,
+            eye_array,
+            target_array,
+            up_array,
+            c_double(time_code),
+        )
+        if result == _lib.NUSD_RESULT_NULL_PARAMETER:
+            raise SetPropertyError(f'invalid parameters for look-at operation on "{xformable_path}"')
+        elif result == _lib.NUSD_RESULT_INVALID_PRIM_PATH:
+            raise SetPropertyError(f'prim "{xformable_path}" does not exist or is not xformable')
+        elif result != _lib.NUSD_RESULT_OK:
+            raise SetPropertyError(f'failed to add look-at operation for "{xformable_path}": {result}')
+
     def prim_set_extent(self, prim_path: str, extent):
         """Set the extent (bounding box) attribute on a UsdGeomBoundable prim.
 

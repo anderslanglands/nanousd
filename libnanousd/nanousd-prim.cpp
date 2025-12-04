@@ -1,5 +1,9 @@
 #include "nanousd.h"
 
+#include <pxr/base/gf/matrix4d.h>
+#include <pxr/base/gf/quatf.h>
+#include <pxr/base/gf/rotation.h>
+
 #include <pxr/usd/usd/attribute.h>
 #include <pxr/usd/usd/property.h>
 #include <pxr/usd/usd/relationship.h>
@@ -45,6 +49,111 @@ nusd_result_t nusd_prim_add_translate_op(nusd_stage_t stage,
     if (translation != nullptr) {
         op.Set(GfVec3d(translation[0], translation[1], translation[2]), time_code);
     }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_prim_add_rotate_op_axis_angle(nusd_stage_t stage,
+                                                  char const* xformable_path,
+                                                  char const* op_suffix,
+                                                  double const* axis,
+                                                  double angle_degrees,
+                                                  double time_code) {
+    if (stage == nullptr || xformable_path == nullptr || axis == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdGeomXformable xform =
+        UsdGeomXformable(_stage->GetPrimAtPath(SdfPath(xformable_path)));
+    if (!xform) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    // Create orient op (uses quaternion representation)
+    UsdGeomXformOp op =
+        op_suffix != nullptr
+            ? xform.AddOrientOp(UsdGeomXformOp::PrecisionFloat, TfToken(op_suffix))
+            : xform.AddOrientOp(UsdGeomXformOp::PrecisionFloat);
+
+    // Convert axis-angle to quaternion using GfRotation
+    GfVec3d axisVec(axis[0], axis[1], axis[2]);
+    GfRotation rotation(axisVec, angle_degrees);
+    GfQuaternion quat = rotation.GetQuaternion();
+
+    // Convert GfQuaternion (double) to GfQuatf (float) for PrecisionFloat orient op
+    GfQuatf quatf(static_cast<float>(quat.GetReal()),
+                  GfVec3f(static_cast<float>(quat.GetImaginary()[0]),
+                          static_cast<float>(quat.GetImaginary()[1]),
+                          static_cast<float>(quat.GetImaginary()[2])));
+
+    op.Set(quatf, time_code);
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_prim_add_scale_op(nusd_stage_t stage,
+                                     char const* xformable_path,
+                                     char const* op_suffix,
+                                     double const* scale,
+                                     double time_code) {
+    if (stage == nullptr || xformable_path == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdGeomXformable xform =
+        UsdGeomXformable(_stage->GetPrimAtPath(SdfPath(xformable_path)));
+    if (!xform) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    UsdGeomXformOp op =
+        op_suffix != nullptr
+            ? xform.AddScaleOp(UsdGeomXformOp::PrecisionDouble, TfToken(op_suffix))
+            : xform.AddScaleOp(UsdGeomXformOp::PrecisionDouble);
+
+    if (scale != nullptr) {
+        op.Set(GfVec3d(scale[0], scale[1], scale[2]), time_code);
+    }
+
+    return NUSD_RESULT_OK;
+}
+
+nusd_result_t nusd_prim_add_look_at_op(nusd_stage_t stage,
+                                        char const* xformable_path,
+                                        char const* op_suffix,
+                                        double const* eye,
+                                        double const* target,
+                                        double const* up,
+                                        double time_code) {
+    if (stage == nullptr || xformable_path == nullptr ||
+        eye == nullptr || target == nullptr || up == nullptr) {
+        return NUSD_RESULT_NULL_PARAMETER;
+    }
+
+    UsdStage* _stage = reinterpret_cast<UsdStage*>(stage);
+    UsdGeomXformable xform =
+        UsdGeomXformable(_stage->GetPrimAtPath(SdfPath(xformable_path)));
+    if (!xform) {
+        return NUSD_RESULT_INVALID_PRIM_PATH;
+    }
+
+    // Create a transform op (uses 4x4 matrix)
+    UsdGeomXformOp op =
+        op_suffix != nullptr
+            ? xform.AddTransformOp(UsdGeomXformOp::PrecisionDouble, TfToken(op_suffix))
+            : xform.AddTransformOp(UsdGeomXformOp::PrecisionDouble);
+
+    // Create look-at matrix using GfMatrix4d::SetLookAt
+    GfVec3d eyeVec(eye[0], eye[1], eye[2]);
+    GfVec3d targetVec(target[0], target[1], target[2]);
+    GfVec3d upVec(up[0], up[1], up[2]);
+
+    GfMatrix4d lookAtMatrix;
+    lookAtMatrix.SetLookAt(eyeVec, targetVec, upVec);
+
+    op.Set(lookAtMatrix, time_code);
 
     return NUSD_RESULT_OK;
 }

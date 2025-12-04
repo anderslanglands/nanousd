@@ -11,6 +11,7 @@
 #include "nanousd-prim.h"
 #include "nanousd-property.h"
 #include "nanousd-types.h"
+#include "nanousd-camera.h"
 
 #ifdef __cplusplus
 extern "C" {

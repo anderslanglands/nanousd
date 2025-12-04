@@ -1258,6 +1258,395 @@ def test_prim_add_translate_op_invalid_translation_values():
         stage.prim_add_translate_op("/World/Camera", translation=[1.0, None, 3.0])
 
 
+def test_prim_add_rotate_op_axis_angle_basic():
+    """Test basic rotate operation addition with axis-angle input"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_basic")
+    stage.define_prim("/World", "Xform")
+    
+    # Rotate 90 degrees around the Y axis
+    axis = [0.0, 1.0, 0.0]
+    stage.prim_add_rotate_op_axis_angle("/World", axis=axis, angle_degrees=90.0)
+
+
+def test_prim_add_rotate_op_axis_angle_with_suffix():
+    """Test rotate operation addition with custom suffix"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_suffix")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    # Rotate 45 degrees around the X axis with suffix
+    axis = [1.0, 0.0, 0.0]
+    stage.prim_add_rotate_op_axis_angle("/World/Camera", axis=axis, angle_degrees=45.0, op_suffix="tilt")
+
+
+def test_prim_add_rotate_op_axis_angle_arbitrary_axis():
+    """Test rotate operation with arbitrary (non-normalized) axis"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_arbitrary")
+    stage.define_prim("/World", "Xform")
+    
+    # Rotate around an arbitrary axis (doesn't need to be normalized)
+    axis = [1.0, 1.0, 1.0]
+    stage.prim_add_rotate_op_axis_angle("/World", axis=axis, angle_degrees=120.0)
+
+
+def test_prim_add_rotate_op_axis_angle_list_input():
+    """Test rotate operation with list input"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_list")
+    stage.define_prim("/World", "Xform")
+    
+    axis = [0.0, 0.0, 1.0]
+    stage.prim_add_rotate_op_axis_angle("/World", axis=axis, angle_degrees=30.0)
+
+
+def test_prim_add_rotate_op_axis_angle_tuple_input():
+    """Test rotate operation with tuple input"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_tuple")
+    stage.define_prim("/World", "Xform")
+    
+    axis = (1.0, 0.0, 0.0)
+    stage.prim_add_rotate_op_axis_angle("/World", axis=axis, angle_degrees=60.0)
+
+
+def test_prim_add_rotate_op_axis_angle_numpy_float32():
+    """Test rotate operation with NumPy float32 array (should convert to double)"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_numpy32")
+    stage.define_prim("/World", "Xform")
+    
+    axis = np.array([0.0, 1.0, 0.0], dtype=np.float32)
+    stage.prim_add_rotate_op_axis_angle("/World", axis=axis, angle_degrees=45.0)
+
+
+def test_prim_add_rotate_op_axis_angle_numpy_float64():
+    """Test rotate operation with NumPy float64 array"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_numpy64")
+    stage.define_prim("/World", "Xform")
+    
+    axis = np.array([0.0, 0.0, 1.0], dtype=np.float64)
+    stage.prim_add_rotate_op_axis_angle("/World", axis=axis, angle_degrees=90.0)
+
+
+def test_prim_add_rotate_op_axis_angle_with_time_code():
+    """Test rotate operation addition with explicit time code"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_time")
+    stage.define_prim("/World", "Xform")
+    
+    axis = [0.0, 1.0, 0.0]
+    stage.prim_add_rotate_op_axis_angle("/World", axis=axis, angle_degrees=45.0, time_code=1.0)
+
+
+def test_prim_add_rotate_op_axis_angle_combined_with_translate():
+    """Test adding both translate and rotate operations"""
+    stage = nusd.Stage.create_in_memory("test_prim_rotate_combined")
+    stage.define_prim("/World", "Xform")
+    
+    # Add translate first
+    stage.prim_add_translate_op("/World", translation=[5.0, 0.0, 0.0])
+    
+    # Then add rotation
+    axis = [0.0, 0.0, 1.0]
+    stage.prim_add_rotate_op_axis_angle("/World", axis=axis, angle_degrees=45.0)
+
+
+def test_prim_add_rotate_op_axis_angle_invalid_prim_path():
+    """Test rotate operation addition with invalid prim path"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_invalid")
+    
+    axis = [0.0, 1.0, 0.0]
+    with pytest.raises(nusd.SetPropertyError):
+        stage.prim_add_rotate_op_axis_angle("/NonExistent/Prim", axis=axis, angle_degrees=90.0)
+
+
+def test_prim_add_rotate_op_axis_angle_invalid_axis_none():
+    """Test rotate operation with None axis"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_axis_none")
+    stage.define_prim("/World", "Xform")
+    
+    with pytest.raises(ValueError, match="axis must be provided"):
+        stage.prim_add_rotate_op_axis_angle("/World", axis=None, angle_degrees=90.0)
+
+
+def test_prim_add_rotate_op_axis_angle_invalid_axis_wrong_length():
+    """Test rotate operation with invalid axis length"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_axis_length")
+    stage.define_prim("/World", "Xform")
+    
+    with pytest.raises(ValueError, match="axis must contain exactly 3 values"):
+        stage.prim_add_rotate_op_axis_angle("/World", axis=[1.0, 0.0], angle_degrees=90.0)
+    
+    with pytest.raises(ValueError, match="axis must contain exactly 3 values"):
+        stage.prim_add_rotate_op_axis_angle("/World", axis=[1.0, 0.0, 0.0, 0.0], angle_degrees=90.0)
+
+
+def test_prim_add_rotate_op_axis_angle_invalid_axis_type():
+    """Test rotate operation with invalid axis type"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_rotate_op_axis_type")
+    stage.define_prim("/World", "Xform")
+    
+    with pytest.raises(ValueError, match="axis must be a list, tuple, or array"):
+        stage.prim_add_rotate_op_axis_angle("/World", axis="not an axis", angle_degrees=90.0)
+
+
+def test_prim_add_scale_op_basic():
+    """Test basic scale operation addition with initial scale"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_scale_op_basic")
+    stage.define_prim("/World", "Xform")
+    
+    # Uniform scale
+    stage.prim_add_scale_op("/World", scale=[2.0, 2.0, 2.0])
+
+
+def test_prim_add_scale_op_with_suffix():
+    """Test scale operation addition with custom suffix"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_scale_op_suffix")
+    stage.define_prim("/World", "Xform")
+    stage.define_prim("/World/Mesh", "Mesh")
+    
+    # Non-uniform scale with suffix
+    stage.prim_add_scale_op("/World/Mesh", op_suffix="stretch", scale=[1.5, 1.0, 0.5])
+
+
+def test_prim_add_scale_op_no_initial_value():
+    """Test scale operation addition without initial value"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_scale_op_no_value")
+    stage.define_prim("/World", "Xform")
+    
+    # Create scale op without initial value
+    stage.prim_add_scale_op("/World", op_suffix="size")
+
+
+def test_prim_add_scale_op_list_input():
+    """Test scale operation with list input"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_scale_op_list")
+    stage.define_prim("/World", "Xform")
+    
+    scale = [1.5, 2.0, 0.5]
+    stage.prim_add_scale_op("/World", scale=scale)
+
+
+def test_prim_add_scale_op_tuple_input():
+    """Test scale operation with tuple input"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_scale_op_tuple")
+    stage.define_prim("/World", "Xform")
+    
+    scale = (2.0, 2.0, 2.0)
+    stage.prim_add_scale_op("/World", scale=scale)
+
+
+def test_prim_add_scale_op_numpy_float32():
+    """Test scale operation with NumPy float32 array (should convert to double)"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_scale_op_numpy32")
+    stage.define_prim("/World", "Xform")
+    
+    scale = np.array([1.5, 1.5, 1.5], dtype=np.float32)
+    stage.prim_add_scale_op("/World", scale=scale)
+
+
+def test_prim_add_scale_op_numpy_float64():
+    """Test scale operation with NumPy float64 array"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_scale_op_numpy64")
+    stage.define_prim("/World", "Xform")
+    
+    scale = np.array([2.0, 2.0, 2.0], dtype=np.float64)
+    stage.prim_add_scale_op("/World", scale=scale)
+
+
+def test_prim_add_scale_op_with_time_code():
+    """Test scale operation addition with explicit time code"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_scale_op_time")
+    stage.define_prim("/World", "Xform")
+    
+    stage.prim_add_scale_op("/World", scale=[2.0, 2.0, 2.0], time_code=1.0)
+
+
+def test_prim_add_scale_op_combined_with_transforms():
+    """Test adding scale with translate and rotate operations"""
+    stage = nusd.Stage.create_in_memory("test_prim_scale_combined")
+    stage.define_prim("/World", "Xform")
+    
+    # Add translate
+    stage.prim_add_translate_op("/World", translation=[5.0, 0.0, 0.0])
+    
+    # Add rotation
+    stage.prim_add_rotate_op_axis_angle("/World", axis=[0.0, 1.0, 0.0], angle_degrees=45.0)
+    
+    # Add scale
+    stage.prim_add_scale_op("/World", scale=[2.0, 2.0, 2.0])
+
+
+def test_prim_add_scale_op_invalid_prim_path():
+    """Test scale operation addition with invalid prim path"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_scale_op_invalid")
+    
+    with pytest.raises(nusd.SetPropertyError):
+        stage.prim_add_scale_op("/NonExistent/Prim", scale=[1.0, 1.0, 1.0])
+
+
+def test_prim_add_scale_op_invalid_scale_wrong_length():
+    """Test scale operation with invalid scale length"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_scale_op_invalid_length")
+    stage.define_prim("/World", "Xform")
+    
+    with pytest.raises(ValueError, match="scale must contain exactly 3 values"):
+        stage.prim_add_scale_op("/World", scale=[1.0, 1.0])
+    
+    with pytest.raises(ValueError, match="scale must contain exactly 3 values"):
+        stage.prim_add_scale_op("/World", scale=[1.0, 1.0, 1.0, 1.0])
+
+
+def test_prim_add_scale_op_invalid_scale_type():
+    """Test scale operation with invalid scale type"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_scale_op_invalid_type")
+    stage.define_prim("/World", "Xform")
+    
+    with pytest.raises(ValueError, match="scale must be a list, tuple, or array"):
+        stage.prim_add_scale_op("/World", scale="not a scale")
+
+
+def test_prim_add_look_at_op_basic():
+    """Test basic look-at operation for a camera"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_basic")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    # Camera at origin looking at target
+    eye = [0.0, 0.0, 10.0]
+    target = [0.0, 0.0, 0.0]
+    up = [0.0, 1.0, 0.0]
+    stage.prim_add_look_at_op("/World/Camera", eye=eye, target=target, up=up)
+
+
+def test_prim_add_look_at_op_with_suffix():
+    """Test look-at operation with custom suffix"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_suffix")
+    stage.define_prim("/World", "Xform")
+    stage.camera_define("/World/Camera")
+    
+    eye = [5.0, 5.0, 5.0]
+    target = [0.0, 0.0, 0.0]
+    up = [0.0, 1.0, 0.0]
+    stage.prim_add_look_at_op("/World/Camera", eye=eye, target=target, up=up, op_suffix="view")
+
+
+def test_prim_add_look_at_op_list_input():
+    """Test look-at operation with list input"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_list")
+    stage.define_prim("/World", "Xform")
+    
+    eye = [0.0, 5.0, 10.0]
+    target = [0.0, 0.0, 0.0]
+    up = [0.0, 1.0, 0.0]
+    stage.prim_add_look_at_op("/World", eye=eye, target=target, up=up)
+
+
+def test_prim_add_look_at_op_tuple_input():
+    """Test look-at operation with tuple input"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_tuple")
+    stage.define_prim("/World", "Xform")
+    
+    eye = (10.0, 10.0, 10.0)
+    target = (0.0, 0.0, 0.0)
+    up = (0.0, 1.0, 0.0)
+    stage.prim_add_look_at_op("/World", eye=eye, target=target, up=up)
+
+
+def test_prim_add_look_at_op_numpy_input():
+    """Test look-at operation with NumPy array input"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_numpy")
+    stage.define_prim("/World", "Xform")
+    
+    eye = np.array([0.0, 0.0, 10.0], dtype=np.float64)
+    target = np.array([0.0, 0.0, 0.0], dtype=np.float32)  # mixed precision
+    up = np.array([0.0, 1.0, 0.0], dtype=np.float64)
+    stage.prim_add_look_at_op("/World", eye=eye, target=target, up=up)
+
+
+def test_prim_add_look_at_op_with_time_code():
+    """Test look-at operation with explicit time code"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_time")
+    stage.define_prim("/World", "Xform")
+    
+    eye = [0.0, 0.0, 10.0]
+    target = [0.0, 0.0, 0.0]
+    up = [0.0, 1.0, 0.0]
+    stage.prim_add_look_at_op("/World", eye=eye, target=target, up=up, time_code=1.0)
+
+
+def test_prim_add_look_at_op_invalid_prim_path():
+    """Test look-at operation with invalid prim path"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_invalid")
+    
+    eye = [0.0, 0.0, 10.0]
+    target = [0.0, 0.0, 0.0]
+    up = [0.0, 1.0, 0.0]
+    with pytest.raises(nusd.SetPropertyError):
+        stage.prim_add_look_at_op("/NonExistent/Prim", eye=eye, target=target, up=up)
+
+
+def test_prim_add_look_at_op_invalid_eye_none():
+    """Test look-at operation with None eye"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_eye_none")
+    stage.define_prim("/World", "Xform")
+    
+    target = [0.0, 0.0, 0.0]
+    up = [0.0, 1.0, 0.0]
+    with pytest.raises(ValueError, match="eye must be provided"):
+        stage.prim_add_look_at_op("/World", eye=None, target=target, up=up)
+
+
+def test_prim_add_look_at_op_invalid_target_none():
+    """Test look-at operation with None target"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_target_none")
+    stage.define_prim("/World", "Xform")
+    
+    eye = [0.0, 0.0, 10.0]
+    up = [0.0, 1.0, 0.0]
+    with pytest.raises(ValueError, match="target must be provided"):
+        stage.prim_add_look_at_op("/World", eye=eye, target=None, up=up)
+
+
+def test_prim_add_look_at_op_invalid_up_none():
+    """Test look-at operation with None up"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_up_none")
+    stage.define_prim("/World", "Xform")
+    
+    eye = [0.0, 0.0, 10.0]
+    target = [0.0, 0.0, 0.0]
+    with pytest.raises(ValueError, match="up must be provided"):
+        stage.prim_add_look_at_op("/World", eye=eye, target=target, up=None)
+
+
+def test_prim_add_look_at_op_invalid_wrong_length():
+    """Test look-at operation with wrong length vectors"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_length")
+    stage.define_prim("/World", "Xform")
+    
+    eye = [0.0, 0.0, 10.0]
+    target = [0.0, 0.0, 0.0]
+    up = [0.0, 1.0, 0.0]
+    
+    with pytest.raises(ValueError, match="eye must contain exactly 3 values"):
+        stage.prim_add_look_at_op("/World", eye=[0.0, 0.0], target=target, up=up)
+    
+    with pytest.raises(ValueError, match="target must contain exactly 3 values"):
+        stage.prim_add_look_at_op("/World", eye=eye, target=[0.0], up=up)
+    
+    with pytest.raises(ValueError, match="up must contain exactly 3 values"):
+        stage.prim_add_look_at_op("/World", eye=eye, target=target, up=[0.0, 1.0, 0.0, 0.0])
+
+
+def test_prim_add_look_at_op_invalid_type():
+    """Test look-at operation with invalid type"""
+    stage = nusd.Stage.create_in_memory("test_prim_add_look_at_op_type")
+    stage.define_prim("/World", "Xform")
+    
+    eye = [0.0, 0.0, 10.0]
+    target = [0.0, 0.0, 0.0]
+    up = [0.0, 1.0, 0.0]
+    
+    with pytest.raises(ValueError, match="eye must be a list, tuple, or array"):
+        stage.prim_add_look_at_op("/World", eye="not an eye", target=target, up=up)
+
+
 def test_path_is_valid_prim_basic():
     """Test basic path validity checking"""
     stage = nusd.Stage.create_in_memory("test_path_is_valid_prim_basic")

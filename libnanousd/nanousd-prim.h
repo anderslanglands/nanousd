@@ -120,10 +120,9 @@ nusd_result_t nusd_prim_create_property(nusd_stage_t stage,
 ///
 /// @param stage Valid stage handle.
 /// @param xformable_path USD path to an existing Xformable prim.
-/// @param camera_to_parent_matrix Pointer to 16 double values representing a
-/// 4x4 transformation matrix
-///                                in row-major order that transforms from local
-///                                space to its parent space.
+/// @param local_to_parent_matrix Pointer to 16 double values representing a
+/// 4x4 transformation matrix in row-major order that transforms from local
+/// space to its parent space.
 /// @param time_code The time at which to set the transform. Use
 /// NUSD_TIMECODE_DEFAULT
 ///                  for the default time. Time samples can be set for
@@ -180,7 +179,120 @@ nusd_result_t nusd_prim_add_translate_op(nusd_stage_t stage,
                                       char const* op_suffix,
                                       double const* translation,
                                       double time_code);
-                                    
+
+/// Adds an orient (quaternion rotation) transform operation to a UsdGeomXformable prim
+/// using axis-angle rotation input.
+///
+/// This function creates a TypeOrient xform operation, which stores rotation as a quaternion.
+/// The axis-angle input is converted to a quaternion internally using GfRotation.
+///
+/// @param stage Valid stage handle.
+/// @param xformable_path USD path to an existing xformable prim (e.g., "/World/Camera", "/World/Mesh").
+/// @param op_suffix Optional suffix for the operation name. If null, USD will generate a default name.
+///                  If provided, the operation will be named "xformOp:orient:{op_suffix}".
+/// @param axis Array of 3 double values representing the rotation axis as [x, y, z].
+///             The axis does not need to be normalized - it will be normalized internally.
+///             Must not be null.
+/// @param angle_degrees The rotation angle in degrees around the specified axis.
+/// @param time_code The time at which to set the rotation value. Use NUSD_TIMECODE_DEFAULT for default time.
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, xformable_path, or axis is null
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if the prim doesn't exist or is not xformable
+///
+/// @note stage must not be null.
+/// @note xformable_path must not be null and should point to an existing UsdGeomXformable prim.
+/// @note axis must not be null and should contain exactly 3 double values for [x, y, z] components.
+/// @note op_suffix is optional and can be null for auto-generated operation names.
+/// @note The orient operation stores rotation as a quaternion (quatf precision by default).
+/// @note Multiple orient operations can be added to the same prim with different suffixes.
+/// @note Transform operations are evaluated in the order they appear in the xformOpOrder attribute.
+/// @note The resulting transform operation will be named "xformOp:orient" or "xformOp:orient:{op_suffix}".
+/// @note Rotation is applied in the prim's local coordinate space.
+///
+/// @see https://openusd.org/dev/api/class_usd_geom_xform_op.html
+/// @see https://openusd.org/dev/api/class_gf_rotation.html
+NANOUSD_API
+nusd_result_t nusd_prim_add_rotate_op_axis_angle(nusd_stage_t stage,
+                                                  char const* xformable_path,
+                                                  char const* op_suffix,
+                                                  double const* axis,
+                                                  double angle_degrees,
+                                                  double time_code);
+
+/// Adds a scale transform operation to a UsdGeomXformable prim.
+///
+/// @param stage Valid stage handle.
+/// @param xformable_path USD path to an existing xformable prim (e.g., "/World/Camera", "/World/Mesh").
+/// @param op_suffix Optional suffix for the operation name. If null, USD will generate a default name.
+///                  If provided, the operation will be named "xformOp:scale:{op_suffix}".
+/// @param scale Optional array of 3 double values representing the scale as [x, y, z].
+///              If null, the operation is created but no initial value is set.
+/// @param time_code The time at which to set the scale value. Use NUSD_TIMECODE_DEFAULT for default time.
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage or xformable_path is null
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if the prim doesn't exist or is not xformable
+///
+/// @note stage must not be null.
+/// @note xformable_path must not be null and should point to an existing UsdGeomXformable prim.
+/// @note op_suffix is optional and can be null for auto-generated operation names.
+/// @note scale is optional and can be null to create the operation without setting an initial value.
+/// @note If scale is provided, it must contain exactly 3 double values for [x, y, z] scale factors.
+/// @note The scale operation uses double precision for maximum accuracy.
+/// @note Multiple scale operations can be added to the same prim with different suffixes.
+/// @note Transform operations are evaluated in the order they appear in the xformOpOrder attribute.
+/// @note The resulting transform operation will be named "xformOp:scale" or "xformOp:scale:{op_suffix}".
+/// @note Scale values are applied in the prim's local coordinate space.
+/// @note A scale of [1.0, 1.0, 1.0] represents no scaling (identity).
+///
+/// @see https://openusd.org/dev/api/class_usd_geom_xform_op.html
+NANOUSD_API
+nusd_result_t nusd_prim_add_scale_op(nusd_stage_t stage,
+                                     char const* xformable_path,
+                                     char const* op_suffix,
+                                     double const* scale,
+                                     double time_code);
+
+/// Adds a look-at transform operation to a UsdGeomXformable prim.
+///
+/// This function creates a TypeTransform xform operation containing a 4x4 matrix
+/// computed from eye position, target position, and up vector using GfMatrix4d::SetLookAt.
+/// This is useful for positioning cameras or objects to look at a specific target.
+///
+/// @param stage Valid stage handle.
+/// @param xformable_path USD path to an existing xformable prim (e.g., "/World/Camera").
+/// @param op_suffix Optional suffix for the operation name. If null, USD will generate a default name.
+///                  If provided, the operation will be named "xformOp:transform:{op_suffix}".
+/// @param eye Array of 3 double values representing the eye/camera position as [x, y, z].
+/// @param target Array of 3 double values representing the target/look-at position as [x, y, z].
+/// @param up Array of 3 double values representing the up direction as [x, y, z].
+///           This does not need to be normalized.
+/// @param time_code The time at which to set the transform value. Use NUSD_TIMECODE_DEFAULT for default time.
+///
+/// @return NUSD_RESULT_OK on success
+/// @return NUSD_RESULT_NULL_PARAMETER if stage, xformable_path, eye, target, or up is null
+/// @return NUSD_RESULT_INVALID_PRIM_PATH if the prim doesn't exist or is not xformable
+///
+/// @note stage must not be null.
+/// @note xformable_path must not be null and should point to an existing UsdGeomXformable prim.
+/// @note eye, target, and up must not be null and should each contain exactly 3 double values.
+/// @note op_suffix is optional and can be null for auto-generated operation names.
+/// @note The look-at matrix orients the prim so its local -Z axis points from eye toward target.
+/// @note The transform operation uses double precision (Matrix4d) for maximum accuracy.
+/// @note Multiple transform operations can be added to the same prim with different suffixes.
+/// @note Transform operations are evaluated in the order they appear in the xformOpOrder attribute.
+///
+/// @see https://openusd.org/dev/api/class_gf_matrix4d.html
+/// @see https://openusd.org/dev/api/class_usd_geom_xform_op.html
+NANOUSD_API
+nusd_result_t nusd_prim_add_look_at_op(nusd_stage_t stage,
+                                        char const* xformable_path,
+                                        char const* op_suffix,
+                                        double const* eye,
+                                        double const* target,
+                                        double const* up,
+                                        double time_code);
 
 /// Computes the complete transformation matrix from a prim's local space to
 /// world space.
