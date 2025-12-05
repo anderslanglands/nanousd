@@ -5,13 +5,15 @@
 ///
 /// @brief C API for nanousd
 
+#include "nanousd-types.h"
 #include "nanousd-array.h"
 #include "nanousd-iterator.h"
 #include "nanousd-mesh.h"
 #include "nanousd-prim.h"
 #include "nanousd-property.h"
-#include "nanousd-types.h"
 #include "nanousd-camera.h"
+#include "nanousd-light.h"
+#include "nanousd-material.h"
 
 #ifdef __cplusplus
 extern "C" {
